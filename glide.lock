@@ -1,0 +1,8 @@
+hash: 22d55e4a179093bf1aa0aa2fcba9dfc3c3e643bc8b3f54a923337503adbf4603
+updated: 2018-08-13T23:24:55.057341264Z
+imports:
+- name: github.com/lxc/lxd
+  version: 6c86b152c1c55f442c2a5c01933254030d324184
+  subpackages:
+  - client
+testImports: []
