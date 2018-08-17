@@ -2,35 +2,27 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"time"
+	"log"
+	"os"
 
-	. "github.com/giosakti/pathfinder-agent/api_client"
-	. "github.com/giosakti/pathfinder-agent/lxd_client"
+	"github.com/urfave/cli"
+)
+
+const (
+	Name    = "Pathfinder Agent"
+	Version = "0.0.1"
 )
 
 func main() {
-	for {
-		// Get from API Server
-		b, _ := ioutil.ReadFile("/opt/projects/golang/src/github.com/giosakti/pathfinder-agent/fixtures/scheduled-containers.json")
+	app := cli.App{
+		Name:    Name,
+		Usage:   "Agent for Pathfinder container manager",
+		Version: Version,
+		Action:  CmdAgent,
+	}
 
-		scheduled, _ := NewContainerListFromByte(b)
-		containers := scheduled.Data.Containers
-
-		// Get from LXC Host
-		local, _ := ListContainers()
-
-		// Compare API Server and LXC Host
-		for _, c := range containers {
-			j := FindContainer(local, c.Name)
-			if j == -1 {
-				fmt.Println("Creating Container", c.Name)
-				CreateContainer(c.Name)
-			} else {
-				local = append(local[:j], local[j+1:]...)
-			}
-		}
-
-		time.Sleep(5 * time.Second)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(fmt.Sprintf("Fatal error: %s", err.Error()))
 	}
 }

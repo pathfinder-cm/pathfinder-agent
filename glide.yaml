@@ -3,3 +3,5 @@ import:
 - package: github.com/lxc/lxd
   subpackages:
   - client
+- package: github.com/urfave/cli
+  version: ^1.20.0
