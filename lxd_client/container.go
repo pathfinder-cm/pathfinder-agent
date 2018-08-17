@@ -1,11 +1,11 @@
-package main
+package lxd_client
 
 import (
 	lxd "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 )
 
-func listContainers() ([]api.Container, error) {
+func ListContainers() ([]api.Container, error) {
 	// Connect to LXD over the Unix socket
 	c, err := lxd.ConnectLXDUnix("/var/snap/lxd/common/lxd/unix.socket", nil)
 	if err != nil {
@@ -20,7 +20,17 @@ func listContainers() ([]api.Container, error) {
 	return containers, nil
 }
 
-func createContainer(name string) (bool, error) {
+func FindContainer(containers []api.Container, name string) int {
+	for i, c := range containers {
+		if c.Name == name {
+			return i
+		}
+	}
+
+	return -1
+}
+
+func CreateContainer(name string) (bool, error) {
 	// Connect to LXD over the Unix socket
 	c, err := lxd.ConnectLXDUnix("/var/snap/lxd/common/lxd/unix.socket", nil)
 	if err != nil {
