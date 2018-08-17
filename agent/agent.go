@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/giosakti/pathfinder-agent/lxd_client"
+	"github.com/giosakti/pathfinder-agent/daemon"
 	"github.com/giosakti/pathfinder-agent/pfclient"
 )
 
@@ -14,29 +14,32 @@ type Agent interface {
 }
 
 type agent struct {
+	containerDaemon daemon.ContainerDaemon
 }
 
-func NewAgent() Agent {
-	return &agent{}
+func NewAgent(cd daemon.ContainerDaemon) Agent {
+	return &agent{
+		containerDaemon: cd,
+	}
 }
 
 func (a *agent) Run() {
 	for {
 		// Get from API Server
 		b, _ := ioutil.ReadFile("/opt/projects/golang/src/github.com/giosakti/pathfinder-agent/fixtures/scheduled-containers.json")
-		rc, _ := pfclient.NewContainerListFromByte(b)
+		remoteContainers, _ := pfclient.NewContainerListFromByte(b)
 
 		// Get from local daemon
-		lc, _ := lxd_client.ListContainers()
+		localContainers, _ := a.containerDaemon.ListContainers()
 
 		// Compare containers from server and local daemon
-		for _, c := range *rc {
-			i := lxd_client.FindContainer(lc, c.Name)
+		for _, rc := range *remoteContainers {
+			i := localContainers.FindByName(rc.Name)
 			if i == -1 {
-				fmt.Println("Creating Container", c.Name)
-				lxd_client.CreateContainer(c.Name)
+				fmt.Println("Creating Container", rc.Name)
+				a.containerDaemon.CreateContainer(rc.Name, rc.Image)
 			} else {
-				lc = append(lc[:i], lc[i+1:]...)
+				localContainers.DeleteAt(i)
 			}
 		}
 

@@ -16,7 +16,8 @@ type ContainerListDataRes struct {
 }
 
 type ContainerRes struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	Image string `json:"image"`
 }
 
 func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
@@ -28,7 +29,8 @@ func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
 	cl := make(model.ContainerList, len(res.Data.Containers))
 	for i, c := range res.Data.Containers {
 		cl[i] = model.Container{
-			Name: c.Name,
+			Name:  c.Name,
+			Image: c.Image,
 		}
 	}
 

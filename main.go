@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	Name    = "Pathfinder Agent"
-	Version = "0.0.1"
+	Name                 = "Pathfinder Agent"
+	Version              = "0.0.1"
+	DefaultLXDSocketPath = "/var/snap/lxd/common/lxd/unix.socket"
 )
 
 func main() {

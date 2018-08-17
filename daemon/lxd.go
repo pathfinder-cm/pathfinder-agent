@@ -1,38 +1,45 @@
-package lxd_client
+package daemon
 
 import (
-	lxd "github.com/lxc/lxd/client"
+	"github.com/giosakti/pathfinder-agent/model"
+	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 )
 
-func ListContainers() ([]api.Container, error) {
-	// Connect to LXD over the Unix socket
-	c, err := lxd.ConnectLXDUnix("/var/snap/lxd/common/lxd/unix.socket", nil)
-	if err != nil {
-		return nil, err
-	}
+type apiContainers []api.Container
 
-	containers, err := c.GetContainers()
-	if err != nil {
-		return nil, err
-	}
-
-	return containers, nil
+type LXD struct {
+	SocketPath string
 }
 
-func FindContainer(containers []api.Container, name string) int {
-	for i, c := range containers {
-		if c.Name == name {
-			return i
+func (a apiContainers) ToContainerList() *model.ContainerList {
+	containerList := make(model.ContainerList, len(a))
+	for i, c := range a {
+		containerList[i] = model.Container{
+			Name: c.Name,
 		}
 	}
-
-	return -1
+	return &containerList
 }
 
-func CreateContainer(name string) (bool, error) {
-	// Connect to LXD over the Unix socket
-	c, err := lxd.ConnectLXDUnix("/var/snap/lxd/common/lxd/unix.socket", nil)
+func (l LXD) ListContainers() (*model.ContainerList, error) {
+	conn, err := client.ConnectLXDUnix(l.SocketPath, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := conn.GetContainers()
+	if err != nil {
+		return nil, err
+	}
+
+	containerList := apiContainers(res).ToContainerList()
+
+	return containerList, nil
+}
+
+func (l LXD) CreateContainer(name string, image string) (bool, error) {
+	conn, err := client.ConnectLXDUnix(l.SocketPath, nil)
 	if err != nil {
 		return false, err
 	}
@@ -44,12 +51,12 @@ func CreateContainer(name string) (bool, error) {
 			Type:     "image",
 			Server:   "https://cloud-images.ubuntu.com/releases",
 			Protocol: "simplestreams",
-			Alias:    "16.04",
+			Alias:    image,
 		},
 	}
 
 	// Get LXD to create the container (background operation)
-	op, err := c.CreateContainer(req)
+	op, err := conn.CreateContainer(req)
 	if err != nil {
 		return false, err
 	}
@@ -66,7 +73,7 @@ func CreateContainer(name string) (bool, error) {
 		Timeout: -1,
 	}
 
-	op, err = c.UpdateContainerState(name, reqState, "")
+	op, err = conn.UpdateContainerState(name, reqState, "")
 	if err != nil {
 		return false, err
 	}

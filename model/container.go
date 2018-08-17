@@ -1,5 +1,6 @@
 package model
 
 type Container struct {
-	Name string
+	Name  string
+	Image string
 }

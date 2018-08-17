@@ -2,8 +2,9 @@
     "api_version": 1,
     "data": {
         "containers": [
-            {"name": "test-01"},
-            {"name": "test-02"}
+            {"name": "test-01", "image": "16.04"},
+            {"name": "test-02", "image": "16.04"},
+            {"name": "test-03", "image": "16.04"}
         ]
     }
 }
