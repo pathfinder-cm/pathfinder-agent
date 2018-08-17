@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"time"
 
-	. "github.com/giosakti/pathfinder-agent/api_client"
-	. "github.com/giosakti/pathfinder-agent/lxd_client"
+	"github.com/giosakti/pathfinder-agent/lxd_client"
+	"github.com/giosakti/pathfinder-agent/pfclient"
 )
 
 type Agent interface {
@@ -24,21 +24,19 @@ func (a *agent) Run() {
 	for {
 		// Get from API Server
 		b, _ := ioutil.ReadFile("/opt/projects/golang/src/github.com/giosakti/pathfinder-agent/fixtures/scheduled-containers.json")
+		rc, _ := pfclient.NewContainerListFromByte(b)
 
-		scheduled, _ := NewContainerListFromByte(b)
-		containers := scheduled.Data.Containers
+		// Get from local daemon
+		lc, _ := lxd_client.ListContainers()
 
-		// Get from LXC Host
-		local, _ := ListContainers()
-
-		// Compare API Server and LXC Host
-		for _, c := range containers {
-			j := FindContainer(local, c.Name)
-			if j == -1 {
+		// Compare containers from server and local daemon
+		for _, c := range *rc {
+			i := lxd_client.FindContainer(lc, c.Name)
+			if i == -1 {
 				fmt.Println("Creating Container", c.Name)
-				CreateContainer(c.Name)
+				lxd_client.CreateContainer(c.Name)
 			} else {
-				local = append(local[:j], local[j+1:]...)
+				lc = append(lc[:i], lc[i+1:]...)
 			}
 		}
 
