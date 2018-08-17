@@ -5,3 +5,6 @@ import:
   - client
 - package: github.com/urfave/cli
   version: ^1.20.0
+- package: github.com/BaritoLog/go-boilerplate
+  subpackages:
+  - srvkit

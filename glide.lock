@@ -1,6 +1,10 @@
-hash: 34114ab810a83b4eb4e63a570eda15afa12063a4d8ce34a766ec727ad02665d0
-updated: 2018-08-17T03:05:48.534120742Z
+hash: 194890eae5363c2a382ef92df2ebf045267713d8b9f7fbc0349c5af8e1a717fa
+updated: 2018-08-17T08:56:47.643729474Z
 imports:
+- name: github.com/BaritoLog/go-boilerplate
+  version: 20c4c30023960bc27eb5e4662207a0bcaae04f11
+  subpackages:
+  - srvkit
 - name: github.com/golang/protobuf
   version: aa810b61a9c79d51363740d207bb46cf8e620ed5
   subpackages:
