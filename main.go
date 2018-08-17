@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
@@ -14,6 +13,12 @@ const (
 	DefaultLXDSocketPath = "/var/snap/lxd/common/lxd/unix.socket"
 )
 
+func init() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.WarnLevel)
+}
+
 func main() {
 	app := cli.App{
 		Name:    Name,
@@ -22,8 +27,15 @@ func main() {
 		Action:  CmdAgent,
 	}
 
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "verbose, V",
+			Usage: "Enable verbose mode",
+		},
+	}
+
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Fatal error: %s", err.Error()))
+		log.Fatal(err.Error())
 	}
 }

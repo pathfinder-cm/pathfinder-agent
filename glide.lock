@@ -1,5 +1,5 @@
-hash: 194890eae5363c2a382ef92df2ebf045267713d8b9f7fbc0349c5af8e1a717fa
-updated: 2018-08-17T08:56:47.643729474Z
+hash: f44af1725970079cb15c12285827a3cb6a72fac2fe5427e9c1492c0370b1a66a
+updated: 2018-08-17T14:03:52.530934532Z
 imports:
 - name: github.com/BaritoLog/go-boilerplate
   version: 20c4c30023960bc27eb5e4662207a0bcaae04f11
@@ -32,6 +32,8 @@ imports:
   version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/rogpeppe/fastuuid
   version: 6724a57986aff9bff1a1770e9347036def7c89f6
+- name: github.com/sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
 - name: github.com/urfave/cli
   version: cfb38830724cc34fedffe9a2a29fb54fa9169cd1
 - name: golang.org/x/crypto
@@ -43,6 +45,7 @@ imports:
   - nacl/secretbox
   - poly1305
   - salsa20/salsa
+  - ssh/terminal
 - name: golang.org/x/net
   version: aaf60122140d3fcf75376d319f0554393160eb50
   subpackages:
@@ -51,6 +54,11 @@ imports:
   - html
   - html/atom
   - publicsuffix
+- name: golang.org/x/sys
+  version: 1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded
+  subpackages:
+  - unix
+  - windows
 - name: gopkg.in/errgo.v1
   version: c17903c6b19d5dedb9cfba9fa314c7fae63e554f
 - name: gopkg.in/httprequest.v1

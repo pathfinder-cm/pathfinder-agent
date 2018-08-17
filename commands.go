@@ -1,19 +1,26 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/BaritoLog/go-boilerplate/srvkit"
 	"github.com/giosakti/pathfinder-agent/agent"
 	"github.com/giosakti/pathfinder-agent/daemon"
+	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
 func CmdAgent(ctx *cli.Context) {
-	fmt.Println("Agent starting...")
+	if ctx.Bool("verbose") == true {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.WarnLevel)
+	}
+
+	log.WithFields(log.Fields{
+		"verbose": ctx.Bool("verbose"),
+	}).Warn("Agent starting...")
 	go runAgent()
 	srvkit.GracefullShutdown(func() {
-		fmt.Println("Agent stopping...")
+		log.Warn("Agent stopping...")
 	})
 }
 

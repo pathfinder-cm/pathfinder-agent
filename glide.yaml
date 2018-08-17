@@ -8,3 +8,8 @@ import:
 - package: github.com/BaritoLog/go-boilerplate
   subpackages:
   - srvkit
+- package: github.com/sirupsen/logrus
+  version: ^1.0.6
+- package: golang.org/x/sys
+  subpackages:
+  - unix
