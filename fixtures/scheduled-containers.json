@@ -1,10 +1,10 @@
 {
-    "api_version": 1,
+    "api_version": "1.0",
     "data": {
         "containers": [
-            {"name": "test-01", "image": "16.04"},
-            {"name": "test-02", "image": "16.04"},
-            {"name": "test-03", "image": "16.04"}
+            {"hostname": "test-01", "image": "16.04"},
+            {"hostname": "test-02", "image": "16.04"},
+            {"hostname": "test-03", "image": "16.04"}
         ]
     }
 }

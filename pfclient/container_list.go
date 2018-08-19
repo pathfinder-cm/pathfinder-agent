@@ -7,17 +7,17 @@ import (
 )
 
 type ContainerListRes struct {
-	ApiVersion int                  `json:"api_version"`
+	ApiVersion string               `json:"api_version"`
 	Data       ContainerListDataRes `json:"data"`
 }
 
 type ContainerListDataRes struct {
-	Containers []ContainerRes `json:"containers"`
+	Items []ContainerRes `json:"items"`
 }
 
 type ContainerRes struct {
-	Name  string `json:"name"`
-	Image string `json:"image"`
+	Hostname string `json:"hostname"`
+	Image    string `json:"image"`
 }
 
 func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
@@ -26,11 +26,11 @@ func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
 		return nil, err
 	}
 
-	cl := make(model.ContainerList, len(res.Data.Containers))
-	for i, c := range res.Data.Containers {
+	cl := make(model.ContainerList, len(res.Data.Items))
+	for i, c := range res.Data.Items {
 		cl[i] = model.Container{
-			Name:  c.Name,
-			Image: c.Image,
+			Hostname: c.Hostname,
+			Image:    c.Image,
 		}
 	}
 

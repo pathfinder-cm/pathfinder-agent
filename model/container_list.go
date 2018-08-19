@@ -2,9 +2,9 @@ package model
 
 type ContainerList []Container
 
-func (cl ContainerList) FindByName(name string) int {
+func (cl ContainerList) FindByHostname(hostname string) int {
 	for i, c := range cl {
-		if c.Name == name {
+		if c.Hostname == hostname {
 			return i
 		}
 	}

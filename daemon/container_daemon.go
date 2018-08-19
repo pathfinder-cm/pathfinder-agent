@@ -6,5 +6,5 @@ import (
 
 type ContainerDaemon interface {
 	ListContainers() (*model.ContainerList, error)
-	CreateContainer(name string, image string) (bool, error)
+	CreateContainer(hostname string, image string) (bool, error)
 }

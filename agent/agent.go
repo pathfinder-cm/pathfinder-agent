@@ -36,12 +36,12 @@ func (a *agent) Run() {
 		} else {
 			// Compare containers from server and local daemon
 			for _, sc := range *serverContainers {
-				i := localContainers.FindByName(sc.Name)
+				i := localContainers.FindByHostname(sc.Hostname)
 				if i == -1 {
-					a.containerDaemon.CreateContainer(sc.Name, sc.Image)
+					a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
 					log.WithFields(log.Fields{
-						"name":   sc.Name,
-						"number": sc.Image,
+						"hostname": sc.Hostname,
+						"number":   sc.Image,
 					}).Info("Container created")
 				} else {
 					localContainers.DeleteAt(i)

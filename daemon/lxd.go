@@ -16,7 +16,7 @@ func (a apiContainers) ToContainerList() *model.ContainerList {
 	containerList := make(model.ContainerList, len(a))
 	for i, c := range a {
 		containerList[i] = model.Container{
-			Name: c.Name,
+			Hostname: c.Name,
 		}
 	}
 	return &containerList
@@ -38,7 +38,7 @@ func (l LXD) ListContainers() (*model.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l LXD) CreateContainer(name string, image string) (bool, error) {
+func (l LXD) CreateContainer(hostname string, image string) (bool, error) {
 	conn, err := client.ConnectLXDUnix(l.SocketPath, nil)
 	if err != nil {
 		return false, err
@@ -46,7 +46,7 @@ func (l LXD) CreateContainer(name string, image string) (bool, error) {
 
 	// Container creation request
 	req := api.ContainersPost{
-		Name: name,
+		Name: hostname,
 		Source: api.ContainerSource{
 			Type:     "image",
 			Server:   "https://cloud-images.ubuntu.com/releases",
@@ -73,7 +73,7 @@ func (l LXD) CreateContainer(name string, image string) (bool, error) {
 		Timeout: -1,
 	}
 
-	op, err = conn.UpdateContainerState(name, reqState, "")
+	op, err = conn.UpdateContainerState(hostname, reqState, "")
 	if err != nil {
 		return false, err
 	}
