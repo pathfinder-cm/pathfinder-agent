@@ -80,6 +80,10 @@ func (a *agent) Run() {
 func (a *agent) provisionContainer(sc model.Container, localContainers *model.ContainerList) (bool, error) {
 	i := localContainers.FindByHostname(sc.Hostname)
 	if i == -1 {
+		log.WithFields(log.Fields{
+			"hostname": sc.Hostname,
+			"number":   sc.Image,
+		}).Info("Creating container")
 		a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
 
 		ok, err := markContainerAsProvisioned(
