@@ -1,7 +1,7 @@
 {
     "api_version": "1.0",
     "data": {
-        "containers": [
+        "items": [
             {"hostname": "test-01", "image": "16.04"},
             {"hostname": "test-02", "image": "16.04"},
             {"hostname": "test-03", "image": "16.04"}

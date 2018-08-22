@@ -21,7 +21,8 @@ type ContainerRes struct {
 }
 
 func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
-	res, err := newContainerListResFromByte(b)
+	var res ContainerListRes
+	err := json.Unmarshal(b, &res)
 	if err != nil {
 		return nil, err
 	}
@@ -35,14 +36,4 @@ func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
 	}
 
 	return &cl, nil
-}
-
-func newContainerListResFromByte(b []byte) (*ContainerListRes, error) {
-	var res ContainerListRes
-	err := json.Unmarshal(b, &res)
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }
