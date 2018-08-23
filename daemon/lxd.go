@@ -9,7 +9,7 @@ import (
 type apiContainers []api.Container
 
 type LXD struct {
-	SocketPath string
+	conn client.ContainerServer
 }
 
 func (a apiContainers) ToContainerList() *model.ContainerList {
@@ -22,13 +22,16 @@ func (a apiContainers) ToContainerList() *model.ContainerList {
 	return &containerList
 }
 
-func (l LXD) ListContainers() (*model.ContainerList, error) {
-	conn, err := client.ConnectLXDUnix(l.SocketPath, nil)
+func NewLXD(socketPath string) (*LXD, error) {
+	conn, err := client.ConnectLXDUnix(socketPath, nil)
 	if err != nil {
 		return nil, err
 	}
+	return &LXD{conn: conn}, nil
+}
 
-	res, err := conn.GetContainers()
+func (l *LXD) ListContainers() (*model.ContainerList, error) {
+	res, err := l.conn.GetContainers()
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +41,7 @@ func (l LXD) ListContainers() (*model.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l LXD) CreateContainer(hostname string, image string) (bool, error) {
-	conn, err := client.ConnectLXDUnix(l.SocketPath, nil)
-	if err != nil {
-		return false, err
-	}
-
+func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
 	// Container creation request
 	req := api.ContainersPost{
 		Name: hostname,
@@ -56,7 +54,7 @@ func (l LXD) CreateContainer(hostname string, image string) (bool, error) {
 	}
 
 	// Get LXD to create the container (background operation)
-	op, err := conn.CreateContainer(req)
+	op, err := l.conn.CreateContainer(req)
 	if err != nil {
 		return false, err
 	}
@@ -73,7 +71,7 @@ func (l LXD) CreateContainer(hostname string, image string) (bool, error) {
 		Timeout: -1,
 	}
 
-	op, err = conn.UpdateContainerState(hostname, reqState, "")
+	op, err = l.conn.UpdateContainerState(hostname, reqState, "")
 	if err != nil {
 		return false, err
 	}

@@ -31,7 +31,11 @@ func CmdAgent(ctx *cli.Context) {
 
 func runAgent() {
 	hostname, _ := os.Hostname()
-	daemon := daemon.LXD{SocketPath: DefaultLXDSocketPath}
+	daemon, err := daemon.NewLXD(DefaultLXDSocketPath)
+	if err != nil {
+		log.Error("Cannot connect to container daemon")
+		return
+	}
 	client := &http.Client{
 		Timeout: time.Second * 60,
 		Transport: &http.Transport{
@@ -41,6 +45,7 @@ func runAgent() {
 			TLSHandshakeTimeout: 60 * time.Second,
 		},
 	}
+
 	a := agent.NewAgent(
 		hostname,
 		daemon,
