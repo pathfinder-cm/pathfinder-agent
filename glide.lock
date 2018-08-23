@@ -1,10 +1,14 @@
-hash: f44af1725970079cb15c12285827a3cb6a72fac2fe5427e9c1492c0370b1a66a
-updated: 2018-08-17T14:03:52.530934532Z
+hash: 7847d0f47c218634516db95ef9859d9cca5e2abd76633082e5951c38784ab260
+updated: 2018-08-22T22:56:50.466142168Z
 imports:
 - name: github.com/BaritoLog/go-boilerplate
   version: 20c4c30023960bc27eb5e4662207a0bcaae04f11
   subpackages:
   - srvkit
+- name: github.com/golang/mock
+  version: c34cdb4725f4c3844d095133c6e40e448b86589b
+  subpackages:
+  - gomock
 - name: github.com/golang/protobuf
   version: aa810b61a9c79d51363740d207bb46cf8e620ed5
   subpackages:
@@ -55,7 +59,7 @@ imports:
   - html/atom
   - publicsuffix
 - name: golang.org/x/sys
-  version: 1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded
+  version: 3b58ed4ad3395d483fc92d5d14123ce2c3581fec
   subpackages:
   - unix
   - windows

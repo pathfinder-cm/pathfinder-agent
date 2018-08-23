@@ -12,7 +12,7 @@ type LXD struct {
 	conn client.ContainerServer
 }
 
-func (a apiContainers) ToContainerList() *model.ContainerList {
+func (a apiContainers) toContainerList() *model.ContainerList {
 	containerList := make(model.ContainerList, len(a))
 	for i, c := range a {
 		containerList[i] = model.Container{
@@ -36,7 +36,7 @@ func (l *LXD) ListContainers() (*model.ContainerList, error) {
 		return nil, err
 	}
 
-	containerList := apiContainers(res).ToContainerList()
+	containerList := apiContainers(res).toContainerList()
 
 	return containerList, nil
 }
