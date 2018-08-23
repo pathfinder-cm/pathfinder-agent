@@ -27,15 +27,15 @@ func TestNewContainerListFromByte(t *testing.T) {
 	cl, _ := NewContainerListFromByte(b)
 
 	for i, table := range tables {
-		if cl.Get(i).Hostname != table.hostname {
+		if (*cl)[i].Hostname != table.hostname {
 			t.Errorf("Incorrect container hostname generated, got: %s, want: %s.",
-				cl.Get(i).Hostname,
+				(*cl)[i].Hostname,
 				table.hostname)
 		}
 
-		if cl.Get(i).Image != table.image {
+		if (*cl)[i].Image != table.image {
 			t.Errorf("Incorrect container image generated, got: %s, want: %s.",
-				cl.Get(i).Image,
+				(*cl)[i].Image,
 				table.image)
 		}
 	}
