@@ -11,6 +11,8 @@ import (
 
 type Agent interface {
 	Run()
+	Process() bool
+	provisionContainer(sc model.Container, lcs *model.ContainerList) (bool, error)
 }
 
 type agent struct {
@@ -36,19 +38,19 @@ func (a *agent) Run() {
 		// Add delay between processing
 		time.Sleep(5 * time.Second)
 
-		a.process()
+		a.Process()
 	}
 }
 
-func (a *agent) process() {
+func (a *agent) Process() bool {
 	scs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname)
 	if err != nil {
-		return
+		return false
 	}
 
 	lcs, err := a.containerDaemon.ListContainers()
 	if err != nil {
-		return
+		return false
 	}
 
 	// Compare containers between server and local daemon
@@ -56,9 +58,11 @@ func (a *agent) process() {
 	for _, sc := range *scs {
 		ok, _ := a.provisionContainer(sc, lcs)
 		if !ok {
-			return
+			return false
 		}
 	}
+
+	return true
 }
 
 func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList) (bool, error) {
