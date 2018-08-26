@@ -9,6 +9,7 @@ import (
 	"github.com/BaritoLog/go-boilerplate/srvkit"
 	"github.com/giosakti/pathfinder-agent/agent"
 	"github.com/giosakti/pathfinder-agent/daemon"
+	"github.com/giosakti/pathfinder-agent/pfclient"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -36,7 +37,7 @@ func runAgent() {
 		log.Error("Cannot connect to container daemon")
 		return
 	}
-	client := &http.Client{
+	httpClient := &http.Client{
 		Timeout: time.Second * 60,
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
@@ -45,14 +46,13 @@ func runAgent() {
 			TLSHandshakeTimeout: 60 * time.Second,
 		},
 	}
-
-	a := agent.NewAgent(
-		hostname,
-		daemon,
-		client,
+	pfclient := pfclient.NewPfclient(
+		httpClient,
 		DefaultPfServerAddr,
 		DefaultListContainersPath,
 		DefaultProvisionedPath,
 	)
+
+	a := agent.NewAgent(hostname, daemon, pfclient)
 	a.Run()
 }
