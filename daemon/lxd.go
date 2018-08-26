@@ -66,12 +66,12 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
 	}
 
 	// Get LXD to start the container (background operation)
-	reqState := api.ContainerStatePut{
+	startReq := api.ContainerStatePut{
 		Action:  "start",
 		Timeout: -1,
 	}
 
-	op, err = l.conn.UpdateContainerState(hostname, reqState, "")
+	op, err = l.conn.UpdateContainerState(hostname, startReq, "")
 	if err != nil {
 		return false, err
 	}
