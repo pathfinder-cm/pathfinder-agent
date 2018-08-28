@@ -32,7 +32,7 @@ func CmdAgent(ctx *cli.Context) {
 
 func runAgent() {
 	hostname, _ := os.Hostname()
-	daemon, err := daemon.NewLXD(DefaultLXDSocketPath)
+	daemon, err := daemon.NewLXD(LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
 		return
@@ -49,11 +49,8 @@ func runAgent() {
 	pfclient := pfclient.NewPfclient(
 		PfCluster,
 		httpClient,
-		DefaultPfServerAddr,
-		DefaultListContainersPath,
-		DefaultMarkProvisionedPath,
-		DefaultMarkProvisionErrorPath,
-		DefaultMarkDeletedPath,
+		PfServerAddr,
+		PfApiPath,
 	)
 
 	a := agent.NewAgent(hostname, daemon, pfclient)

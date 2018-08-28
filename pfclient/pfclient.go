@@ -20,37 +20,28 @@ type Pfclient interface {
 }
 
 type pfclient struct {
-	cluster              string
-	httpClient           *http.Client
-	pfServerAddr         string
-	pfListContainersPath string
-	pfProvisionedPath    string
-	pfProvisionErrorPath string
-	pfDeletedPath        string
+	cluster      string
+	httpClient   *http.Client
+	pfServerAddr string
+	pfApiPath    map[string]string
 }
 
 func NewPfclient(
 	cluster string,
 	httpClient *http.Client,
 	pfServerAddr string,
-	pfListContainersPath string,
-	pfProvisionedPath string,
-	pfProvisionErrorPath string,
-	pfDeletedPath string) Pfclient {
+	pfApiPath map[string]string) Pfclient {
 
 	return &pfclient{
-		cluster:              cluster,
-		httpClient:           httpClient,
-		pfServerAddr:         pfServerAddr,
-		pfListContainersPath: pfListContainersPath,
-		pfProvisionedPath:    pfProvisionedPath,
-		pfProvisionErrorPath: pfProvisionErrorPath,
-		pfDeletedPath:        pfDeletedPath,
+		cluster:      cluster,
+		httpClient:   httpClient,
+		pfServerAddr: pfServerAddr,
+		pfApiPath:    pfApiPath,
 	}
 }
 
 func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfListContainersPath)
+	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["ListContainers"])
 	q := url.Values{}
 	q.Add("cluster_name", p.cluster)
 	q.Add("node_hostname", node)
@@ -81,7 +72,7 @@ func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList,
 }
 
 func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfProvisionedPath)
+	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisioned"])
 	form := url.Values{}
 	form.Set("cluster_name", p.cluster)
 	form.Set("node_hostname", node)
@@ -106,7 +97,7 @@ func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (boo
 }
 
 func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfProvisionErrorPath)
+	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisionError"])
 	form := url.Values{}
 	form.Set("cluster_name", p.cluster)
 	form.Set("node_hostname", node)
@@ -131,7 +122,7 @@ func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (
 }
 
 func (p *pfclient) MarkContainerAsDeleted(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfDeletedPath)
+	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkDeleted"])
 	form := url.Values{}
 	form.Set("cluster_name", p.cluster)
 	form.Set("node_hostname", node)
