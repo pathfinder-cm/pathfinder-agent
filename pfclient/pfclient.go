@@ -18,6 +18,7 @@ type Pfclient interface {
 }
 
 type pfclient struct {
+	cluster              string
 	httpClient           *http.Client
 	pfServerAddr         string
 	pfListContainersPath string
@@ -25,12 +26,14 @@ type pfclient struct {
 }
 
 func NewPfclient(
+	cluster string,
 	httpClient *http.Client,
 	pfServerAddr string,
 	pfListContainersPath string,
 	pfProvisionedPath string) Pfclient {
 
 	return &pfclient{
+		cluster:              cluster,
 		httpClient:           httpClient,
 		pfServerAddr:         pfServerAddr,
 		pfListContainersPath: pfListContainersPath,
@@ -41,6 +44,7 @@ func NewPfclient(
 func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList, error) {
 	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfListContainersPath)
 	q := url.Values{}
+	q.Add("cluster_name", p.cluster)
 	q.Add("node_hostname", node)
 
 	req, _ := http.NewRequest(http.MethodGet, address, nil)
@@ -71,8 +75,9 @@ func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList,
 func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (bool, error) {
 	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfProvisionedPath)
 	form := url.Values{}
+	form.Set("cluster_name", p.cluster)
 	form.Set("node_hostname", node)
-	form.Add("hostname", hostname)
+	form.Set("hostname", hostname)
 	body := bytes.NewBufferString(form.Encode())
 
 	req, err := http.NewRequest(http.MethodPost, address, body)
