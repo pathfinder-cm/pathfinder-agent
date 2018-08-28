@@ -90,3 +90,34 @@ func TestCreateContainer(t *testing.T) {
 		t.Errorf("Container not properly generated")
 	}
 }
+
+func TestDeleteContainer(t *testing.T) {
+	tables := []struct {
+		hostname string
+	}{
+		{"test-01"},
+	}
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	stopReq := api.ContainerStatePut{
+		Action:  "stop",
+		Timeout: 60,
+	}
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().DeleteContainer(tables[0].hostname).Return(mockOperation, nil)
+	mockContainerServer.EXPECT().
+		UpdateContainerState(tables[0].hostname, stopReq, "").
+		Return(mockOperation, nil)
+
+	l := LXD{conn: mockContainerServer}
+	ok, _ := l.DeleteContainer(tables[0].hostname)
+	if ok != true {
+		t.Errorf("Container not properly deleted")
+	}
+}

@@ -16,6 +16,7 @@ const (
 	DefaultListContainersPath = "api/v1/node/containers/scheduled"
 	DefaultProvisionedPath    = "api/v1/node/containers/provision"
 	DefaultProvisionErrorPath = "api/v1/node/containers/provision_error"
+	DefaultDeletedPath        = "api/v1/node/containers/mark_deleted"
 )
 
 func init() {

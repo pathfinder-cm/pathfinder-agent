@@ -18,6 +18,7 @@ type ContainerListDataRes struct {
 type ContainerRes struct {
 	Hostname string `json:"hostname"`
 	Image    string `json:"image"`
+	Status   string `json:"status"`
 }
 
 func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
@@ -32,6 +33,7 @@ func NewContainerListFromByte(b []byte) (*model.ContainerList, error) {
 		cl[i] = model.Container{
 			Hostname: c.Hostname,
 			Image:    c.Image,
+			Status:   c.Status,
 		}
 	}
 

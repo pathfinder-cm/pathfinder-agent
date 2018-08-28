@@ -84,3 +84,34 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
 
 	return true, nil
 }
+
+func (l *LXD) DeleteContainer(hostname string) (bool, error) {
+	// Get LXD to stop the container (background operation)
+	stopReq := api.ContainerStatePut{
+		Action:  "stop",
+		Timeout: 60,
+	}
+
+	op, err := l.conn.UpdateContainerState(hostname, stopReq, "")
+	if err == nil {
+		// Wait for the operation to complete
+		err = op.Wait()
+		if err != nil {
+			return false, err
+		}
+	}
+
+	// Get LXD to delete the container (background operation)
+	op, err = l.conn.DeleteContainer(hostname)
+	if err != nil {
+		return false, err
+	}
+
+	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}

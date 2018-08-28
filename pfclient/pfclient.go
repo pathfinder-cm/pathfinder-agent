@@ -16,6 +16,7 @@ type Pfclient interface {
 	FetchContainersFromServer(node string) (*model.ContainerList, error)
 	MarkContainerAsProvisioned(node string, hostname string) (bool, error)
 	MarkContainerAsProvisionError(node string, hostname string) (bool, error)
+	MarkContainerAsDeleted(node string, hostname string) (bool, error)
 }
 
 type pfclient struct {
@@ -25,6 +26,7 @@ type pfclient struct {
 	pfListContainersPath string
 	pfProvisionedPath    string
 	pfProvisionErrorPath string
+	pfDeletedPath        string
 }
 
 func NewPfclient(
@@ -33,7 +35,8 @@ func NewPfclient(
 	pfServerAddr string,
 	pfListContainersPath string,
 	pfProvisionedPath string,
-	pfProvisionErrorPath string) Pfclient {
+	pfProvisionErrorPath string,
+	pfDeletedPath string) Pfclient {
 
 	return &pfclient{
 		cluster:              cluster,
@@ -42,6 +45,7 @@ func NewPfclient(
 		pfListContainersPath: pfListContainersPath,
 		pfProvisionedPath:    pfProvisionedPath,
 		pfProvisionErrorPath: pfProvisionErrorPath,
+		pfDeletedPath:        pfDeletedPath,
 	}
 }
 
@@ -103,6 +107,31 @@ func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (boo
 
 func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (bool, error) {
 	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfProvisionErrorPath)
+	form := url.Values{}
+	form.Set("cluster_name", p.cluster)
+	form.Set("node_hostname", node)
+	form.Set("hostname", hostname)
+	body := bytes.NewBufferString(form.Encode())
+
+	req, err := http.NewRequest(http.MethodPost, address, body)
+
+	res, err := p.httpClient.Do(req)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		b, _ := ioutil.ReadAll(res.Body)
+		log.Error(string(b))
+		return false, errors.New(string(b))
+	}
+
+	return true, nil
+}
+
+func (p *pfclient) MarkContainerAsDeleted(node string, hostname string) (bool, error) {
+	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfDeletedPath)
 	form := url.Values{}
 	form.Set("cluster_name", p.cluster)
 	form.Set("node_hostname", node)
