@@ -25,7 +25,7 @@ func TestProcessContainerExist(t *testing.T) {
 
 	mockContainerDaemon := mock.NewMockContainerDaemon(mockCtrl)
 	mockContainerDaemon.EXPECT().ListContainers().Return(&lcs, nil)
-	mockContainerDaemon.EXPECT().CreateContainer("test-c-03", "16.04")
+	mockContainerDaemon.EXPECT().CreateContainer("test-c-03", "16.04").Return(true, nil)
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)
 	mockPfClient.EXPECT().FetchContainersFromServer(node).Return(&scs, nil)

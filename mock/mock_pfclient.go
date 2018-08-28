@@ -46,6 +46,19 @@ func (mr *MockPfclientMockRecorder) FetchContainersFromServer(arg0 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchContainersFromServer), arg0)
 }
 
+// MarkContainerAsProvisionError mocks base method
+func (m *MockPfclient) MarkContainerAsProvisionError(arg0, arg1 string) (bool, error) {
+	ret := m.ctrl.Call(m, "MarkContainerAsProvisionError", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MarkContainerAsProvisionError indicates an expected call of MarkContainerAsProvisionError
+func (mr *MockPfclientMockRecorder) MarkContainerAsProvisionError(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsProvisionError", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsProvisionError), arg0, arg1)
+}
+
 // MarkContainerAsProvisioned mocks base method
 func (m *MockPfclient) MarkContainerAsProvisioned(arg0, arg1 string) (bool, error) {
 	ret := m.ctrl.Call(m, "MarkContainerAsProvisioned", arg0, arg1)

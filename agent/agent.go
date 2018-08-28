@@ -70,11 +70,23 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 	if i == -1 {
 		log.WithFields(log.Fields{
 			"hostname": sc.Hostname,
-			"number":   sc.Image,
+			"image":    sc.Image,
 		}).Info("Creating container")
-		a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
 
-		ok, err := a.pfclient.MarkContainerAsProvisioned(
+		ok, err := a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
+		if !ok {
+			a.pfclient.MarkContainerAsProvisionError(
+				a.nodeHostname,
+				sc.Hostname,
+			)
+			log.WithFields(log.Fields{
+				"hostname": sc.Hostname,
+				"image":    sc.Image,
+			}).Error("Error during container creation")
+			return false, err
+		}
+
+		ok, err = a.pfclient.MarkContainerAsProvisioned(
 			a.nodeHostname,
 			sc.Hostname,
 		)
@@ -84,7 +96,7 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 
 		log.WithFields(log.Fields{
 			"hostname": sc.Hostname,
-			"number":   sc.Image,
+			"image":    sc.Image,
 		}).Info("Container created")
 	} else {
 		lcs.DeleteAt(i)

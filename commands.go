@@ -52,6 +52,7 @@ func runAgent() {
 		DefaultPfServerAddr,
 		DefaultListContainersPath,
 		DefaultProvisionedPath,
+		DefaultProvisionErrorPath,
 	)
 
 	a := agent.NewAgent(hostname, daemon, pfclient)

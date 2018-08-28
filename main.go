@@ -15,6 +15,7 @@ const (
 	DefaultPfServerAddr       = "http://192.168.33.1:3000"
 	DefaultListContainersPath = "api/v1/node/containers/scheduled"
 	DefaultProvisionedPath    = "api/v1/node/containers/provision"
+	DefaultProvisionErrorPath = "api/v1/node/containers/provision_error"
 )
 
 func init() {

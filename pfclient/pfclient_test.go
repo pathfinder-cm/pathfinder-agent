@@ -34,7 +34,7 @@ func TestFetchContainersFromServer(t *testing.T) {
 	}))
 	defer func() { testServer.Close() }()
 
-	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, "", "")
+	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, "", "", "")
 	cl, _ := pfclient.FetchContainersFromServer(node)
 	for i, table := range tables {
 		if (*cl)[i].Hostname != table.hostname {
@@ -64,9 +64,29 @@ func TestMarkContainerAsProvisioned(t *testing.T) {
 	}))
 	defer func() { testServer.Close() }()
 
-	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, "", "")
+	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, "", "", "")
 	ok, _ := pfclient.MarkContainerAsProvisioned(tables[0].node, tables[0].hostname)
 	if ok != true {
 		t.Errorf("Error when marking container as provisioned")
+	}
+}
+
+func TestMarkContainerAsProvisionError(t *testing.T) {
+	tables := []struct {
+		node     string
+		hostname string
+	}{
+		{"test-01", "test-c-01"},
+	}
+
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(http.StatusOK)
+	}))
+	defer func() { testServer.Close() }()
+
+	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, "", "", "")
+	ok, _ := pfclient.MarkContainerAsProvisionError(tables[0].node, tables[0].hostname)
+	if ok != true {
+		t.Errorf("Error when marking container as provision_error")
 	}
 }
