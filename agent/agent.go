@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/giosakti/pathfinder-agent/daemon"
@@ -129,7 +128,6 @@ func (a *agent) deleteContainer(sc model.Container, lcs *model.ContainerList) (b
 				"hostname": sc.Hostname,
 				"image":    sc.Image,
 			}).Error("Error during container deletion")
-			fmt.Println(err)
 			return false, err
 		}
 

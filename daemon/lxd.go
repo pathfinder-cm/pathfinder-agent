@@ -92,17 +92,13 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 		Timeout: 60,
 	}
 
-	op, err := l.conn.UpdateContainerState(hostname, stopReq, "")
-	if err == nil {
-		// Wait for the operation to complete
-		err = op.Wait()
-		if err != nil {
-			return false, err
-		}
-	}
+	// Stop the container
+	// We don't care if container already stopped
+	op, _ := l.conn.UpdateContainerState(hostname, stopReq, "")
+	op.Wait()
 
 	// Get LXD to delete the container (background operation)
-	op, err = l.conn.DeleteContainer(hostname)
+	op, err := l.conn.DeleteContainer(hostname)
 	if err != nil {
 		return false, err
 	}
