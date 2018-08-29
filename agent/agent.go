@@ -7,6 +7,7 @@ import (
 	"github.com/giosakti/pathfinder-agent/daemon"
 	"github.com/giosakti/pathfinder-agent/model"
 	"github.com/giosakti/pathfinder-agent/pfclient"
+	"github.com/giosakti/pathfinder-agent/util"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -37,7 +38,8 @@ func NewAgent(
 func (a *agent) Run() {
 	for {
 		// Add delay between processing
-		time.Sleep(5 * time.Second)
+		delay := 5 + util.RandomIntRange(1, 5)
+		time.Sleep(time.Duration(delay) * time.Second)
 
 		a.Process()
 	}
