@@ -3,9 +3,9 @@ package agent
 import (
 	"testing"
 
-	"github.com/giosakti/pathfinder-agent/mock"
-	"github.com/giosakti/pathfinder-agent/model"
 	"github.com/golang/mock/gomock"
+	"github.com/pathfinder-cm/pathfinder-agent/mock"
+	"github.com/pathfinder-cm/pathfinder-agent/model"
 )
 
 func TestProcess(t *testing.T) {

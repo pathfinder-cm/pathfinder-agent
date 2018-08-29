@@ -1,7 +1,7 @@
 package daemon
 
 import (
-	"github.com/giosakti/pathfinder-agent/model"
+	"github.com/pathfinder-cm/pathfinder-agent/model"
 )
 
 type ContainerDaemon interface {

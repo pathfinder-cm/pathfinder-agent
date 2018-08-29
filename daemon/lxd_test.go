@@ -3,9 +3,9 @@ package daemon
 import (
 	"testing"
 
-	"github.com/giosakti/pathfinder-agent/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/mock"
 )
 
 func TestToContainerList(t *testing.T) {

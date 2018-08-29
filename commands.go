@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/BaritoLog/go-boilerplate/srvkit"
-	"github.com/giosakti/pathfinder-agent/agent"
-	"github.com/giosakti/pathfinder-agent/daemon"
-	"github.com/giosakti/pathfinder-agent/pfclient"
+	"github.com/pathfinder-cm/pathfinder-agent/agent"
+	"github.com/pathfinder-cm/pathfinder-agent/daemon"
+	"github.com/pathfinder-cm/pathfinder-agent/pfclient"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )

@@ -1,9 +1,9 @@
 package daemon
 
 import (
-	"github.com/giosakti/pathfinder-agent/model"
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/model"
 )
 
 type apiContainers []api.Container

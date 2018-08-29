@@ -3,7 +3,7 @@ package pfclient
 import (
 	"encoding/json"
 
-	"github.com/giosakti/pathfinder-agent/model"
+	"github.com/pathfinder-cm/pathfinder-agent/model"
 )
 
 type ContainerListRes struct {

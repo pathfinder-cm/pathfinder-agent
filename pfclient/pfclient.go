@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/giosakti/pathfinder-agent/model"
+	"github.com/pathfinder-cm/pathfinder-agent/model"
 	log "github.com/sirupsen/logrus"
 )
 
