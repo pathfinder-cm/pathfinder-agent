@@ -26,7 +26,7 @@ func TestProcess(t *testing.T) {
 	defer mockCtrl.Finish()
 
 	mockContainerDaemon := mock.NewMockContainerDaemon(mockCtrl)
-	mockContainerDaemon.EXPECT().ListContainers().Return(&lcs, nil)
+	mockContainerDaemon.EXPECT().ListContainers().Return(&lcs, nil).AnyTimes()
 	mockContainerDaemon.EXPECT().CreateContainer("test-c-03", "16.04").Return(true, "127.0.0.1", nil)
 	mockContainerDaemon.EXPECT().DeleteContainer("test-c-04").Return(true, nil)
 

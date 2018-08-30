@@ -50,14 +50,14 @@ func (a *agent) Process() bool {
 		return false
 	}
 
-	lcs, err := a.containerDaemon.ListContainers()
-	if err != nil {
-		return false
-	}
-
 	// Compare containers between server and local daemon
 	// Do action as necessary
 	for _, sc := range *scs {
+		lcs, err := a.containerDaemon.ListContainers()
+		if err != nil {
+			return false
+		}
+
 		switch status := sc.Status; status {
 		case "SCHEDULED":
 			a.provisionContainer(sc, lcs)
