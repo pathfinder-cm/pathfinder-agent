@@ -1,6 +1,9 @@
 package daemon
 
 import (
+	"errors"
+	"time"
+
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 	"github.com/pathfinder-cm/pathfinder-agent/model"
@@ -41,7 +44,7 @@ func (l *LXD) ListContainers() (*model.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
+func (l *LXD) CreateContainer(hostname string, image string) (bool, string, error) {
 	// Container creation request
 	req := api.ContainersPost{
 		Name: hostname,
@@ -56,13 +59,13 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
 	// Get LXD to create the container (background operation)
 	op, err := l.conn.CreateContainer(req)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	// Wait for the operation to complete
 	err = op.Wait()
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	// Get LXD to start the container (background operation)
@@ -73,16 +76,46 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, error) {
 
 	op, err = l.conn.UpdateContainerState(hostname, startReq, "")
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	// Wait for the operation to complete
 	err = op.Wait()
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
-	return true, nil
+	// Wait for ipaddress to be available
+	ipaddress := ""
+	found := false
+	timeLimit := time.Now().Add(60 * time.Second)
+
+	for !found && time.Now().Before(timeLimit) {
+		state, _, err := l.conn.GetContainerState(hostname)
+		if err != nil {
+			return false, "", err
+		}
+
+		addresses := state.Network["eth0"].Addresses
+		for _, address := range addresses {
+			if address.Family == "inet" {
+				ipaddress = address.Address
+			}
+		}
+
+		if ipaddress != "" {
+			found = true
+			break
+		}
+
+		time.Sleep(time.Duration(3) * time.Second)
+	}
+
+	if !found {
+		return false, "", errors.New("Missing ip address")
+	}
+
+	return true, ipaddress, nil
 }
 
 func (l *LXD) DeleteContainer(hostname string) (bool, error) {

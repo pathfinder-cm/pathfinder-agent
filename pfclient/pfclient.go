@@ -14,6 +14,7 @@ import (
 
 type Pfclient interface {
 	FetchContainersFromServer(node string) (*model.ContainerList, error)
+	UpdateIpaddress(node string, hostname string, ipaddress string) (bool, error)
 	MarkContainerAsProvisioned(node string, hostname string) (bool, error)
 	MarkContainerAsProvisionError(node string, hostname string) (bool, error)
 	MarkContainerAsDeleted(node string, hostname string) (bool, error)
@@ -41,14 +42,18 @@ func NewPfclient(
 }
 
 func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["ListContainers"])
-	q := url.Values{}
-	q.Add("cluster_name", p.cluster)
-	q.Add("node_hostname", node)
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["ListContainers"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return nil, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	u.RawQuery = q.Encode()
 
-	req, _ := http.NewRequest(http.MethodGet, address, nil)
-	req.URL.RawQuery = q.Encode()
-
+	req, _ := http.NewRequest(http.MethodGet, u.String(), nil)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -71,16 +76,53 @@ func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList,
 	return serverContainers, nil
 }
 
-func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisioned"])
+func (p *pfclient) UpdateIpaddress(node string, hostname string, ipaddress string) (bool, error) {
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["UpdateIpaddress"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	q.Set("hostname", hostname)
+	u.RawQuery = q.Encode()
+
 	form := url.Values{}
-	form.Set("cluster_name", p.cluster)
-	form.Set("node_hostname", node)
-	form.Set("hostname", hostname)
+	form.Set("ipaddress", ipaddress)
 	body := bytes.NewBufferString(form.Encode())
 
-	req, err := http.NewRequest(http.MethodPost, address, body)
+	req, err := http.NewRequest(http.MethodPost, u.String(), body)
+	res, err := p.httpClient.Do(req)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
 
+	if res.StatusCode != http.StatusOK {
+		b, _ := ioutil.ReadAll(res.Body)
+		log.Error(string(b))
+		return false, errors.New(string(b))
+	}
+
+	return true, nil
+}
+
+func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (bool, error) {
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisioned"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	q.Set("hostname", hostname)
+	u.RawQuery = q.Encode()
+
+	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -97,14 +139,19 @@ func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (boo
 }
 
 func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisionError"])
-	form := url.Values{}
-	form.Set("cluster_name", p.cluster)
-	form.Set("node_hostname", node)
-	form.Set("hostname", hostname)
-	body := bytes.NewBufferString(form.Encode())
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkProvisionError"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	q.Set("hostname", hostname)
+	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequest(http.MethodPost, address, body)
+	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
 
 	res, err := p.httpClient.Do(req)
 	if err != nil {
@@ -122,14 +169,19 @@ func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (
 }
 
 func (p *pfclient) MarkContainerAsDeleted(node string, hostname string) (bool, error) {
-	address := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkDeleted"])
-	form := url.Values{}
-	form.Set("cluster_name", p.cluster)
-	form.Set("node_hostname", node)
-	form.Set("hostname", hostname)
-	body := bytes.NewBufferString(form.Encode())
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["MarkDeleted"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	q.Set("hostname", hostname)
+	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequest(http.MethodPost, address, body)
+	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
 
 	res, err := p.httpClient.Do(req)
 	if err != nil {

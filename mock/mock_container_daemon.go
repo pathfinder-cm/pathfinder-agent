@@ -5,10 +5,9 @@
 package mock
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/pathfinder-cm/pathfinder-agent/model"
+	reflect "reflect"
 )
 
 // MockContainerDaemon is a mock of ContainerDaemon interface
@@ -35,11 +34,12 @@ func (m *MockContainerDaemon) EXPECT() *MockContainerDaemonMockRecorder {
 }
 
 // CreateContainer mocks base method
-func (m *MockContainerDaemon) CreateContainer(arg0, arg1 string) (bool, error) {
+func (m *MockContainerDaemon) CreateContainer(arg0, arg1 string) (bool, string, error) {
 	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
 	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(string)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // CreateContainer indicates an expected call of CreateContainer

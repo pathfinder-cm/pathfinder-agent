@@ -79,7 +79,7 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 			"image":    sc.Image,
 		}).Info("Creating container")
 
-		ok, err := a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
+		ok, ipaddress, err := a.containerDaemon.CreateContainer(sc.Hostname, sc.Image)
 		if !ok {
 			a.pfclient.MarkContainerAsProvisionError(
 				a.nodeHostname,
@@ -92,13 +92,15 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 			return false, err
 		}
 
-		ok, err = a.pfclient.MarkContainerAsProvisioned(
+		a.pfclient.UpdateIpaddress(
+			a.nodeHostname,
+			sc.Hostname,
+			ipaddress,
+		)
+		a.pfclient.MarkContainerAsProvisioned(
 			a.nodeHostname,
 			sc.Hostname,
 		)
-		if !ok {
-			return false, err
-		}
 
 		log.WithFields(log.Fields{
 			"hostname": sc.Hostname,
@@ -109,6 +111,11 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 			"hostname": sc.Hostname,
 			"image":    sc.Image,
 		}).Info("Container already exist")
+
+		a.pfclient.MarkContainerAsProvisioned(
+			a.nodeHostname,
+			sc.Hostname,
+		)
 	}
 
 	return true, nil

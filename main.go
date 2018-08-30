@@ -15,6 +15,7 @@ const (
 	DefaultPfCluster                = "default"
 	DefaultPfServerAddr             = "http://192.168.33.1:3000"
 	DefaultPfListContainersPath     = "api/v1/node/containers/scheduled"
+	DefaultPfUpdateIpaddress        = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath    = "api/v1/node/containers/mark_provisioned"
 	DefaultPfMarkProvisionErrorPath = "api/v1/node/containers/mark_provision_error"
 	DefaultPfMarkDeletedPath        = "api/v1/node/containers/mark_deleted"
@@ -23,6 +24,7 @@ const (
 	EnvPfCluster                = "PF_CLUSTER"
 	EnvPfServerAddr             = "PF_SERVER_ADDR"
 	EnvPfListContainersPath     = "PF_LIST_CONTAINERS_PATH"
+	EnvPfUpdateIpaddress        = "PF_UPDATE_IPADDRESS"
 	EnvPfMarkProvisionedPath    = "PF_MARK_PROVISIONED_PATH"
 	EnvPfMarkProvisionErrorPath = "PF_MARK_PROVISION_ERROR_PATH"
 	EnvPfMarkDeletedPath        = "PF_MARK_DELETED_PATH"
@@ -46,6 +48,7 @@ func init() {
 	PfServerAddr, _ = envkit.GetString(EnvPfServerAddr, DefaultPfServerAddr)
 	PfApiPath = make(map[string]string)
 	PfApiPath["ListContainers"], _ = envkit.GetString(EnvPfListContainersPath, DefaultPfListContainersPath)
+	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddress, DefaultPfUpdateIpaddress)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)
 	PfApiPath["MarkProvisionError"], _ = envkit.GetString(EnvPfMarkProvisionErrorPath, DefaultPfMarkProvisionErrorPath)
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)

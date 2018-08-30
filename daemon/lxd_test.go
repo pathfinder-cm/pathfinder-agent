@@ -78,14 +78,30 @@ func TestCreateContainer(t *testing.T) {
 	mockOperation := mock.NewMockOperation(mockCtrl)
 	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
 
+	state := api.ContainerState{
+		Network: map[string]api.ContainerStateNetwork{
+			"eth0": api.ContainerStateNetwork{
+				Addresses: []api.ContainerStateNetworkAddress{
+					api.ContainerStateNetworkAddress{
+						Family:  "inet",
+						Address: "127.0.0.1",
+					},
+				},
+			},
+		},
+	}
+
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
 	mockContainerServer.EXPECT().CreateContainer(createReq).Return(mockOperation, nil)
 	mockContainerServer.EXPECT().
 		UpdateContainerState(tables[0].hostname, startReq, "").
 		Return(mockOperation, nil)
+	mockContainerServer.EXPECT().
+		GetContainerState(tables[0].hostname).
+		Return(&state, "", nil)
 
 	l := LXD{conn: mockContainerServer}
-	ok, _ := l.CreateContainer(tables[0].hostname, tables[0].image)
+	ok, _, _ := l.CreateContainer(tables[0].hostname, tables[0].image)
 	if ok != true {
 		t.Errorf("Container not properly generated")
 	}

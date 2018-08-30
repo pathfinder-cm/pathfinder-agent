@@ -58,6 +58,27 @@ func TestFetchContainersFromServer(t *testing.T) {
 	}
 }
 
+func TestUpdateIpaddress(t *testing.T) {
+	tables := []struct {
+		node      string
+		hostname  string
+		ipaddress string
+	}{
+		{"test-01", "test-c-01", "127.0.0.1"},
+	}
+
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(http.StatusOK)
+	}))
+	defer func() { testServer.Close() }()
+
+	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, map[string]string{})
+	ok, _ := pfclient.UpdateIpaddress(tables[0].node, tables[0].hostname, tables[0].ipaddress)
+	if ok != true {
+		t.Errorf("Error when updating container ipaddress")
+	}
+}
+
 func TestMarkContainerAsProvisioned(t *testing.T) {
 	tables := []struct {
 		node     string
@@ -95,5 +116,25 @@ func TestMarkContainerAsProvisionError(t *testing.T) {
 	ok, _ := pfclient.MarkContainerAsProvisionError(tables[0].node, tables[0].hostname)
 	if ok != true {
 		t.Errorf("Error when marking container as provision_error")
+	}
+}
+
+func TestMarkContainerAsDeleted(t *testing.T) {
+	tables := []struct {
+		node     string
+		hostname string
+	}{
+		{"test-01", "test-c-01"},
+	}
+
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(http.StatusOK)
+	}))
+	defer func() { testServer.Close() }()
+
+	pfclient := NewPfclient("default", &http.Client{}, testServer.URL, map[string]string{})
+	ok, _ := pfclient.MarkContainerAsDeleted(tables[0].node, tables[0].hostname)
+	if ok != true {
+		t.Errorf("Error when marking container as deleted")
 	}
 }

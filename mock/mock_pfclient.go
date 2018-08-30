@@ -5,10 +5,9 @@
 package mock
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/pathfinder-cm/pathfinder-agent/model"
+	reflect "reflect"
 )
 
 // MockPfclient is a mock of Pfclient interface
@@ -84,4 +83,17 @@ func (m *MockPfclient) MarkContainerAsProvisioned(arg0, arg1 string) (bool, erro
 // MarkContainerAsProvisioned indicates an expected call of MarkContainerAsProvisioned
 func (mr *MockPfclientMockRecorder) MarkContainerAsProvisioned(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsProvisioned", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsProvisioned), arg0, arg1)
+}
+
+// UpdateIpaddress mocks base method
+func (m *MockPfclient) UpdateIpaddress(arg0, arg1, arg2 string) (bool, error) {
+	ret := m.ctrl.Call(m, "UpdateIpaddress", arg0, arg1, arg2)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateIpaddress indicates an expected call of UpdateIpaddress
+func (mr *MockPfclientMockRecorder) UpdateIpaddress(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateIpaddress", reflect.TypeOf((*MockPfclient)(nil).UpdateIpaddress), arg0, arg1, arg2)
 }
