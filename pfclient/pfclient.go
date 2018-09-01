@@ -13,6 +13,7 @@ import (
 )
 
 type Pfclient interface {
+	Register(node string) (bool, error)
 	FetchContainersFromServer(node string) (*model.ContainerList, error)
 	UpdateIpaddress(node string, hostname string, ipaddress string) (bool, error)
 	MarkContainerAsProvisioned(node string, hostname string) (bool, error)
@@ -21,24 +22,68 @@ type Pfclient interface {
 }
 
 type pfclient struct {
-	cluster      string
-	httpClient   *http.Client
-	pfServerAddr string
-	pfApiPath    map[string]string
+	cluster         string
+	clusterPassword string
+	token           string
+	httpClient      *http.Client
+	pfServerAddr    string
+	pfApiPath       map[string]string
 }
 
 func NewPfclient(
 	cluster string,
+	clusterPassword string,
 	httpClient *http.Client,
 	pfServerAddr string,
 	pfApiPath map[string]string) Pfclient {
 
 	return &pfclient{
-		cluster:      cluster,
-		httpClient:   httpClient,
-		pfServerAddr: pfServerAddr,
-		pfApiPath:    pfApiPath,
+		cluster:         cluster,
+		clusterPassword: clusterPassword,
+		httpClient:      httpClient,
+		pfServerAddr:    pfServerAddr,
+		pfApiPath:       pfApiPath,
 	}
+}
+
+func (p *pfclient) Register(node string) (bool, error) {
+	addr := fmt.Sprintf("%s/%s", p.pfServerAddr, p.pfApiPath["Register"])
+	u, err := url.Parse(addr)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+	q := u.Query()
+	q.Set("cluster_name", p.cluster)
+	q.Set("node_hostname", node)
+	u.RawQuery = q.Encode()
+
+	form := url.Values{}
+	form.Set("password", p.clusterPassword)
+	body := bytes.NewBufferString(form.Encode())
+
+	req, err := http.NewRequest(http.MethodPost, u.String(), body)
+	res, err := p.httpClient.Do(req)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		b, _ := ioutil.ReadAll(res.Body)
+		log.Error(string(b))
+		return false, errors.New(string(b))
+	}
+
+	b, _ := ioutil.ReadAll(res.Body)
+	register, err := NewRegisterFromByte(b)
+	if err != nil {
+		log.Error(err.Error())
+		return false, err
+	}
+
+	p.token = register.AuthenticationToken
+	return true, nil
 }
 
 func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList, error) {
@@ -54,6 +99,7 @@ func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList,
 	u.RawQuery = q.Encode()
 
 	req, _ := http.NewRequest(http.MethodGet, u.String(), nil)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -94,6 +140,7 @@ func (p *pfclient) UpdateIpaddress(node string, hostname string, ipaddress strin
 	body := bytes.NewBufferString(form.Encode())
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), body)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -123,6 +170,7 @@ func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (boo
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -152,7 +200,7 @@ func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
-
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -182,7 +230,7 @@ func (p *pfclient) MarkContainerAsDeleted(node string, hostname string) (bool, e
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
-
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())

@@ -48,6 +48,7 @@ func runAgent() {
 	}
 	pfclient := pfclient.NewPfclient(
 		PfCluster,
+		PfClusterPassword,
 		httpClient,
 		PfServerAddr,
 		PfApiPath,
