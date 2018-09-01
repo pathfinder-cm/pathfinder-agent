@@ -99,6 +99,7 @@ func (p *pfclient) FetchContainersFromServer(node string) (*model.ContainerList,
 	u.RawQuery = q.Encode()
 
 	req, _ := http.NewRequest(http.MethodGet, u.String(), nil)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -139,6 +140,7 @@ func (p *pfclient) UpdateIpaddress(node string, hostname string, ipaddress strin
 	body := bytes.NewBufferString(form.Encode())
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), body)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -168,6 +170,7 @@ func (p *pfclient) MarkContainerAsProvisioned(node string, hostname string) (boo
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -197,7 +200,7 @@ func (p *pfclient) MarkContainerAsProvisionError(node string, hostname string) (
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
-
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
@@ -227,7 +230,7 @@ func (p *pfclient) MarkContainerAsDeleted(node string, hostname string) (bool, e
 	u.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodPost, u.String(), nil)
-
+	req.Header.Set("X-Auth-Token", p.token)
 	res, err := p.httpClient.Do(req)
 	if err != nil {
 		log.Error(err.Error())
