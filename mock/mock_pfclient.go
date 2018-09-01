@@ -85,6 +85,19 @@ func (mr *MockPfclientMockRecorder) MarkContainerAsProvisioned(arg0, arg1 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsProvisioned", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsProvisioned), arg0, arg1)
 }
 
+// Register mocks base method
+func (m *MockPfclient) Register(arg0 string) (bool, error) {
+	ret := m.ctrl.Call(m, "Register", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Register indicates an expected call of Register
+func (mr *MockPfclientMockRecorder) Register(arg0 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockPfclient)(nil).Register), arg0)
+}
+
 // UpdateIpaddress mocks base method
 func (m *MockPfclient) UpdateIpaddress(arg0, arg1, arg2 string) (bool, error) {
 	ret := m.ctrl.Call(m, "UpdateIpaddress", arg0, arg1, arg2)
