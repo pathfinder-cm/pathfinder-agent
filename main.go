@@ -14,6 +14,7 @@ const (
 	DefaultLXDSocketPath            = "/var/snap/lxd/common/lxd/unix.socket"
 	DefaultPfCluster                = "default"
 	DefaultPfServerAddr             = "http://192.168.33.1:3000"
+	DefaultPfRegisterPath           = "api/v1/node/register"
 	DefaultPfListContainersPath     = "api/v1/node/containers/scheduled"
 	DefaultPfUpdateIpaddress        = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath    = "api/v1/node/containers/mark_provisioned"
@@ -22,7 +23,9 @@ const (
 
 	EnvLXDSocketPath            = "LXD_SOCKET_PATH"
 	EnvPfCluster                = "PF_CLUSTER"
+	EnvPfClusterPassword        = "PF_CLUSTER_PASSWORD"
 	EnvPfServerAddr             = "PF_SERVER_ADDR"
+	EnvPfRegisterPath           = "PF_REGISTER_PATH"
 	EnvPfListContainersPath     = "PF_LIST_CONTAINERS_PATH"
 	EnvPfUpdateIpaddress        = "PF_UPDATE_IPADDRESS"
 	EnvPfMarkProvisionedPath    = "PF_MARK_PROVISIONED_PATH"
@@ -31,10 +34,11 @@ const (
 )
 
 var (
-	LXDSocketPath string
-	PfCluster     string
-	PfServerAddr  string
-	PfApiPath     map[string]string
+	LXDSocketPath     string
+	PfCluster         string
+	PfClusterPassword string
+	PfServerAddr      string
+	PfApiPath         map[string]string
 )
 
 func init() {
@@ -45,8 +49,10 @@ func init() {
 	// Initialize config vars
 	LXDSocketPath, _ = envkit.GetString(EnvLXDSocketPath, DefaultLXDSocketPath)
 	PfCluster, _ = envkit.GetString(EnvPfCluster, DefaultPfCluster)
+	PfClusterPassword, _ = envkit.GetString(EnvPfClusterPassword, "")
 	PfServerAddr, _ = envkit.GetString(EnvPfServerAddr, DefaultPfServerAddr)
 	PfApiPath = make(map[string]string)
+	PfApiPath["Register"], _ = envkit.GetString(EnvPfRegisterPath, DefaultPfRegisterPath)
 	PfApiPath["ListContainers"], _ = envkit.GetString(EnvPfListContainersPath, DefaultPfListContainersPath)
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddress, DefaultPfUpdateIpaddress)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)

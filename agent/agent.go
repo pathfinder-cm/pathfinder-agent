@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"errors"
 	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
@@ -35,6 +36,12 @@ func NewAgent(
 }
 
 func (a *agent) Run() {
+	// Self Register
+	ok, _ := a.pfclient.Register(a.nodeHostname)
+	if !ok {
+		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
+	}
+
 	for {
 		// Add delay between processing
 		delay := 5 + util.RandomIntRange(1, 5)
