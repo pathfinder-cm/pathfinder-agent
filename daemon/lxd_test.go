@@ -38,7 +38,7 @@ func TestListContainers(t *testing.T) {
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
 	mockContainerServer.EXPECT().GetContainers().Return(tables, nil)
 
-	l := LXD{conn: mockContainerServer}
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	result, _ := l.ListContainers()
 	for i, table := range tables {
 		if (*result)[i].Hostname != table.Name {
@@ -100,7 +100,7 @@ func TestCreateContainer(t *testing.T) {
 		GetContainerState(tables[0].hostname).
 		Return(&state, "", nil)
 
-	l := LXD{conn: mockContainerServer}
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	ok, _, _ := l.CreateContainer(tables[0].hostname, tables[0].image)
 	if ok != true {
 		t.Errorf("Container not properly generated")
@@ -131,7 +131,7 @@ func TestDeleteContainer(t *testing.T) {
 		UpdateContainerState(tables[0].hostname, stopReq, "").
 		Return(mockOperation, nil)
 
-	l := LXD{conn: mockContainerServer}
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	ok, _ := l.DeleteContainer(tables[0].hostname)
 	if ok != true {
 		t.Errorf("Container not properly deleted")

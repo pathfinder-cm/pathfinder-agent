@@ -12,7 +12,9 @@ import (
 type apiContainers []api.Container
 
 type LXD struct {
-	conn client.ContainerServer
+	hostname  string
+	localSrv  client.ContainerServer
+	targetSrv client.ContainerServer
 }
 
 func (a apiContainers) toContainerList() *model.ContainerList {
@@ -25,16 +27,22 @@ func (a apiContainers) toContainerList() *model.ContainerList {
 	return &containerList
 }
 
-func NewLXD(socketPath string) (*LXD, error) {
-	conn, err := client.ConnectLXDUnix(socketPath, nil)
+func NewLXD(hostname string, socketPath string) (*LXD, error) {
+	localSrv, err := client.ConnectLXDUnix(socketPath, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &LXD{conn: conn}, nil
+	targetSrv := localSrv.UseTarget(hostname)
+
+	return &LXD{
+		hostname:  hostname,
+		localSrv:  localSrv,
+		targetSrv: targetSrv,
+	}, nil
 }
 
 func (l *LXD) ListContainers() (*model.ContainerList, error) {
-	res, err := l.conn.GetContainers()
+	res, err := l.targetSrv.GetContainers()
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +65,7 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, string, erro
 	}
 
 	// Get LXD to create the container (background operation)
-	op, err := l.conn.CreateContainer(req)
+	op, err := l.targetSrv.CreateContainer(req)
 	if err != nil {
 		return false, "", err
 	}
@@ -74,7 +82,7 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, string, erro
 		Timeout: -1,
 	}
 
-	op, err = l.conn.UpdateContainerState(hostname, startReq, "")
+	op, err = l.targetSrv.UpdateContainerState(hostname, startReq, "")
 	if err != nil {
 		return false, "", err
 	}
@@ -91,7 +99,7 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, string, erro
 	timeLimit := time.Now().Add(60 * time.Second)
 
 	for !found && time.Now().Before(timeLimit) {
-		state, _, err := l.conn.GetContainerState(hostname)
+		state, _, err := l.targetSrv.GetContainerState(hostname)
 		if err != nil {
 			return false, "", err
 		}
@@ -127,11 +135,11 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 
 	// Stop the container
 	// We don't care if container already stopped
-	op, _ := l.conn.UpdateContainerState(hostname, stopReq, "")
+	op, _ := l.targetSrv.UpdateContainerState(hostname, stopReq, "")
 	op.Wait()
 
 	// Get LXD to delete the container (background operation)
-	op, err := l.conn.DeleteContainer(hostname)
+	op, err := l.targetSrv.DeleteContainer(hostname)
 	if err != nil {
 		return false, err
 	}

@@ -32,7 +32,7 @@ func CmdAgent(ctx *cli.Context) {
 
 func runAgent() {
 	hostname, _ := os.Hostname()
-	daemon, err := daemon.NewLXD(LXDSocketPath)
+	daemon, err := daemon.NewLXD(hostname, LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
 		return
