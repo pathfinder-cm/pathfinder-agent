@@ -10,7 +10,7 @@ import (
 
 const (
 	Name                            = "Pathfinder Agent"
-	Version                         = "0.1.0"
+	Version                         = "0.2.0"
 	DefaultLXDSocketPath            = "/var/snap/lxd/common/lxd/unix.socket"
 	DefaultPfCluster                = "default"
 	DefaultPfServerAddr             = "http://192.168.33.1:3000"
