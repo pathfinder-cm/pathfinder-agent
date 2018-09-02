@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
-	"github.com/pathfinder-cm/pathfinder-agent/pfclient"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	log "github.com/sirupsen/logrus"
 )
