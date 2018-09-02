@@ -6,7 +6,7 @@ package mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/pathfinder-cm/pathfinder-agent/model"
+	pfmodel "github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	reflect "reflect"
 )
 
@@ -61,9 +61,9 @@ func (mr *MockContainerDaemonMockRecorder) DeleteContainer(arg0 interface{}) *go
 }
 
 // ListContainers mocks base method
-func (m *MockContainerDaemon) ListContainers() (*model.ContainerList, error) {
+func (m *MockContainerDaemon) ListContainers() (*pfmodel.ContainerList, error) {
 	ret := m.ctrl.Call(m, "ListContainers")
-	ret0, _ := ret[0].(*model.ContainerList)
+	ret0, _ := ret[0].(*pfmodel.ContainerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -6,7 +6,7 @@ import (
 
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
-	"github.com/pathfinder-cm/pathfinder-agent/model"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
 type apiContainers []api.Container
@@ -17,10 +17,10 @@ type LXD struct {
 	targetSrv client.ContainerServer
 }
 
-func (a apiContainers) toContainerList() *model.ContainerList {
-	containerList := make(model.ContainerList, len(a))
+func (a apiContainers) toContainerList() *pfmodel.ContainerList {
+	containerList := make(pfmodel.ContainerList, len(a))
 	for i, c := range a {
-		containerList[i] = model.Container{
+		containerList[i] = pfmodel.Container{
 			Hostname: c.Name,
 		}
 	}
@@ -41,7 +41,7 @@ func NewLXD(hostname string, socketPath string) (*LXD, error) {
 	}, nil
 }
 
-func (l *LXD) ListContainers() (*model.ContainerList, error) {
+func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 	res, err := l.targetSrv.GetContainers()
 	if err != nil {
 		return nil, err

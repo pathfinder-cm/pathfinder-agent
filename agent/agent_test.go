@@ -5,22 +5,22 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
-	"github.com/pathfinder-cm/pathfinder-agent/model"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
 func TestProcess(t *testing.T) {
 	node := "test-01"
 
-	scs := make(model.ContainerList, 4)
-	scs[0] = model.Container{Hostname: "test-c-01", Image: "16.04", Status: "SCHEDULED"}
-	scs[1] = model.Container{Hostname: "test-c-02", Image: "16.04", Status: "SCHEDULED"}
-	scs[2] = model.Container{Hostname: "test-c-03", Image: "16.04", Status: "SCHEDULED"}
-	scs[3] = model.Container{Hostname: "test-c-04", Image: "16.04", Status: "SCHEDULE_DELETION"}
+	scs := make(pfmodel.ContainerList, 4)
+	scs[0] = pfmodel.Container{Hostname: "test-c-01", Image: "16.04", Status: "SCHEDULED"}
+	scs[1] = pfmodel.Container{Hostname: "test-c-02", Image: "16.04", Status: "SCHEDULED"}
+	scs[2] = pfmodel.Container{Hostname: "test-c-03", Image: "16.04", Status: "SCHEDULED"}
+	scs[3] = pfmodel.Container{Hostname: "test-c-04", Image: "16.04", Status: "SCHEDULE_DELETION"}
 
-	lcs := make(model.ContainerList, 3)
-	lcs[0] = model.Container{Hostname: "test-c-01", Image: "16.04"}
-	lcs[1] = model.Container{Hostname: "test-c-02", Image: "16.04"}
-	lcs[2] = model.Container{Hostname: "test-c-04", Image: "16.04"}
+	lcs := make(pfmodel.ContainerList, 3)
+	lcs[0] = pfmodel.Container{Hostname: "test-c-01", Image: "16.04"}
+	lcs[1] = pfmodel.Container{Hostname: "test-c-02", Image: "16.04"}
+	lcs[2] = pfmodel.Container{Hostname: "test-c-04", Image: "16.04"}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()

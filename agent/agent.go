@@ -5,16 +5,16 @@ import (
 	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
-	"github.com/pathfinder-cm/pathfinder-agent/model"
 	"github.com/pathfinder-cm/pathfinder-agent/pfclient"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	log "github.com/sirupsen/logrus"
 )
 
 type Agent interface {
 	Run()
 	Process() bool
-	provisionContainer(sc model.Container, lcs *model.ContainerList) (bool, error)
+	provisionContainer(sc pfmodel.Container, lcs *pfmodel.ContainerList) (bool, error)
 }
 
 type agent struct {
@@ -78,7 +78,7 @@ func (a *agent) Process() bool {
 	return true
 }
 
-func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList) (bool, error) {
+func (a *agent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.ContainerList) (bool, error) {
 	i := lcs.FindByHostname(sc.Hostname)
 	if i == -1 {
 		log.WithFields(log.Fields{
@@ -128,7 +128,7 @@ func (a *agent) provisionContainer(sc model.Container, lcs *model.ContainerList)
 	return true, nil
 }
 
-func (a *agent) deleteContainer(sc model.Container, lcs *model.ContainerList) (bool, error) {
+func (a *agent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.ContainerList) (bool, error) {
 	i := lcs.FindByHostname(sc.Hostname)
 	if i == -1 {
 		log.WithFields(log.Fields{

@@ -6,7 +6,7 @@ package mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/pathfinder-cm/pathfinder-agent/model"
+	pfmodel "github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	reflect "reflect"
 )
 
@@ -34,9 +34,9 @@ func (m *MockPfclient) EXPECT() *MockPfclientMockRecorder {
 }
 
 // FetchContainersFromServer mocks base method
-func (m *MockPfclient) FetchContainersFromServer(arg0 string) (*model.ContainerList, error) {
+func (m *MockPfclient) FetchContainersFromServer(arg0 string) (*pfmodel.ContainerList, error) {
 	ret := m.ctrl.Call(m, "FetchContainersFromServer", arg0)
-	ret0, _ := ret[0].(*model.ContainerList)
+	ret0, _ := ret[0].(*pfmodel.ContainerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
