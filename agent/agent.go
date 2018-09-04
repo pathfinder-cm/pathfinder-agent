@@ -1,10 +1,10 @@
 package agent
 
 import (
-	"errors"
 	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
+	"github.com/pathfinder-cm/pathfinder-agent/metrics"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
@@ -12,7 +12,8 @@ import (
 )
 
 type Agent interface {
-	Run()
+	Run(agentType string)
+	RunMetrics() error
 	Process() bool
 	provisionContainer(sc pfmodel.Container, lcs *pfmodel.ContainerList) (bool, error)
 }
@@ -35,11 +36,17 @@ func NewAgent(
 	}
 }
 
-func (a *agent) Run() {
-	// Self Register
-	ok, _ := a.pfclient.Register(a.nodeHostname)
-	if !ok {
-		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
+func (a *agent) Run(agentType string) {
+	if agentType == "metrics" {
+		log.WithFields(log.Fields{}).Warn("Push Metrics")
+
+		for {
+			delay := 6 + util.RandomIntRange(1, 6)
+			time.Sleep(time.Duration(delay) * time.Second)
+
+			a.RunMetrics()
+		}
+		return
 	}
 
 	for {
@@ -49,6 +56,18 @@ func (a *agent) Run() {
 
 		a.Process()
 	}
+}
+
+func (a *agent) RunMetrics() error {
+	m := metrics.NewMetrics()
+	collectedMetrics := m.Collect()
+	err := a.pfclient.PushMetrics(collectedMetrics)
+	if err != nil {
+		log.Error(err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func (a *agent) Process() bool {

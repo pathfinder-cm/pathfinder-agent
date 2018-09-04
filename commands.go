@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -24,7 +25,7 @@ func CmdAgent(ctx *cli.Context) {
 	log.WithFields(log.Fields{
 		"verbose": ctx.Bool("verbose"),
 	}).Warn("Agent starting...")
-	go runAgent()
+	runAgent()
 	srvkit.GracefullShutdown(func() {
 		log.Warn("Agent stopping...")
 	})
@@ -54,6 +55,13 @@ func runAgent() {
 		PfApiPath,
 	)
 
+	// Self Register
+	ok, _ := pfclient.Register(hostname)
+	if !ok {
+		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
+	}
+
 	a := agent.NewAgent(hostname, daemon, pfclient)
-	a.Run()
+	go a.Run("provision")
+	go a.Run("metrics")
 }
