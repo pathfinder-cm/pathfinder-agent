@@ -7,6 +7,7 @@ import (
 
 type Agent interface {
 	Run()
+	Process() bool
 }
 
 func NewAgent(

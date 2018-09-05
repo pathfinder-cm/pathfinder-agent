@@ -15,7 +15,7 @@ const (
 	DefaultPfCluster                = "default"
 	DefaultPfServerAddr             = "http://192.168.33.1:3000"
 	DefaultPfRegisterPath           = "api/v1/node/register"
-	DefaultPfStoreMetricPath        = "api/v1/node/store_metrics"
+	DefaultPfStoreMetricsPath       = "api/v1/node/store_metrics"
 	DefaultPfListContainersPath     = "api/v1/node/containers/scheduled"
 	DefaultPfUpdateIpaddress        = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath    = "api/v1/node/containers/mark_provisioned"
@@ -27,7 +27,7 @@ const (
 	EnvPfClusterPassword        = "PF_CLUSTER_PASSWORD"
 	EnvPfServerAddr             = "PF_SERVER_ADDR"
 	EnvPfRegisterPath           = "PF_REGISTER_PATH"
-	EnvPfStoreMetricPath        = "PF_STORE_METRIC_PATH"
+	EnvPfStoreMetricsPath       = "PF_STORE_METRICS_PATH"
 	EnvPfListContainersPath     = "PF_LIST_CONTAINERS_PATH"
 	EnvPfUpdateIpaddress        = "PF_UPDATE_IPADDRESS"
 	EnvPfMarkProvisionedPath    = "PF_MARK_PROVISIONED_PATH"
@@ -55,7 +55,7 @@ func init() {
 	PfServerAddr, _ = envkit.GetString(EnvPfServerAddr, DefaultPfServerAddr)
 	PfApiPath = make(map[string]string)
 	PfApiPath["Register"], _ = envkit.GetString(EnvPfRegisterPath, DefaultPfRegisterPath)
-	PfApiPath["StoreMetric"], _ = envkit.GetString(EnvPfStoreMetricPath, DefaultPfStoreMetricPath)
+	PfApiPath["StoreMetrics"], _ = envkit.GetString(EnvPfStoreMetricsPath, DefaultPfStoreMetricsPath)
 	PfApiPath["ListContainers"], _ = envkit.GetString(EnvPfListContainersPath, DefaultPfListContainersPath)
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddress, DefaultPfUpdateIpaddress)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)

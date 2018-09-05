@@ -22,18 +22,18 @@ func (a *metricsAgent) Run() {
 		delay := 60 + util.RandomIntRange(1, 10)
 		time.Sleep(time.Duration(delay) * time.Second)
 
-		a.runMetrics()
+		a.Process()
 	}
 }
 
-func (a *metricsAgent) runMetrics() error {
+func (a *metricsAgent) Process() bool {
 	m := metrics.NewMetrics()
 	collectedMetrics := m.Collect()
 	err := a.pfclient.PushMetrics(collectedMetrics)
 	if err != nil {
 		log.Error(err.Error())
-		return err
+		return false
 	}
 
-	return nil
+	return true
 }

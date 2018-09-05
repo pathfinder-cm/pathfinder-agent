@@ -9,7 +9,7 @@ import (
 
 type Metrics interface {
 	Collect() model.Metrics
-	getMemoryMetrics() model.Memory
+	collectMemoryMetrics() model.Memory
 }
 
 type metrics struct{}
@@ -19,14 +19,14 @@ func NewMetrics() Metrics {
 }
 
 func (m *metrics) Collect() model.Metrics {
-	memory := m.getMemoryMetrics()
+	memory := m.collectMemoryMetrics()
 
 	return model.Metrics{
 		Memory: memory,
 	}
 }
 
-func (m *metrics) getMemoryMetrics() model.Memory {
+func (m *metrics) collectMemoryMetrics() model.Memory {
 	vmStat, err := mem.VirtualMemory()
 	if err != nil {
 		log.Error(err.Error())
