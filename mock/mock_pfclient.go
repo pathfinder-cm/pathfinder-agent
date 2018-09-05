@@ -6,6 +6,7 @@ package mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	model "github.com/pathfinder-cm/pathfinder-agent/model"
 	pfmodel "github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	reflect "reflect"
 )
