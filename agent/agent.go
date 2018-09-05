@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
@@ -41,7 +42,7 @@ func (a *agent) Run(agentType string) {
 		log.WithFields(log.Fields{}).Warn("Push Metrics")
 
 		for {
-			delay := 6 + util.RandomIntRange(1, 6)
+			delay := 60 + util.RandomIntRange(1, 10)
 			time.Sleep(time.Duration(delay) * time.Second)
 
 			a.RunMetrics()
@@ -114,7 +115,7 @@ func (a *agent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.ContainerL
 			log.WithFields(log.Fields{
 				"hostname": sc.Hostname,
 				"image":    sc.Image,
-			}).Error("Error during container creation")
+			}).Error(fmt.Sprintf("Error during container creation. %v", err))
 			return false, err
 		}
 

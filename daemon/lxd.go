@@ -65,7 +65,15 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, string, erro
 	}
 
 	// Get LXD to create the container (background operation)
-	op, err := l.targetSrv.CreateContainer(req)
+	// but check first if cluster mode is active
+	var err error
+	var op client.Operation
+	if l.targetSrv.IsClustered() {
+		op, err = l.targetSrv.CreateContainer(req)
+	} else {
+		op, err = l.localSrv.CreateContainer(req)
+	}
+
 	if err != nil {
 		return false, "", err
 	}
