@@ -61,7 +61,9 @@ func runAgent() {
 		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
 	}
 
-	a := agent.NewAgent(hostname, daemon, pfclient)
-	go a.Run("provision")
-	go a.Run("metrics")
+	provisionAgent := agent.NewAgent(hostname, daemon, pfclient, "provision")
+	go provisionAgent.Run()
+
+	metricsAgent := agent.NewAgent(hostname, daemon, pfclient, "metrics")
+	go metricsAgent.Run()
 }

@@ -5,8 +5,8 @@ Agent for Pathfinder container manager. Ensure appropriate containers are runnin
 ## Minimum Setup
 ```
 export PF_CLUSTER_PASSWORD=ubuntu
-export PF_CLUSTER=BaritoLog
-export PF_SERVER_ADDR=http://10.20.20.1:5000
+export PF_CLUSTER=default
+export PF_SERVER_ADDR=http://127.0.0.1
 
 ```
 
