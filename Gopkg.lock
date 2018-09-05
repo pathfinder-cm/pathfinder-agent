@@ -48,12 +48,12 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:cee8e8ac80df6373e7daa11baf1f98c1b6f7242c49ccae7e1ec34a971dc408d9"
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
   name = "github.com/gorilla/websocket"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3ff3320c2a1756a3691521efc290b4701575147c"
-  version = "v1.3.0"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
@@ -94,18 +94,18 @@
     "shared/simplestreams",
   ]
   pruneopts = "UT"
-  revision = "63353b1c5c13a6d049fada8c78c78e8d0ba613a9"
+  revision = "aa490dbc7cfc2bc4e1c2132f69a6e025996dd830"
 
 [[projects]]
   branch = "master"
-  digest = "1:36eb3bd5e26d32243ca43245ad87f5a14351d1078acd55aa08bd46a2c8f26ca3"
+  digest = "1:6655d8f09359ec1683d4920be61a0825d4dff22196e6808f302b772749babade"
   name = "github.com/pathfinder-cm/pathfinder-go-client"
   packages = [
     "pfclient",
     "pfmodel",
   ]
   pruneopts = "UT"
-  revision = "42ccb753fed8931091dd075a18942d6a4d227b9f"
+  revision = "e31a0900a9362d48760e119d9ea6c64967efbd6c"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -164,7 +164,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "182538f80094b6a8efaade63a8fd8e0d9d5843dd"
+  revision = "0709b304e793a5edb4a2c0145f281ecdc20838a4"
 
 [[projects]]
   branch = "master"
@@ -183,14 +183,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:629034aef6b53eb8ea737e6d82cb5402907e2757fbab5ddf5e74c08b4c6473af"
+  digest = "1:600745f4180c86e1a33360ae232949f1eb483dfb54162ef9afca1f4b1abc9a9f"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "fa5fdf94c78965f1aa8423f0cc50b8b8d728b05a"
+  revision = "d9c697bf0b2aa0d415387b61250fcd0f456f1656"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
