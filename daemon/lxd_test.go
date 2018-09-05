@@ -92,6 +92,7 @@ func TestCreateContainer(t *testing.T) {
 	}
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().IsClustered().Return(false)
 	mockContainerServer.EXPECT().CreateContainer(createReq).Return(mockOperation, nil)
 	mockContainerServer.EXPECT().
 		UpdateContainerState(tables[0].hostname, startReq, "").
