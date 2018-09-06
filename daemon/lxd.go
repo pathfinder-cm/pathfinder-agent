@@ -32,7 +32,14 @@ func NewLXD(hostname string, socketPath string) (*LXD, error) {
 	if err != nil {
 		return nil, err
 	}
-	targetSrv := localSrv.UseTarget(hostname)
+
+	// If in clustered mode, specifically target the node
+	var targetSrv client.ContainerServer
+	if localSrv.IsClustered() {
+		targetSrv = localSrv.UseTarget(hostname)
+	} else {
+		targetSrv = localSrv
+	}
 
 	return &LXD{
 		hostname:  hostname,
@@ -65,15 +72,7 @@ func (l *LXD) CreateContainer(hostname string, image string) (bool, string, erro
 	}
 
 	// Get LXD to create the container (background operation)
-	// but check first if cluster mode is active
-	var err error
-	var op client.Operation
-	if l.targetSrv.IsClustered() {
-		op, err = l.targetSrv.CreateContainer(req)
-	} else {
-		op, err = l.localSrv.CreateContainer(req)
-	}
-
+	op, err := l.targetSrv.CreateContainer(req)
 	if err != nil {
 		return false, "", err
 	}

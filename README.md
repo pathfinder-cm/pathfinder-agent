@@ -6,6 +6,7 @@ Agent for Pathfinder container manager. Ensure appropriate containers are runnin
 
 Please ensure pathfinder server up and running and set this configuration before starting the agent.
 
+Example:
 ```
 export PF_SERVER_ADDR=http://127.0.0.1
 export PF_CLUSTER=default
