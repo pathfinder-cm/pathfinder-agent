@@ -2,26 +2,23 @@
 
 Agent for Pathfinder container manager. Ensure appropriate containers are running on the node in which this agent reside in.
 
-## Minimum Setup
+## Setup
+
+Please ensure pathfinder server up and running and set this configuration before starting the agent.
+
 ```
-export PF_CLUSTER_PASSWORD=ubuntu
-export PF_CLUSTER=default
 export PF_SERVER_ADDR=http://127.0.0.1
-
+export PF_CLUSTER=default
+export PF_CLUSTER_PASSWORD=ubuntu
 ```
 
-## Environment Variables
+## Configurations
+
+These are possible configurations that you can set via environment variables.
 
 ```
 "LXD_SOCKET_PATH"
+"PF_SERVER_ADDR"
 "PF_CLUSTER"
 "PF_CLUSTER_PASSWORD"
-"PF_SERVER_ADDR"
-"PF_REGISTER_PATH"
-"PF_STORE_METRIC_PATH"
-"PF_LIST_CONTAINERS_PATH"
-"PF_UPDATE_IPADDRESS"
-"PF_MARK_PROVISIONED_PATH"
-"PF_MARK_PROVISION_ERROR_PATH"
-"PF_MARK_DELETED_PATH"
 ```

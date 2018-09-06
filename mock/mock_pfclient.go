@@ -6,7 +6,6 @@ package mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/pathfinder-cm/pathfinder-agent/model"
 	pfmodel "github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	reflect "reflect"
 )
@@ -86,18 +85,6 @@ func (mr *MockPfclientMockRecorder) MarkContainerAsProvisioned(arg0, arg1 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsProvisioned", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsProvisioned), arg0, arg1)
 }
 
-// PushMetrics mocks base method
-func (m *MockPfclient) PushMetrics(arg0 model.Metrics) error {
-	ret := m.ctrl.Call(m, "PushMetrics", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// PushMetrics indicates an expected call of PushMetrics
-func (mr *MockPfclientMockRecorder) PushMetrics(arg0 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushMetrics", reflect.TypeOf((*MockPfclient)(nil).PushMetrics), arg0)
-}
-
 // Register mocks base method
 func (m *MockPfclient) Register(arg0 string) (bool, error) {
 	ret := m.ctrl.Call(m, "Register", arg0)
@@ -109,6 +96,19 @@ func (m *MockPfclient) Register(arg0 string) (bool, error) {
 // Register indicates an expected call of Register
 func (mr *MockPfclientMockRecorder) Register(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockPfclient)(nil).Register), arg0)
+}
+
+// StoreMetrics mocks base method
+func (m *MockPfclient) StoreMetrics(arg0 pfmodel.Metrics) (bool, error) {
+	ret := m.ctrl.Call(m, "StoreMetrics", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StoreMetrics indicates an expected call of StoreMetrics
+func (mr *MockPfclientMockRecorder) StoreMetrics(arg0 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreMetrics", reflect.TypeOf((*MockPfclient)(nil).StoreMetrics), arg0)
 }
 
 // UpdateIpaddress mocks base method

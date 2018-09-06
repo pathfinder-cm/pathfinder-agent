@@ -5,7 +5,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
-	// "github.com/pathfinder-cm/pathfinder-agent/model"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
@@ -46,7 +45,7 @@ func TestProcess(t *testing.T) {
 	}
 
 	metricsAgent := NewAgent(node, mockContainerDaemon, mockPfClient, "metrics")
-	mockPfClient.EXPECT().PushMetrics(gomock.Any()).Return(nil)
+	mockPfClient.EXPECT().StoreMetrics(gomock.Any()).Return(true, nil)
 	ok = metricsAgent.Process()
 	if ok != true {
 		t.Errorf("Metrics agent does not process properly")

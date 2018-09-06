@@ -1,12 +1,13 @@
 package agent
 
 import (
+	"time"
+
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-agent/metrics"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type metricsAgent struct {
@@ -29,8 +30,8 @@ func (a *metricsAgent) Run() {
 func (a *metricsAgent) Process() bool {
 	m := metrics.NewMetrics()
 	collectedMetrics := m.Collect()
-	err := a.pfclient.PushMetrics(collectedMetrics)
-	if err != nil {
+	ok, err := a.pfclient.StoreMetrics(collectedMetrics)
+	if !ok {
 		log.Error(err.Error())
 		return false
 	}
