@@ -99,7 +99,7 @@ func (mr *MockPfclientMockRecorder) Register(arg0 interface{}) *gomock.Call {
 }
 
 // StoreMetrics mocks base method
-func (m *MockPfclient) StoreMetrics(arg0 pfmodel.Metrics) (bool, error) {
+func (m *MockPfclient) StoreMetrics(arg0 *pfmodel.Metrics) (bool, error) {
 	ret := m.ctrl.Call(m, "StoreMetrics", arg0)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)

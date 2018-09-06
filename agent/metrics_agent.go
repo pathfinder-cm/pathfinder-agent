@@ -3,7 +3,6 @@ package agent
 import (
 	"time"
 
-	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-agent/metrics"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
@@ -11,13 +10,22 @@ import (
 )
 
 type metricsAgent struct {
-	nodeHostname    string
-	containerDaemon daemon.ContainerDaemon
-	pfclient        pfclient.Pfclient
+	nodeHostname string
+	pfclient     pfclient.Pfclient
+}
+
+func NewMetricsAgent(
+	nodeHostname string,
+	pfclient pfclient.Pfclient) Agent {
+
+	return &metricsAgent{
+		nodeHostname: nodeHostname,
+		pfclient:     pfclient,
+	}
 }
 
 func (a *metricsAgent) Run() {
-	log.WithFields(log.Fields{}).Warn("Push Metrics")
+	log.WithFields(log.Fields{}).Warn("Starting metrics agent...")
 
 	for {
 		delay := 60 + util.RandomIntRange(1, 10)
@@ -28,8 +36,7 @@ func (a *metricsAgent) Run() {
 }
 
 func (a *metricsAgent) Process() bool {
-	m := metrics.NewMetrics()
-	collectedMetrics := m.Collect()
+	collectedMetrics := metrics.Collect()
 	ok, err := a.pfclient.StoreMetrics(collectedMetrics)
 	if !ok {
 		log.Error(err.Error())

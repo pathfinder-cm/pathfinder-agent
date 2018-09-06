@@ -2,12 +2,13 @@ package agent
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type provisionAgent struct {
@@ -16,7 +17,21 @@ type provisionAgent struct {
 	pfclient        pfclient.Pfclient
 }
 
+func NewProvisionAgent(
+	nodeHostname string,
+	containerDaemon daemon.ContainerDaemon,
+	pfclient pfclient.Pfclient) Agent {
+
+	return &provisionAgent{
+		nodeHostname:    nodeHostname,
+		containerDaemon: containerDaemon,
+		pfclient:        pfclient,
+	}
+}
+
 func (a *provisionAgent) Run() {
+	log.WithFields(log.Fields{}).Warn("Starting provision agent...")
+
 	for {
 		// Add delay between processing
 		delay := 5 + util.RandomIntRange(1, 5)

@@ -8,7 +8,7 @@ import (
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
-func TestProcess(t *testing.T) {
+func TestProvisionProcess(t *testing.T) {
 	node := "test-01"
 
 	scs := make(pfmodel.ContainerList, 4)
@@ -38,16 +38,9 @@ func TestProcess(t *testing.T) {
 	mockPfClient.EXPECT().MarkContainerAsProvisioned(node, "test-c-03").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsDeleted(node, "test-c-04").Return(true, nil)
 
-	provisionAgent := NewAgent(node, mockContainerDaemon, mockPfClient, "provision")
+	provisionAgent := NewProvisionAgent(node, mockContainerDaemon, mockPfClient)
 	ok := provisionAgent.Process()
 	if ok != true {
 		t.Errorf("Agent does not process properly")
-	}
-
-	metricsAgent := NewAgent(node, mockContainerDaemon, mockPfClient, "metrics")
-	mockPfClient.EXPECT().StoreMetrics(gomock.Any()).Return(true, nil)
-	ok = metricsAgent.Process()
-	if ok != true {
-		t.Errorf("Metrics agent does not process properly")
 	}
 }
