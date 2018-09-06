@@ -2,10 +2,24 @@
 
 Agent for Pathfinder container manager. Ensure appropriate containers are running on the node in which this agent reside in.
 
-## Changelog
+## Setup
 
-#### 0.2.0
-- Model and pfclient are extracted to [pathfinder-go-client](https://github.com/pathfinder-cm/pathfinder-go-client) repo
+Please ensure pathfinder server up and running and set this configuration before starting the agent.
 
-#### 0.1.0
-- Initial release: base agent functionality up and running.
+Example:
+```
+export PF_SERVER_ADDR=http://127.0.0.1
+export PF_CLUSTER=default
+export PF_CLUSTER_PASSWORD=ubuntu
+```
+
+## Configurations
+
+These are possible configurations that you can set via environment variables.
+
+```
+"LXD_SOCKET_PATH"
+"PF_SERVER_ADDR"
+"PF_CLUSTER"
+"PF_CLUSTER_PASSWORD"
+```

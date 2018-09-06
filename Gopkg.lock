@@ -13,6 +13,25 @@
   revision = "20c4c30023960bc27eb5e4662207a0bcaae04f11"
 
 [[projects]]
+  digest = "1:e92f5581902c345eb4ceffdcd4a854fb8f73cf436d47d837d1ec98ef1fe0a214"
+  name = "github.com/StackExchange/wmi"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "5d049714c4a64225c3c79a7cf7d02f7fb5b96338"
+  version = "1.0.0"
+
+[[projects]]
+  digest = "1:64a5a67c69b70c2420e607a8545d674a23778ed9c3e80607bfd17b77c6c87f6a"
+  name = "github.com/go-ole/go-ole"
+  packages = [
+    ".",
+    "oleutil",
+  ]
+  pruneopts = "UT"
+  revision = "a41e3c4b706f6ae8dfbff342b06e40fa4d2d0506"
+  version = "v1.2.1"
+
+[[projects]]
   digest = "1:bc38c7c481812e178d85160472e231c5e1c9a7f5845d67e23ee4e706933c10d8"
   name = "github.com/golang/mock"
   packages = ["gomock"]
@@ -29,12 +48,12 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:cee8e8ac80df6373e7daa11baf1f98c1b6f7242c49ccae7e1ec34a971dc408d9"
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
   name = "github.com/gorilla/websocket"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3ff3320c2a1756a3691521efc290b4701575147c"
-  version = "v1.3.0"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
@@ -75,18 +94,18 @@
     "shared/simplestreams",
   ]
   pruneopts = "UT"
-  revision = "63353b1c5c13a6d049fada8c78c78e8d0ba613a9"
+  revision = "aa490dbc7cfc2bc4e1c2132f69a6e025996dd830"
 
 [[projects]]
   branch = "master"
-  digest = "1:36eb3bd5e26d32243ca43245ad87f5a14351d1078acd55aa08bd46a2c8f26ca3"
+  digest = "1:56a3951557c640b460377521516f2306b6592f48f354b19ab03716e927c7babc"
   name = "github.com/pathfinder-cm/pathfinder-go-client"
   packages = [
     "pfclient",
     "pfmodel",
   ]
   pruneopts = "UT"
-  revision = "42ccb753fed8931091dd075a18942d6a4d227b9f"
+  revision = "b0febbf4adb931207ed4c4702dd06da5fe7fcbd2"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -103,6 +122,17 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "6724a57986aff9bff1a1770e9347036def7c89f6"
+
+[[projects]]
+  digest = "1:d6962d5c108ea66e1ba40269404db31ce1490cb23f8134110f9f434251d63d4a"
+  name = "github.com/shirou/gopsutil"
+  packages = [
+    "internal/common",
+    "mem",
+  ]
+  pruneopts = "UT"
+  revision = "8048a2e9c5773235122027dd585cf821b2af1249"
+  version = "v2.18.07"
 
 [[projects]]
   digest = "1:d867dfa6751c8d7a435821ad3b736310c2ed68945d05b50fb9d23aee0540c8cc"
@@ -134,7 +164,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "182538f80094b6a8efaade63a8fd8e0d9d5843dd"
+  revision = "0709b304e793a5edb4a2c0145f281ecdc20838a4"
 
 [[projects]]
   branch = "master"
@@ -153,14 +183,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:629034aef6b53eb8ea737e6d82cb5402907e2757fbab5ddf5e74c08b4c6473af"
+  digest = "1:7f4a61b989d94774dc61016b660cf8347f59eb0bed91a10b2f23fc72a38d45d4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "fa5fdf94c78965f1aa8423f0cc50b8b8d728b05a"
+  revision = "ebe1bf3edb3325c393447059974de898d5133eb8"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -235,6 +265,7 @@
     "github.com/lxc/lxd/shared/api",
     "github.com/pathfinder-cm/pathfinder-go-client/pfclient",
     "github.com/pathfinder-cm/pathfinder-go-client/pfmodel",
+    "github.com/shirou/gopsutil/mem",
     "github.com/sirupsen/logrus",
     "github.com/urfave/cli",
   ]

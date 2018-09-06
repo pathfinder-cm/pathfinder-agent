@@ -98,6 +98,19 @@ func (mr *MockPfclientMockRecorder) Register(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockPfclient)(nil).Register), arg0)
 }
 
+// StoreMetrics mocks base method
+func (m *MockPfclient) StoreMetrics(arg0 *pfmodel.Metrics) (bool, error) {
+	ret := m.ctrl.Call(m, "StoreMetrics", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StoreMetrics indicates an expected call of StoreMetrics
+func (mr *MockPfclientMockRecorder) StoreMetrics(arg0 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreMetrics", reflect.TypeOf((*MockPfclient)(nil).StoreMetrics), arg0)
+}
+
 // UpdateIpaddress mocks base method
 func (m *MockPfclient) UpdateIpaddress(arg0, arg1, arg2 string) (bool, error) {
 	ret := m.ctrl.Call(m, "UpdateIpaddress", arg0, arg1, arg2)

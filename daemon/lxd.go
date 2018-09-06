@@ -32,7 +32,14 @@ func NewLXD(hostname string, socketPath string) (*LXD, error) {
 	if err != nil {
 		return nil, err
 	}
-	targetSrv := localSrv.UseTarget(hostname)
+
+	// If in clustered mode, specifically target the node
+	var targetSrv client.ContainerServer
+	if localSrv.IsClustered() {
+		targetSrv = localSrv.UseTarget(hostname)
+	} else {
+		targetSrv = localSrv
+	}
 
 	return &LXD{
 		hostname:  hostname,
