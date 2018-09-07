@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.3.1
+- Fix: Default path for storing metrics
+
 #### 0.3.0
 - Add feature to collect metrics from node and store it on server
 
