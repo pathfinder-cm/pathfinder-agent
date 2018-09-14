@@ -86,16 +86,16 @@ func (mr *MockPfclientMockRecorder) MarkContainerAsProvisioned(arg0, arg1 interf
 }
 
 // Register mocks base method
-func (m *MockPfclient) Register(arg0 string) (bool, error) {
-	ret := m.ctrl.Call(m, "Register", arg0)
+func (m *MockPfclient) Register(arg0, arg1 string) (bool, error) {
+	ret := m.ctrl.Call(m, "Register", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Register indicates an expected call of Register
-func (mr *MockPfclientMockRecorder) Register(arg0 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockPfclient)(nil).Register), arg0)
+func (mr *MockPfclientMockRecorder) Register(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockPfclient)(nil).Register), arg0, arg1)
 }
 
 // StoreMetrics mocks base method

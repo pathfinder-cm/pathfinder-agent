@@ -33,7 +33,7 @@ func CmdAgent(ctx *cli.Context) {
 
 func runAgent() {
 	hostname, _ := os.Hostname()
-	ipAddress := getLocalIP()
+	ipaddress := getLocalIP()
 	daemon, err := daemon.NewLXD(hostname, LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
@@ -57,7 +57,7 @@ func runAgent() {
 	)
 
 	// Self Register
-	ok, _ := pfclient.Register(hostname, ipAddress)
+	ok, _ := pfclient.Register(hostname, ipaddress)
 	if !ok {
 		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
 	}
