@@ -33,6 +33,7 @@ func CmdAgent(ctx *cli.Context) {
 
 func runAgent() {
 	hostname, _ := os.Hostname()
+	ipaddress := getLocalIP()
 	daemon, err := daemon.NewLXD(hostname, LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
@@ -56,7 +57,7 @@ func runAgent() {
 	)
 
 	// Self Register
-	ok, _ := pfclient.Register(hostname)
+	ok, _ := pfclient.Register(hostname, ipaddress)
 	if !ok {
 		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
 	}
@@ -66,4 +67,20 @@ func runAgent() {
 
 	metricsAgent := agent.NewMetricsAgent(hostname, pfclient)
 	go metricsAgent.Run()
+}
+
+func getLocalIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ""
+	}
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback the display it
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+	return ""
 }
