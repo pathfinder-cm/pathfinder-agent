@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.3.2
+- Fix: Node ipaddress that is sent to mono
+
 #### 0.3.1
 - Fix: Default path for storing metrics
 
