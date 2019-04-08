@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -11,9 +10,13 @@ import (
 	"github.com/pathfinder-cm/pathfinder-agent/agent"
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+//"errors"
+	
 
 func CmdAgent(ctx *cli.Context) {
 	if ctx.Bool("verbose") == true {
@@ -30,6 +33,7 @@ func CmdAgent(ctx *cli.Context) {
 		log.Warn("Agent stopping...")
 	})
 }
+
 
 func runAgent() {
 	hostname, _ := os.Hostname()
@@ -56,10 +60,18 @@ func runAgent() {
 		PfApiPath,
 	)
 
-	// Self Register
-	ok, _ := pfclient.Register(hostname, ipaddress)
-	if !ok {
-		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
+	for {
+		log.WithFields(log.Fields{}).Warn("Trying to register to pathfinder server...")
+		ok, _ := pfclient.Register(hostname,ipaddress)
+		
+		if !ok {
+			log.Error("Cannot register to pathfinder server, please check your configuration")
+
+			delay := 60 + util.RandomIntRange(1, 10)
+			time.Sleep(time.Duration(delay) * time.Second)			
+		} else {
+			break
+		}
 	}
 
 	provisionAgent := agent.NewProvisionAgent(hostname, daemon, pfclient)
