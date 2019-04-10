@@ -1,18 +1,18 @@
 package main
 
 import (
-	"errors"
+	"fmt"
+	"github.com/BaritoLog/go-boilerplate/srvkit"
+	"github.com/pathfinder-cm/pathfinder-agent/agent"
+	"github.com/pathfinder-cm/pathfinder-agent/daemon"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 	"net"
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/BaritoLog/go-boilerplate/srvkit"
-	"github.com/pathfinder-cm/pathfinder-agent/agent"
-	"github.com/pathfinder-cm/pathfinder-agent/daemon"
-	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
-	log "github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
 )
 
 func CmdAgent(ctx *cli.Context) {
@@ -56,10 +56,18 @@ func runAgent() {
 		PfApiPath,
 	)
 
-	// Self Register
-	ok, _ := pfclient.Register(hostname, ipaddress)
-	if !ok {
-		panic(errors.New("Cannot register to pathfinder server, please check your configuration."))
+	log.WithFields(log.Fields{}).Warn("Trying to register to pathfinder server...")
+	for {
+		ok, _ := pfclient.Register(hostname, ipaddress)
+
+		if !ok {
+			log.Error("Cannot register to pathfinder server, please check your configuration")
+			delay := 60 + util.RandomIntRange(1, 10)
+			log.WithFields(log.Fields{}).Warn(fmt.Sprintf("Retrying in %d second(s)", delay))
+			time.Sleep(time.Duration(delay) * time.Second)
+		} else {
+			break
+		}
 	}
 
 	provisionAgent := agent.NewProvisionAgent(hostname, daemon, pfclient)
