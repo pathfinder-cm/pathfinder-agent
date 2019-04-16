@@ -2,9 +2,11 @@
 
 Agent for Pathfinder container manager. Ensure appropriate containers are running on the node in which this agent reside in.
 
-## Setup
+## Getting Started
 
-Please ensure pathfinder server up and running and set this configuration before starting the agent.
+Precompiled binaries are availabe on the release page, [here][pathfinder-agent-releases]
+
+Please ensure pathfinder server is up and running and also exports appropriate configurations before starting the agent (see configurations section).
 
 Example:
 ```
@@ -13,13 +15,44 @@ export PF_CLUSTER=default
 export PF_CLUSTER_PASSWORD=ubuntu
 ```
 
+Run the downloaded binary normally.
+
+## Development Setup
+
+1. Ensure that you have golang installed
+2. Install `dep`
+3. Run `dep ensure`
+
+### Running tests
+
+Run `go test ./...`
+
 ## Configurations
 
 These are possible configurations that you can set via environment variables.
 
 ```
-"LXD_SOCKET_PATH"
-"PF_SERVER_ADDR"
-"PF_CLUSTER"
-"PF_CLUSTER_PASSWORD"
+LXD_SOCKET_PATH
+PF_SERVER_ADDR
+PF_CLUSTER
+PF_CLUSTER_PASSWORD
 ```
+
+## Getting Help
+
+If you have any questions or feedback regarding pathfinder-agent:
+
+- [File an issue](https://github.com/pathfinder-cm/pathfinder-agent/issues/new) for bugs, issues and feature suggestions.
+
+Your feedback is always welcome.
+
+## Further Reading
+
+- [Pathfinder Container Manager Wiki][pathfinder-cm-wiki]
+
+[pathfinder-cm-wiki]: https://github.com/pathfinder-cm/wiki
+[pathfinder-agent-releases]: https://github.com/pathfinder-cm/pathfinder-agent/releases
+
+## License
+
+Apache License v2, see [LICENSE](LICENSE).
