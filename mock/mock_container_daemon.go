@@ -34,8 +34,9 @@ func (m *MockContainerDaemon) EXPECT() *MockContainerDaemonMockRecorder {
 }
 
 // CreateContainer mocks base method
-func (m *MockContainerDaemon) CreateContainer(arg0, arg1 string) (bool, string, error) {
-	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1)
+func (m *MockContainerDaemon) CreateContainer(arg0, arg1, arg2, arg3 string) (bool, string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(string)
 	ret2, _ := ret[2].(error)
@@ -43,12 +44,14 @@ func (m *MockContainerDaemon) CreateContainer(arg0, arg1 string) (bool, string, 
 }
 
 // CreateContainer indicates an expected call of CreateContainer
-func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0, arg1 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0, arg1)
+func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0, arg1, arg2, arg3)
 }
 
 // DeleteContainer mocks base method
 func (m *MockContainerDaemon) DeleteContainer(arg0 string) (bool, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteContainer", arg0)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
@@ -57,11 +60,13 @@ func (m *MockContainerDaemon) DeleteContainer(arg0 string) (bool, error) {
 
 // DeleteContainer indicates an expected call of DeleteContainer
 func (mr *MockContainerDaemonMockRecorder) DeleteContainer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteContainer", reflect.TypeOf((*MockContainerDaemon)(nil).DeleteContainer), arg0)
 }
 
 // ListContainers mocks base method
 func (m *MockContainerDaemon) ListContainers() (*pfmodel.ContainerList, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListContainers")
 	ret0, _ := ret[0].(*pfmodel.ContainerList)
 	ret1, _ := ret[1].(error)
@@ -70,5 +75,6 @@ func (m *MockContainerDaemon) ListContainers() (*pfmodel.ContainerList, error) {
 
 // ListContainers indicates an expected call of ListContainers
 func (mr *MockContainerDaemonMockRecorder) ListContainers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListContainers", reflect.TypeOf((*MockContainerDaemon)(nil).ListContainers))
 }
