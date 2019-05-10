@@ -2,9 +2,9 @@
     "api_version": "1.0",
     "data": {
         "items": [
-            {"hostname": "test-01", "image": "16.04"},
-            {"hostname": "test-02", "image": "16.04"},
-            {"hostname": "test-03", "image": "16.04"}
+            {"hostname": "test-01", "image": "16.04", "image_server": "https://cloud-images.ubuntu.com/releases", "image_protocol": "simplestream"},
+            {"hostname": "test-02", "image": "16.04", "image_server": "https://cloud-images.ubuntu.com/releases", "image_protocol": "simplestream"},
+            {"hostname": "test-03", "image": "16.04", "image_server": "https://cloud-images.ubuntu.com/releases", "image_protocol": "simplestream"}
         ]
     }
 }
