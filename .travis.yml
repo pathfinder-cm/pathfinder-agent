@@ -1,14 +1,13 @@
 language: go
 
 go:
-  - "1.10"
+  - "1.12.5"
+
+env:
+- GO111MODULE=on
 
 notifications:
   email: false
-
-install:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - dep ensure
 
 script:
   - go test ./...
