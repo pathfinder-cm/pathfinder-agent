@@ -12,22 +12,22 @@ func TestProvisionProcess(t *testing.T) {
 	node := "test-01"
 
 	scs := make(pfmodel.ContainerList, 4)
-	scs[0] = pfmodel.Container{Hostname: "test-c-01", Image: "16.04", Status: "SCHEDULED"}
-	scs[1] = pfmodel.Container{Hostname: "test-c-02", Image: "16.04", Status: "SCHEDULED"}
-	scs[2] = pfmodel.Container{Hostname: "test-c-03", Image: "16.04", Status: "SCHEDULED"}
-	scs[3] = pfmodel.Container{Hostname: "test-c-04", Image: "16.04", Status: "SCHEDULE_DELETION"}
+	scs[0] = pfmodel.Container{Hostname: "test-c-01", ImageAlias: "16.04", ImageServer: "https://cloud-images.ubuntu.com/releases", ImageProtocol: "simplestreams", Status: "SCHEDULED"}
+	scs[1] = pfmodel.Container{Hostname: "test-c-02", ImageAlias: "16.04", ImageServer: "https://cloud-images.ubuntu.com/releases", ImageProtocol: "simplestreams", Status: "SCHEDULED"}
+	scs[2] = pfmodel.Container{Hostname: "test-c-03", ImageAlias: "16.04", ImageServer: "https://cloud-images.ubuntu.com/releases", ImageProtocol: "simplestreams", Status: "SCHEDULED"}
+	scs[3] = pfmodel.Container{Hostname: "test-c-04", ImageAlias: "16.04", ImageServer: "https://cloud-images.ubuntu.com/releases", ImageProtocol: "simplestreams", Status: "SCHEDULE_DELETION"}
 
 	lcs := make(pfmodel.ContainerList, 3)
-	lcs[0] = pfmodel.Container{Hostname: "test-c-01", Image: "16.04"}
-	lcs[1] = pfmodel.Container{Hostname: "test-c-02", Image: "16.04"}
-	lcs[2] = pfmodel.Container{Hostname: "test-c-04", Image: "16.04"}
+	lcs[0] = pfmodel.Container{Hostname: "test-c-01", ImageAlias: "16.04"}
+	lcs[1] = pfmodel.Container{Hostname: "test-c-02", ImageAlias: "16.04"}
+	lcs[2] = pfmodel.Container{Hostname: "test-c-04", ImageAlias: "16.04"}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	mockContainerDaemon := mock.NewMockContainerDaemon(mockCtrl)
 	mockContainerDaemon.EXPECT().ListContainers().Return(&lcs, nil).AnyTimes()
-	mockContainerDaemon.EXPECT().CreateContainer("test-c-03", "16.04").Return(true, "127.0.0.1", nil)
+	mockContainerDaemon.EXPECT().CreateContainer("test-c-03", "16.04", "https://cloud-images.ubuntu.com/releases", "simplestreams").Return(true, "127.0.0.1", nil)
 	mockContainerDaemon.EXPECT().DeleteContainer("test-c-04").Return(true, nil)
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)

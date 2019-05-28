@@ -59,15 +59,15 @@ func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l *LXD) CreateContainer(hostname string, image string) (bool, string, error) {
+func (l *LXD) CreateContainer(hostname string, image_alias string, image_server string, image_protocol string) (bool, string, error) {
 	// Container creation request
 	req := api.ContainersPost{
 		Name: hostname,
 		Source: api.ContainerSource{
 			Type:     "image",
-			Server:   "https://cloud-images.ubuntu.com/releases",
-			Protocol: "simplestreams",
-			Alias:    image,
+			Server:   image_server,
+			Protocol: image_protocol,
+			Alias:    image_alias,
 		},
 	}
 

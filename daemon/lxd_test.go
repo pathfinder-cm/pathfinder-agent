@@ -51,10 +51,12 @@ func TestListContainers(t *testing.T) {
 
 func TestCreateContainer(t *testing.T) {
 	tables := []struct {
-		hostname string
-		image    string
+		hostname       string
+		image_alias    string
+		image_server   string
+		image_protocol string
 	}{
-		{"test-01", "16.04"},
+		{"test-01", "16.04", "https://cloud-images.ubuntu.com/releases", "simplestreams"},
 	}
 
 	mockCtrl := gomock.NewController(t)
@@ -64,9 +66,9 @@ func TestCreateContainer(t *testing.T) {
 		Name: tables[0].hostname,
 		Source: api.ContainerSource{
 			Type:     "image",
-			Server:   "https://cloud-images.ubuntu.com/releases",
-			Protocol: "simplestreams",
-			Alias:    tables[0].image,
+			Server:   tables[0].image_server,
+			Protocol: tables[0].image_protocol,
+			Alias:    tables[0].image_alias,
 		},
 	}
 
@@ -101,7 +103,7 @@ func TestCreateContainer(t *testing.T) {
 		Return(&state, "", nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _, _ := l.CreateContainer(tables[0].hostname, tables[0].image)
+	ok, _, _ := l.CreateContainer(tables[0].hostname, tables[0].image_alias, tables[0].image_server, tables[0].image_protocol)
 	if ok != true {
 		t.Errorf("Container not properly generated")
 	}

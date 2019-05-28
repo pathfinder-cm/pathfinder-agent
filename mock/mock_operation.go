@@ -37,6 +37,7 @@ func (m *MockOperation) EXPECT() *MockOperationMockRecorder {
 
 // AddHandler mocks base method
 func (m *MockOperation) AddHandler(arg0 func(api.Operation)) (*client.EventTarget, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddHandler", arg0)
 	ret0, _ := ret[0].(*client.EventTarget)
 	ret1, _ := ret[1].(error)
@@ -45,11 +46,13 @@ func (m *MockOperation) AddHandler(arg0 func(api.Operation)) (*client.EventTarge
 
 // AddHandler indicates an expected call of AddHandler
 func (mr *MockOperationMockRecorder) AddHandler(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddHandler", reflect.TypeOf((*MockOperation)(nil).AddHandler), arg0)
 }
 
 // Cancel mocks base method
 func (m *MockOperation) Cancel() error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Cancel")
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -57,11 +60,13 @@ func (m *MockOperation) Cancel() error {
 
 // Cancel indicates an expected call of Cancel
 func (mr *MockOperationMockRecorder) Cancel() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cancel", reflect.TypeOf((*MockOperation)(nil).Cancel))
 }
 
 // Get mocks base method
 func (m *MockOperation) Get() api.Operation {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get")
 	ret0, _ := ret[0].(api.Operation)
 	return ret0
@@ -69,11 +74,13 @@ func (m *MockOperation) Get() api.Operation {
 
 // Get indicates an expected call of Get
 func (mr *MockOperationMockRecorder) Get() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockOperation)(nil).Get))
 }
 
 // GetWebsocket mocks base method
 func (m *MockOperation) GetWebsocket(arg0 string) (*websocket.Conn, error) {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetWebsocket", arg0)
 	ret0, _ := ret[0].(*websocket.Conn)
 	ret1, _ := ret[1].(error)
@@ -82,11 +89,13 @@ func (m *MockOperation) GetWebsocket(arg0 string) (*websocket.Conn, error) {
 
 // GetWebsocket indicates an expected call of GetWebsocket
 func (mr *MockOperationMockRecorder) GetWebsocket(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebsocket", reflect.TypeOf((*MockOperation)(nil).GetWebsocket), arg0)
 }
 
 // Refresh mocks base method
 func (m *MockOperation) Refresh() error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Refresh")
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -94,11 +103,13 @@ func (m *MockOperation) Refresh() error {
 
 // Refresh indicates an expected call of Refresh
 func (mr *MockOperationMockRecorder) Refresh() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Refresh", reflect.TypeOf((*MockOperation)(nil).Refresh))
 }
 
 // RemoveHandler mocks base method
 func (m *MockOperation) RemoveHandler(arg0 *client.EventTarget) error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RemoveHandler", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -106,11 +117,13 @@ func (m *MockOperation) RemoveHandler(arg0 *client.EventTarget) error {
 
 // RemoveHandler indicates an expected call of RemoveHandler
 func (mr *MockOperationMockRecorder) RemoveHandler(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveHandler", reflect.TypeOf((*MockOperation)(nil).RemoveHandler), arg0)
 }
 
 // Wait mocks base method
 func (m *MockOperation) Wait() error {
+	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Wait")
 	ret0, _ := ret[0].(error)
 	return ret0
@@ -118,5 +131,6 @@ func (m *MockOperation) Wait() error {
 
 // Wait indicates an expected call of Wait
 func (mr *MockOperationMockRecorder) Wait() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Wait", reflect.TypeOf((*MockOperation)(nil).Wait))
 }
