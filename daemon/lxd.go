@@ -59,15 +59,17 @@ func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l *LXD) CreateContainer(hostname string, image_alias string, image_server string, image_protocol string) (bool, string, error) {
+func (l *LXD) CreateContainer(hostname string, source_type string, alias string, certificate string, mode string, server string, protocol string) (bool, string, error) {
 	// Container creation request
 	req := api.ContainersPost{
 		Name: hostname,
 		Source: api.ContainerSource{
-			Type:     "image",
-			Server:   image_server,
-			Protocol: image_protocol,
-			Alias:    image_alias,
+			Type:        source_type,
+			Server:      server,
+			Protocol:    protocol,
+			Alias:       alias,
+			Mode:        mode,
+			Certificate: certificate,
 		},
 	}
 
