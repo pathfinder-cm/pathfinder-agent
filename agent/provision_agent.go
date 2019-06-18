@@ -73,15 +73,16 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 	if i == -1 {
 		log.WithFields(log.Fields{
 			"hostname":    sc.Hostname,
-			"source_type": sc.Type,
-			"alias":       sc.Alias,
-			"certificate": sc.Certificate,
-			"mode":        sc.Mode,
-			"server":      sc.Server,
-			"protocol":    sc.Protocol,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Creating container")
 
-		ok, ipaddress, err := a.containerDaemon.CreateContainer(sc.Hostname, sc.Type, sc.Alias, sc.Certificate, sc.Mode, sc.Server, sc.Protocol)
+		ok, ipaddress, err := a.containerDaemon.CreateContainer(sc)
 		if !ok {
 			a.pfclient.MarkContainerAsProvisionError(
 				a.nodeHostname,
@@ -89,12 +90,13 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 			)
 			log.WithFields(log.Fields{
 				"hostname":    sc.Hostname,
-				"source_type": sc.Type,
-				"alias":       sc.Alias,
-				"certificate": sc.Certificate,
-				"mode":        sc.Mode,
-				"server":      sc.Server,
-				"protocol":    sc.Protocol,
+				"source_type": sc.Source.Type,
+				"alias":       sc.Source.Alias,
+				"certificate": sc.Source.Certificate,
+				"mode":        sc.Source.Mode,
+				"server":      sc.Source.Remote.Server,
+				"protocol":    sc.Source.Remote.Protocol,
+				"auth_type":   sc.Source.Remote.AuthType,
 			}).Error(fmt.Sprintf("Error during container creation. %v", err))
 			return false, err
 		}
@@ -111,22 +113,24 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 
 		log.WithFields(log.Fields{
 			"hostname":    sc.Hostname,
-			"source_type": sc.Type,
-			"alias":       sc.Alias,
-			"certificate": sc.Certificate,
-			"mode":        sc.Mode,
-			"server":      sc.Server,
-			"protocol":    sc.Protocol,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Container created")
 	} else {
 		log.WithFields(log.Fields{
 			"hostname":    sc.Hostname,
-			"source_type": sc.Type,
-			"alias":       sc.Alias,
-			"certificate": sc.Certificate,
-			"mode":        sc.Mode,
-			"server":      sc.Server,
-			"protocol":    sc.Protocol,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Container already exist")
 
 		a.pfclient.MarkContainerAsProvisioned(
@@ -143,21 +147,21 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 	if i == -1 {
 		log.WithFields(log.Fields{
 			"hostname": sc.Hostname,
-			"alias":    sc.Alias,
+			"alias":    sc.Source.Alias,
 		}).Info("Container already deleted")
 	} else {
 		ok, err := a.containerDaemon.DeleteContainer(sc.Hostname)
 		if !ok {
 			log.WithFields(log.Fields{
 				"hostname": sc.Hostname,
-				"alias":    sc.Alias,
+				"alias":    sc.Source.Alias,
 			}).Error("Error during container deletion")
 			return false, err
 		}
 
 		log.WithFields(log.Fields{
 			"hostname": sc.Hostname,
-			"alias":    sc.Alias,
+			"alias":    sc.Source.Alias,
 		}).Info("Container deleted")
 	}
 
