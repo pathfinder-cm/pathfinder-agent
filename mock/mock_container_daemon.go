@@ -34,9 +34,9 @@ func (m *MockContainerDaemon) EXPECT() *MockContainerDaemonMockRecorder {
 }
 
 // CreateContainer mocks base method
-func (m *MockContainerDaemon) CreateContainer(arg0, arg1, arg2, arg3, arg4, arg5, arg6 string) (bool, string, error) {
+func (m *MockContainerDaemon) CreateContainer(arg0 pfmodel.Container) (bool, string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateContainer", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	ret := m.ctrl.Call(m, "CreateContainer", arg0)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(string)
 	ret2, _ := ret[2].(error)
@@ -44,9 +44,9 @@ func (m *MockContainerDaemon) CreateContainer(arg0, arg1, arg2, arg3, arg4, arg5
 }
 
 // CreateContainer indicates an expected call of CreateContainer
-func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0, arg1, arg2, arg3, arg4, arg5, arg6 interface{}) *gomock.Call {
+func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0)
 }
 
 // DeleteContainer mocks base method

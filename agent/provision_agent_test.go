@@ -33,7 +33,7 @@ func TestProvisionProcess(t *testing.T) {
 			},
 		},
 	}
-	scs[3] = pfmodel.Container{Hostname: "test-c-04", Status: "SCHEDULED_DELETION", Source: pfmodel.Source{
+	scs[3] = pfmodel.Container{Hostname: "test-c-04", Status: "SCHEDULE_DELETION", Source: pfmodel.Source{
 		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull", 
 			Remote: pfmodel.Remote{
 				Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
