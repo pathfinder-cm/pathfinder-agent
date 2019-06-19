@@ -52,11 +52,11 @@ func TestListContainers(t *testing.T) {
 
 func TestCreateContainer(t *testing.T) {
 	tables := []struct {
-	container pfmodel.Container
+		container pfmodel.Container
 	}{
 		{
 			pfmodel.Container{
-				Hostname:     "test-01",
+				Hostname: "test-01",
 				Source: pfmodel.Source{
 					Type:        "image",
 					Mode:        "pull",
@@ -65,7 +65,7 @@ func TestCreateContainer(t *testing.T) {
 					Remote: pfmodel.Remote{
 						Server:   "https://cloud-images.ubuntu.com/releases",
 						Protocol: "simplestream",
-						AuthType: "none",
+						AuthType: "tls",
 					},
 				},
 			},

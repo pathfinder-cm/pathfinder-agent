@@ -13,32 +13,32 @@ func TestProvisionProcess(t *testing.T) {
 
 	scs := make(pfmodel.ContainerList, 4)
 	scs[0] = pfmodel.Container{Hostname: "test-c-01", Status: "SCHEDULED", Source: pfmodel.Source{
-		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull", 
-			Remote: pfmodel.Remote{
-				Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
-			},
+		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull",
+		Remote: pfmodel.Remote{
+			Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
 		},
+	},
 	}
 	scs[1] = pfmodel.Container{Hostname: "test-c-02", Status: "SCHEDULED", Source: pfmodel.Source{
-		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull", 
-			Remote: pfmodel.Remote{
-				Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
-			},
+		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull",
+		Remote: pfmodel.Remote{
+			Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
 		},
+	},
 	}
 	scs[2] = pfmodel.Container{Hostname: "test-c-03", Status: "SCHEDULED", Source: pfmodel.Source{
-		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull", 
-			Remote: pfmodel.Remote{
-				Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
-			},
+		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull",
+		Remote: pfmodel.Remote{
+			Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
 		},
+	},
 	}
 	scs[3] = pfmodel.Container{Hostname: "test-c-04", Status: "SCHEDULE_DELETION", Source: pfmodel.Source{
-		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull", 
-			Remote: pfmodel.Remote{
-				Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
-			},
+		Type: "image", Alias: "16.04", Certificate: "random", Mode: "pull",
+		Remote: pfmodel.Remote{
+			Server: "https://cloud-images.ubuntu.com/releases", Protocol: "simplestreams", AuthType: "none",
 		},
+	},
 	}
 
 	lcs := make(pfmodel.ContainerList, 3)

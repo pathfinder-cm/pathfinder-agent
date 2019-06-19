@@ -60,6 +60,11 @@ func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 }
 
 func (l *LXD) CreateContainer(container pfmodel.Container) (bool, string, error) {
+	var certificate string
+	if container.Source.Remote.AuthType == "tls" {
+		certificate = container.Source.Certificate
+	}
+
 	// Container creation request
 	req := api.ContainersPost{
 		Name: container.Hostname,
@@ -69,7 +74,7 @@ func (l *LXD) CreateContainer(container pfmodel.Container) (bool, string, error)
 			Protocol:    container.Source.Remote.Protocol,
 			Alias:       container.Source.Alias,
 			Mode:        container.Source.Mode,
-			Certificate: container.Source.Certificate,
+			Certificate: certificate,
 		},
 	}
 
