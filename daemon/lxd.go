@@ -59,15 +59,22 @@ func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 	return containerList, nil
 }
 
-func (l *LXD) CreateContainer(hostname string, image_alias string, image_server string, image_protocol string) (bool, string, error) {
+func (l *LXD) CreateContainer(container pfmodel.Container) (bool, string, error) {
+	var certificate string
+	if container.Source.Remote.AuthType == "tls" {
+		certificate = container.Source.Certificate
+	}
+
 	// Container creation request
 	req := api.ContainersPost{
-		Name: hostname,
+		Name: container.Hostname,
 		Source: api.ContainerSource{
-			Type:     "image",
-			Server:   image_server,
-			Protocol: image_protocol,
-			Alias:    image_alias,
+			Type:        container.Source.Type,
+			Server:      container.Source.Remote.Server,
+			Protocol:    container.Source.Remote.Protocol,
+			Alias:       container.Source.Alias,
+			Mode:        container.Source.Mode,
+			Certificate: certificate,
 		},
 	}
 
@@ -89,7 +96,7 @@ func (l *LXD) CreateContainer(hostname string, image_alias string, image_server 
 		Timeout: -1,
 	}
 
-	op, err = l.targetSrv.UpdateContainerState(hostname, startReq, "")
+	op, err = l.targetSrv.UpdateContainerState(container.Hostname, startReq, "")
 	if err != nil {
 		return false, "", err
 	}
@@ -106,7 +113,7 @@ func (l *LXD) CreateContainer(hostname string, image_alias string, image_server 
 	timeLimit := time.Now().Add(60 * time.Second)
 
 	for !found && time.Now().Before(timeLimit) {
-		state, _, err := l.targetSrv.GetContainerState(hostname)
+		state, _, err := l.targetSrv.GetContainerState(container.Hostname)
 		if err != nil {
 			return false, "", err
 		}
