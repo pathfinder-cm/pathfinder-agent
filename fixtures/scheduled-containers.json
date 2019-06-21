@@ -5,24 +5,48 @@
 			{
 				"hostname": "test-01",
 				"source": {
-					"source_type":"image", "mode":"pull", "fingerprint":"", "alias":"16.04", "certificate": "random",
-					"remote": {"server":"https://cloud-images.ubuntu.com/releases", "protocol":"simplestream", "auth_type":"none"} 
+					"source_type": "image",
+					"mode": "pull",
+					"fingerprint":"",
+					"alias":"16.04",
+					"certificate": "random",
+					"remote": {
+						"server": "https://cloud-images.ubuntu.com/releases",
+						"protocol": "simplestream",
+						"auth_type": "none"
+					}
 				},
 				"status":"SCHEDULED"
 			},
 			{
 				"hostname": "test-02",
 				"source": {
-					"source_type":"image", "mode":"pull", "fingerprint":"", "alias":"16.04", "certificate": "random",
-					"remote": {"server":"https://cloud-images.ubuntu.com/releases", "protocol":"simplestream", "auth_type":"none"} 
+					"source_type": "image",
+					"mode": "pull",
+					"fingerprint":"",
+					"alias":"16.04",
+					"certificate": "random",
+					"remote": {
+						"server": "https://cloud-images.ubuntu.com/releases",
+						"protocol": "simplestream",
+						"auth_type": "none"
+					}
 				},
 				"status":"SCHEDULED"
 			},
 			{
 				"hostname": "test-03",
 				"source": {
-					"source_type":"image", "mode":"pull", "fingerprint":"", "alias":"16.04", "certificate": "random",
-					"remote": {"server":"https://cloud-images.ubuntu.com/releases", "protocol":"simplestream", "auth_type":"none"} 
+					"source_type": "image",
+					"mode": "pull",
+					"fingerprint":"",
+					"alias":"16.04",
+					"certificate": "random",
+					"remote": {
+						"server": "https://cloud-images.ubuntu.com/releases",
+						"protocol": "simplestream",
+						"auth_type": "none"
+					}
 				},
 				"status":"SCHEDULED"
 			}
