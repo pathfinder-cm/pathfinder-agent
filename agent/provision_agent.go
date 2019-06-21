@@ -72,23 +72,31 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 	i := lcs.FindByHostname(sc.Hostname)
 	if i == -1 {
 		log.WithFields(log.Fields{
-			"hostname":       sc.Hostname,
-			"image_alias":    sc.ImageAlias,
-			"image_server":   sc.ImageServer,
-			"image_protocol": sc.ImageProtocol,
+			"hostname":    sc.Hostname,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Creating container")
 
-		ok, ipaddress, err := a.containerDaemon.CreateContainer(sc.Hostname, sc.ImageAlias, sc.ImageServer, sc.ImageProtocol)
+		ok, ipaddress, err := a.containerDaemon.CreateContainer(sc)
 		if !ok {
 			a.pfclient.MarkContainerAsProvisionError(
 				a.nodeHostname,
 				sc.Hostname,
 			)
 			log.WithFields(log.Fields{
-				"hostname":       sc.Hostname,
-				"image_alias":    sc.ImageAlias,
-				"image_server":   sc.ImageServer,
-				"image_protocol": sc.ImageProtocol,
+				"hostname":    sc.Hostname,
+				"source_type": sc.Source.Type,
+				"alias":       sc.Source.Alias,
+				"certificate": sc.Source.Certificate,
+				"mode":        sc.Source.Mode,
+				"server":      sc.Source.Remote.Server,
+				"protocol":    sc.Source.Remote.Protocol,
+				"auth_type":   sc.Source.Remote.AuthType,
 			}).Error(fmt.Sprintf("Error during container creation. %v", err))
 			return false, err
 		}
@@ -104,17 +112,25 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 		)
 
 		log.WithFields(log.Fields{
-			"hostname":       sc.Hostname,
-			"image_alias":    sc.ImageAlias,
-			"image_server":   sc.ImageServer,
-			"image_protocol": sc.ImageProtocol,
+			"hostname":    sc.Hostname,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Container created")
 	} else {
 		log.WithFields(log.Fields{
-			"hostname":       sc.Hostname,
-			"image_alias":    sc.ImageAlias,
-			"image_server":   sc.ImageServer,
-			"image_protocol": sc.ImageProtocol,
+			"hostname":    sc.Hostname,
+			"source_type": sc.Source.Type,
+			"alias":       sc.Source.Alias,
+			"certificate": sc.Source.Certificate,
+			"mode":        sc.Source.Mode,
+			"server":      sc.Source.Remote.Server,
+			"protocol":    sc.Source.Remote.Protocol,
+			"auth_type":   sc.Source.Remote.AuthType,
 		}).Info("Container already exist")
 
 		a.pfclient.MarkContainerAsProvisioned(
@@ -130,22 +146,22 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 	i := lcs.FindByHostname(sc.Hostname)
 	if i == -1 {
 		log.WithFields(log.Fields{
-			"hostname":    sc.Hostname,
-			"image_alias": sc.ImageAlias,
+			"hostname": sc.Hostname,
+			"alias":    sc.Source.Alias,
 		}).Info("Container already deleted")
 	} else {
 		ok, err := a.containerDaemon.DeleteContainer(sc.Hostname)
 		if !ok {
 			log.WithFields(log.Fields{
-				"hostname":    sc.Hostname,
-				"image_alias": sc.ImageAlias,
+				"hostname": sc.Hostname,
+				"alias":    sc.Source.Alias,
 			}).Error("Error during container deletion")
 			return false, err
 		}
 
 		log.WithFields(log.Fields{
-			"hostname":    sc.Hostname,
-			"image_alias": sc.ImageAlias,
+			"hostname": sc.Hostname,
+			"alias":    sc.Source.Alias,
 		}).Info("Container deleted")
 	}
 

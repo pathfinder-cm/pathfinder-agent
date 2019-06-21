@@ -6,6 +6,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/lxc/lxd/shared/api"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
 func TestToContainerList(t *testing.T) {
@@ -51,24 +52,38 @@ func TestListContainers(t *testing.T) {
 
 func TestCreateContainer(t *testing.T) {
 	tables := []struct {
-		hostname       string
-		image_alias    string
-		image_server   string
-		image_protocol string
+		container pfmodel.Container
 	}{
-		{"test-01", "16.04", "https://cloud-images.ubuntu.com/releases", "simplestreams"},
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:        "image",
+					Mode:        "pull",
+					Alias:       "16.04",
+					Certificate: "random",
+					Remote: pfmodel.Remote{
+						Server:   "https://cloud-images.ubuntu.com/releases",
+						Protocol: "simplestream",
+						AuthType: "tls",
+					},
+				},
+			},
+		},
 	}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	createReq := api.ContainersPost{
-		Name: tables[0].hostname,
+		Name: tables[0].container.Hostname,
 		Source: api.ContainerSource{
-			Type:     "image",
-			Server:   tables[0].image_server,
-			Protocol: tables[0].image_protocol,
-			Alias:    tables[0].image_alias,
+			Type:        tables[0].container.Source.Type,
+			Server:      tables[0].container.Source.Remote.Server,
+			Protocol:    tables[0].container.Source.Remote.Protocol,
+			Alias:       tables[0].container.Source.Alias,
+			Mode:        tables[0].container.Source.Mode,
+			Certificate: tables[0].container.Source.Certificate,
 		},
 	}
 
@@ -96,14 +111,14 @@ func TestCreateContainer(t *testing.T) {
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
 	mockContainerServer.EXPECT().CreateContainer(createReq).Return(mockOperation, nil)
 	mockContainerServer.EXPECT().
-		UpdateContainerState(tables[0].hostname, startReq, "").
+		UpdateContainerState(tables[0].container.Hostname, startReq, "").
 		Return(mockOperation, nil)
 	mockContainerServer.EXPECT().
-		GetContainerState(tables[0].hostname).
+		GetContainerState(tables[0].container.Hostname).
 		Return(&state, "", nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _, _ := l.CreateContainer(tables[0].hostname, tables[0].image_alias, tables[0].image_server, tables[0].image_protocol)
+	ok, _, _ := l.CreateContainer(tables[0].container)
 	if ok != true {
 		t.Errorf("Container not properly generated")
 	}

@@ -1,5 +1,10 @@
 ## Changelog
 
+#### 0.4.0
+- Retry connecting to pathfinder mono when server is down
+- Migrate to go modules
+- Use pathfinder mono v2 API
+
 #### 0.3.2
 - Fix: Node ipaddress that is sent to mono
 

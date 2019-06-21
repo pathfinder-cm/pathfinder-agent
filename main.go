@@ -10,13 +10,13 @@ import (
 
 const (
 	Name                            = "Pathfinder Agent"
-	Version                         = "0.3.2"
+	Version                         = "0.4.0"
 	DefaultLXDSocketPath            = "/var/snap/lxd/common/lxd/unix.socket"
 	DefaultPfCluster                = "default"
 	DefaultPfServerAddr             = "http://192.168.33.1:3000"
 	DefaultPfRegisterPath           = "api/v1/node/register"
 	DefaultPfStoreMetricsPath       = "api/v1/node/nodes/store_metrics"
-	DefaultPfListContainersPath     = "api/v1/node/containers/scheduled"
+	DefaultPfListContainersPath     = "api/v2/node/containers/scheduled"
 	DefaultPfUpdateIpaddressPath    = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath    = "api/v1/node/containers/mark_provisioned"
 	DefaultPfMarkProvisionErrorPath = "api/v1/node/containers/mark_provision_error"
