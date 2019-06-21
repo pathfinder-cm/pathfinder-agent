@@ -55,6 +55,8 @@ github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20180914013414-c57b57e53136
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20180914013414-c57b57e53136/go.mod h1:zRQWBhtBQ5ZSMrlVoTZ3bjSM76r5xcC+bhU5lKFcr5k=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190528035449-0487dd181bb6 h1:TnB38701xhg93PlbIfymOAOt5Nnd2oWLRWeYwJGVVno=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190528035449-0487dd181bb6/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190621001444-8a7473d27656 h1:k1ITxpALT1SklGOddlVXSu8pEKsmNjL2hRWj8ZtXK7c=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190621001444-8a7473d27656/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
