@@ -58,14 +58,14 @@ func TestCreateContainer(t *testing.T) {
 			pfmodel.Container{
 				Hostname: "test-01",
 				Source: pfmodel.Source{
-					Type:        "image",
-					Mode:        "pull",
-					Alias:       "16.04",
-					Certificate: "random",
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
 					Remote: pfmodel.Remote{
-						Server:   "https://cloud-images.ubuntu.com/releases",
-						Protocol: "simplestream",
-						AuthType: "tls",
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
 					},
 				},
 			},
@@ -83,7 +83,7 @@ func TestCreateContainer(t *testing.T) {
 			Protocol:    tables[0].container.Source.Remote.Protocol,
 			Alias:       tables[0].container.Source.Alias,
 			Mode:        tables[0].container.Source.Mode,
-			Certificate: tables[0].container.Source.Certificate,
+			Certificate: tables[0].container.Source.Remote.Certificate,
 		},
 	}
 
