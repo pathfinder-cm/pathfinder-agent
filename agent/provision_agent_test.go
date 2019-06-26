@@ -56,7 +56,7 @@ func TestProvisionProcess(t *testing.T) {
 	mockContainerDaemon.EXPECT().DeleteContainer(scs[3].Hostname).Return(true, nil)
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)
-	mockPfClient.EXPECT().FetchContainersFromServer(node).Return(&scs, nil)
+	mockPfClient.EXPECT().FetchContainersFromServer(node, "ListScheduledContainers").Return(&scs, nil)
 	mockPfClient.EXPECT().UpdateIpaddress(node, "test-c-03", "127.0.0.1").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsProvisioned(node, "test-c-01").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsProvisioned(node, "test-c-02").Return(true, nil)

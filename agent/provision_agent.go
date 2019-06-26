@@ -42,7 +42,7 @@ func (a *provisionAgent) Run() {
 }
 
 func (a *provisionAgent) Process() bool {
-	scs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname)
+	scs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname, "ListScheduledContainers")
 	if err != nil {
 		return false
 	}

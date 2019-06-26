@@ -9,30 +9,32 @@ import (
 )
 
 const (
-	Name                            = "Pathfinder Agent"
-	Version                         = "0.3.2"
-	DefaultLXDSocketPath            = "/var/snap/lxd/common/lxd/unix.socket"
-	DefaultPfCluster                = "default"
-	DefaultPfServerAddr             = "http://192.168.33.1:3000"
-	DefaultPfRegisterPath           = "api/v1/node/register"
-	DefaultPfStoreMetricsPath       = "api/v1/node/nodes/store_metrics"
-	DefaultPfListContainersPath     = "api/v2/node/containers/scheduled"
-	DefaultPfUpdateIpaddressPath    = "api/v1/node/containers/ipaddress"
-	DefaultPfMarkProvisionedPath    = "api/v1/node/containers/mark_provisioned"
-	DefaultPfMarkProvisionErrorPath = "api/v1/node/containers/mark_provision_error"
-	DefaultPfMarkDeletedPath        = "api/v1/node/containers/mark_deleted"
+	Name                                   = "Pathfinder Agent"
+	Version                                = "0.3.2"
+	DefaultLXDSocketPath                   = "/var/snap/lxd/common/lxd/unix.socket"
+	DefaultPfCluster                       = "default"
+	DefaultPfServerAddr                    = "http://192.168.33.1:3000"
+	DefaultPfRegisterPath                  = "api/v1/node/register"
+	DefaultPfStoreMetricsPath              = "api/v1/node/nodes/store_metrics"
+	DefaultPfListScheduledContainersPath   = "api/v2/node/containers/scheduled"
+	DefaultPfListProvisionedContainersPath = "api/v2/node/containers/provisioned"
+	DefaultPfUpdateIpaddressPath           = "api/v1/node/containers/ipaddress"
+	DefaultPfMarkProvisionedPath           = "api/v1/node/containers/mark_provisioned"
+	DefaultPfMarkProvisionErrorPath        = "api/v1/node/containers/mark_provision_error"
+	DefaultPfMarkDeletedPath               = "api/v1/node/containers/mark_deleted"
 
-	EnvLXDSocketPath            = "LXD_SOCKET_PATH"
-	EnvPfCluster                = "PF_CLUSTER"
-	EnvPfClusterPassword        = "PF_CLUSTER_PASSWORD"
-	EnvPfServerAddr             = "PF_SERVER_ADDR"
-	EnvPfRegisterPath           = "PF_REGISTER_PATH"
-	EnvPfStoreMetricsPath       = "PF_STORE_METRICS_PATH"
-	EnvPfListContainersPath     = "PF_LIST_CONTAINERS_PATH"
-	EnvPfUpdateIpaddressPath    = "PF_UPDATE_IPADDRESS_PATH"
-	EnvPfMarkProvisionedPath    = "PF_MARK_PROVISIONED_PATH"
-	EnvPfMarkProvisionErrorPath = "PF_MARK_PROVISION_ERROR_PATH"
-	EnvPfMarkDeletedPath        = "PF_MARK_DELETED_PATH"
+	EnvLXDSocketPath                   = "LXD_SOCKET_PATH"
+	EnvPfCluster                       = "PF_CLUSTER"
+	EnvPfClusterPassword               = "PF_CLUSTER_PASSWORD"
+	EnvPfServerAddr                    = "PF_SERVER_ADDR"
+	EnvPfRegisterPath                  = "PF_REGISTER_PATH"
+	EnvPfStoreMetricsPath              = "PF_STORE_METRICS_PATH"
+	EnvPfListScheduledContainersPath   = "PF_LIST_SCHEDULED_CONTAINERS_PATH"
+	EnvPfListProvisionedContainersPath = "PF_LIST_PROVISIONED_CONTAINERS_PATH"
+	EnvPfUpdateIpaddressPath           = "PF_UPDATE_IPADDRESS_PATH"
+	EnvPfMarkProvisionedPath           = "PF_MARK_PROVISIONED_PATH"
+	EnvPfMarkProvisionErrorPath        = "PF_MARK_PROVISION_ERROR_PATH"
+	EnvPfMarkDeletedPath               = "PF_MARK_DELETED_PATH"
 )
 
 var (
@@ -56,7 +58,7 @@ func init() {
 	PfApiPath = make(map[string]string)
 	PfApiPath["Register"], _ = envkit.GetString(EnvPfRegisterPath, DefaultPfRegisterPath)
 	PfApiPath["StoreMetrics"], _ = envkit.GetString(EnvPfStoreMetricsPath, DefaultPfStoreMetricsPath)
-	PfApiPath["ListContainers"], _ = envkit.GetString(EnvPfListContainersPath, DefaultPfListContainersPath)
+	PfApiPath["ListScheduledContainers"], _ = envkit.GetString(EnvPfListScheduledContainersPath, DefaultPfListScheduledContainersPath)
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddressPath, DefaultPfUpdateIpaddressPath)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)
 	PfApiPath["MarkProvisionError"], _ = envkit.GetString(EnvPfMarkProvisionErrorPath, DefaultPfMarkProvisionErrorPath)

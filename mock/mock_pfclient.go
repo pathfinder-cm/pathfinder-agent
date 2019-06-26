@@ -34,18 +34,18 @@ func (m *MockPfclient) EXPECT() *MockPfclientMockRecorder {
 }
 
 // FetchContainersFromServer mocks base method
-func (m *MockPfclient) FetchContainersFromServer(arg0 string) (*pfmodel.ContainerList, error) {
+func (m *MockPfclient) FetchContainersFromServer(arg0, arg1 string) (*pfmodel.ContainerList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FetchContainersFromServer", arg0)
+	ret := m.ctrl.Call(m, "FetchContainersFromServer", arg0, arg1)
 	ret0, _ := ret[0].(*pfmodel.ContainerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FetchContainersFromServer indicates an expected call of FetchContainersFromServer
-func (mr *MockPfclientMockRecorder) FetchContainersFromServer(arg0 interface{}) *gomock.Call {
+func (mr *MockPfclientMockRecorder) FetchContainersFromServer(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchContainersFromServer), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchContainersFromServer), arg0, arg1)
 }
 
 // MarkContainerAsDeleted mocks base method
