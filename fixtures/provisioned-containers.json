@@ -14,9 +14,16 @@
 						"protocol": "simplestream",
 						"auth_type": "none",
 						"certificate": "random"
-					}
+					},
+					"bootstrappers": [{
+						"bootstrap_type": "chef-solo",
+						"bootstrap_cookbooks_url": "",
+						"bootstrap_attributes": {
+							"run_list": "[barito:auto]"				
+						}
+					}]
 				},
-				"status":"SCHEDULED"
+				"status":"PROVISIONED"
 			},
 			{
 				"hostname": "test-02",
@@ -30,9 +37,16 @@
 						"protocol": "simplestream",
 						"auth_type": "none",
 						"certificate": "random"
-					}
+					},
+					"bootstrappers": [{
+						"bootstrap_type": "chef-solo",
+						"bootstrap_cookbooks_url": "",
+						"bootstrap_attributes": {
+							"run_list": "[barito:auto]"				
+						}
+					}]
 				},
-				"status":"SCHEDULED"
+				"status":"PROVISIONED"
 			},
 			{
 				"hostname": "test-03",
@@ -46,9 +60,16 @@
 						"protocol": "simplestream",
 						"auth_type": "none",
 						"certificate": "random"
-					}
+					},
+					"bootstrappers": [{
+						"bootstrap_type": "chef-solo",
+						"bootstrap_cookbooks_url": "",
+						"bootstrap_attributes": {
+							"run_list": "[barito:auto]"				
+						}
+					}]
 				},
-				"status":"SCHEDULED"
+				"status":"PROVISIONED"
 			}
         ]
     }
