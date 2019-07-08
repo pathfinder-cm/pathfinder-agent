@@ -2,10 +2,13 @@ package daemon
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"time"
 
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
@@ -159,6 +162,95 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	}
 
 	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (l *LXD) CreateContainerFile(container pfmodel.Container, fullPath string) error {
+	var content string
+	mode := 644
+	contentType := "file"
+	writeMode := "overwrite"
+
+	// // prepare filescript
+	for _, bs := range container.Bootstrappers {
+		switch bs.Type {
+		case "chef-solo":
+			content = `
+cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
+cat > solo.rb << EOF
+root = File.absolute_path(File.dirname(__FILE__))
+cookbook_path root + "/cookbooks"
+EOF
+`
+			execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bs.Attributes, bs.CookbooksUrl)
+			content = content + "\n" + execChefSoloCmd
+			mode = 600
+		default:
+			content = content
+			mode = mode
+		}
+	}
+
+	bootstrapFile, err := util.WriteToFile(fullPath, content)
+	if err != nil {
+		return err
+	}
+
+	// Setup the various options for a container file upload
+	fileArgs := client.ContainerFileArgs{
+		Content:   bootstrapFile,
+		UID:       0,
+		GID:       0,
+		Mode:      mode,
+		Type:      contentType,
+		WriteMode: writeMode,
+	}
+
+	err = l.targetSrv.CreateContainerFile(container.Hostname, fullPath, fileArgs)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *LXD) ExecContainer(container pfmodel.Container, fullPath string) (bool, error) {
+	//  pushing file to container
+	commands := []string{
+		"sh",
+		"-c",
+	}
+	execBootstrapShCmd := fmt.Sprintf("./%s", fullPath)
+	commands = append(commands, execBootstrapShCmd)
+
+	// Container exec request
+	req := api.ContainerExecPost{
+		Command:     commands,
+		WaitForWS:   true,
+		Interactive: true,
+		Width:       80,
+		Height:      15,
+	}
+
+	// Setup the exec arguments (fds)
+	args := client.ContainerExecArgs{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	// Get LXD to create the container (background operation)
+	op, err := l.targetSrv.ExecContainer(container.Hostname, req, &args)
+	if err != nil {
+		return false, err
+	}
+
+	// Wait for it to complete
 	err = op.Wait()
 	if err != nil {
 		return false, err

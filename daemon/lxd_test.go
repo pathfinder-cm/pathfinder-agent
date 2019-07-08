@@ -1,11 +1,16 @@
 package daemon
 
 import (
+	"fmt"
+	"os"
 	"testing"
+	// "io/ioutil"
 
 	"github.com/golang/mock/gomock"
+	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
@@ -152,5 +157,152 @@ func TestDeleteContainer(t *testing.T) {
 	ok, _ := l.DeleteContainer(tables[0].hostname)
 	if ok != true {
 		t.Errorf("Container not properly deleted")
+	}
+}
+
+func TestCreateContainerFile(t *testing.T) {
+	bootstrappers := []pfmodel.Bootstrapper{
+		pfmodel.Bootstrapper{
+			Type:         "chef-solo",
+			CookbooksUrl: "127.0.0.1",
+			Attributes:   "{}",
+		},
+	}
+	filename := util.RandomString(10)
+	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
+
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+				Bootstrappers: bootstrappers,
+			},
+		},
+	}
+
+	content := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
+cat > solo.rb << EOF
+root = File.absolute_path(File.dirname(__FILE__))
+cookbook_path root + "/cookbooks"
+EOF
+`
+	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
+	content = content + "\n" + execChefSoloCmd
+
+	bootstrapFile, err := util.WriteToFile(fullPath, content)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Setup the various options for a container file upload
+	fileArgs := client.ContainerFileArgs{
+		Content:   bootstrapFile,
+		UID:       0,
+		GID:       0,
+		Mode:      600,
+		Type:      "file",
+		WriteMode: "overwrite",
+	}
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().
+		CreateContainerFile(tables[0].container.Hostname, fullPath, fileArgs).
+		Return(nil)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	err = l.CreateContainerFile(tables[0].container, fullPath)
+	if err != nil {
+		t.Errorf("Container file failed to create")
+	}
+}
+
+func TestExecContainer(t *testing.T) {
+	filename := util.RandomString(10)
+	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
+
+	bootstrappers := []pfmodel.Bootstrapper{
+		pfmodel.Bootstrapper{
+			Type:         "chef-solo",
+			CookbooksUrl: "127.0.0.1",
+			Attributes:   "{}",
+		},
+	}
+
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+				Bootstrappers: bootstrappers,
+			},
+		},
+	}
+
+	commands := []string{
+		"sh",
+		"-c",
+	}
+	execBootstrapShCmd := fmt.Sprintf("./%s", fullPath)
+	commands = append(commands, execBootstrapShCmd)
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	execReq := api.ContainerExecPost{
+		Command:     commands,
+		WaitForWS:   true,
+		Interactive: true,
+		Width:       80,
+		Height:      15,
+	}
+
+	// Setup the exec arguments (fds)
+	args := client.ContainerExecArgs{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	ok, _ := l.ExecContainer(tables[0].container, fullPath)
+	if ok != true {
+		t.Errorf("Container not properly generated")
 	}
 }

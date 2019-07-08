@@ -48,6 +48,36 @@ func (mr *MockPfclientMockRecorder) FetchContainersFromServer(arg0, arg1 interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchContainersFromServer), arg0, arg1)
 }
 
+// MarkContainerAsBootstrapError mocks base method
+func (m *MockPfclient) MarkContainerAsBootstrapError(arg0, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkContainerAsBootstrapError", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MarkContainerAsBootstrapError indicates an expected call of MarkContainerAsBootstrapError
+func (mr *MockPfclientMockRecorder) MarkContainerAsBootstrapError(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsBootstrapError", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsBootstrapError), arg0, arg1)
+}
+
+// MarkContainerAsBootstrapped mocks base method
+func (m *MockPfclient) MarkContainerAsBootstrapped(arg0, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkContainerAsBootstrapped", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MarkContainerAsBootstrapped indicates an expected call of MarkContainerAsBootstrapped
+func (mr *MockPfclientMockRecorder) MarkContainerAsBootstrapped(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsBootstrapped", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsBootstrapped), arg0, arg1)
+}
+
 // MarkContainerAsDeleted mocks base method
 func (m *MockPfclient) MarkContainerAsDeleted(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
