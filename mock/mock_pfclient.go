@@ -33,19 +33,34 @@ func (m *MockPfclient) EXPECT() *MockPfclientMockRecorder {
 	return m.recorder
 }
 
-// FetchContainersFromServer mocks base method
-func (m *MockPfclient) FetchContainersFromServer(arg0, arg1 string) (*pfmodel.ContainerList, error) {
+// FetchProvisionedContainersFromServer mocks base method
+func (m *MockPfclient) FetchProvisionedContainersFromServer(arg0 string) (*pfmodel.ContainerList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FetchContainersFromServer", arg0, arg1)
+	ret := m.ctrl.Call(m, "FetchProvisionedContainersFromServer", arg0)
 	ret0, _ := ret[0].(*pfmodel.ContainerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FetchContainersFromServer indicates an expected call of FetchContainersFromServer
-func (mr *MockPfclientMockRecorder) FetchContainersFromServer(arg0, arg1 interface{}) *gomock.Call {
+// FetchProvisionedContainersFromServer indicates an expected call of FetchProvisionedContainersFromServer
+func (mr *MockPfclientMockRecorder) FetchProvisionedContainersFromServer(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchContainersFromServer), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchProvisionedContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchProvisionedContainersFromServer), arg0)
+}
+
+// FetchScheduledContainersFromServer mocks base method
+func (m *MockPfclient) FetchScheduledContainersFromServer(arg0 string) (*pfmodel.ContainerList, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FetchScheduledContainersFromServer", arg0)
+	ret0, _ := ret[0].(*pfmodel.ContainerList)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FetchScheduledContainersFromServer indicates an expected call of FetchScheduledContainersFromServer
+func (mr *MockPfclientMockRecorder) FetchScheduledContainersFromServer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchScheduledContainersFromServer", reflect.TypeOf((*MockPfclient)(nil).FetchScheduledContainersFromServer), arg0)
 }
 
 // MarkContainerAsBootstrapError mocks base method
