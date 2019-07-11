@@ -170,33 +170,17 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	return true, nil
 }
 
-func (l *LXD) CreateContainerFile(container pfmodel.Container, fullPath string) error {
+func (l *LXD) CreateContainerBootstrapFile(container pfmodel.Container, fullPath string) error {
 	var content string
 	mode := 644
 	contentType := "file"
 	writeMode := "overwrite"
 
-	// // prepare filescript
 	for _, bs := range container.Bootstrappers {
-		switch bs.Type {
-		case "chef-solo":
-			content = `
-cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
-cat > solo.rb << EOF
-root = File.absolute_path(File.dirname(__FILE__))
-cookbook_path root + "/cookbooks"
-EOF
-`
-			execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bs.Attributes, bs.CookbooksUrl)
-			content = content + "\n" + execChefSoloCmd
-			mode = 600
-		default:
-			content = content
-			mode = mode
-		}
+		content, mode = util.SetupBootstrapFileContent(bs, content, mode)
 	}
 
-	bootstrapFile, err := util.WriteToFile(fullPath, content)
+	bootstrapFile, err := util.WriteStringToFile(fullPath, content)
 	if err != nil {
 		return err
 	}
@@ -219,8 +203,7 @@ EOF
 	return nil
 }
 
-func (l *LXD) ExecContainer(container pfmodel.Container, fullPath string) (bool, error) {
-	//  pushing file to container
+func (l *LXD) ExecContainerBootstrap(container pfmodel.Container, fullPath string) (bool, error) {
 	commands := []string{
 		"sh",
 		"-c",
@@ -244,7 +227,7 @@ func (l *LXD) ExecContainer(container pfmodel.Container, fullPath string) (bool,
 		Stderr: os.Stderr,
 	}
 
-	// Get LXD to create the container (background operation)
+	// Get LXD to exec the container
 	op, err := l.targetSrv.ExecContainer(container.Hostname, req, &args)
 	if err != nil {
 		return false, err

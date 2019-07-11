@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	// "io/ioutil"
 
 	"github.com/golang/mock/gomock"
 	client "github.com/lxc/lxd/client"
@@ -160,7 +159,7 @@ func TestDeleteContainer(t *testing.T) {
 	}
 }
 
-func TestCreateContainerFile(t *testing.T) {
+func TestCreateContainerBootstrapFile(t *testing.T) {
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
@@ -202,7 +201,7 @@ EOF
 	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
 	content = content + "\n" + execChefSoloCmd
 
-	bootstrapFile, err := util.WriteToFile(fullPath, content)
+	bootstrapFile, err := util.WriteStringToFile(fullPath, content)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -229,13 +228,13 @@ EOF
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	err = l.CreateContainerFile(tables[0].container, fullPath)
+	err = l.CreateContainerBootstrapFile(tables[0].container, fullPath)
 	if err != nil {
 		t.Errorf("Container file failed to create")
 	}
 }
 
-func TestExecContainer(t *testing.T) {
+func TestExecContainerBootstrap(t *testing.T) {
 	filename := util.RandomString(10)
 	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 
@@ -301,7 +300,7 @@ func TestExecContainer(t *testing.T) {
 	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _ := l.ExecContainer(tables[0].container, fullPath)
+	ok, _ := l.ExecContainerBootstrap(tables[0].container, fullPath)
 	if ok != true {
 		t.Errorf("Container not properly generated")
 	}
