@@ -21,7 +21,7 @@ require (
 	github.com/lxc/lxd v0.0.0-20180904093917-aa490dbc7cfc
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
-	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190709054203-ca1c8f97398a
+	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710093714-04a66f068cfa
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af // indirect
 	github.com/shirou/gopsutil v0.0.0-20180801053943-8048a2e9c577
