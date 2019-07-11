@@ -66,12 +66,12 @@ func TestBootstrapProcess(t *testing.T) {
 	mockContainerDaemon := mock.NewMockContainerDaemon(mockCtrl)
 
 	for _, pc := range pcs {
-		mockContainerDaemon.EXPECT().CreateContainerFile(pc, fullPath).Return(nil)
-		mockContainerDaemon.EXPECT().ExecContainer(pc, fullPath).Return(true, nil)
+		mockContainerDaemon.EXPECT().CreateContainerBootstrapFile(pc, fullPath).Return(nil)
+		mockContainerDaemon.EXPECT().ExecContainerBootstrap(pc, fullPath).Return(true, nil)
 	}
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)
-	mockPfClient.EXPECT().FetchContainersFromServer(node, "ListProvisionedContainers").Return(&pcs, nil)
+	mockPfClient.EXPECT().FetchProvisionedContainersFromServer(node).Return(&pcs, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-01").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-02").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-03").Return(true, nil)

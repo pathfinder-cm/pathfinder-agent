@@ -37,12 +37,15 @@ func (a *provisionAgent) Run() {
 		delay := 5 + util.RandomIntRange(1, 5)
 		time.Sleep(time.Duration(delay) * time.Second)
 
-		a.Process()
+		provisionAgent := a.Process()
+		if provisionAgent {
+			a.bootstrapProcess()
+		}
 	}
 }
 
 func (a *provisionAgent) Process() bool {
-	scs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname, "ListScheduledContainers")
+	scs, err := a.pfclient.FetchScheduledContainersFromServer(a.nodeHostname)
 	if err != nil {
 		return false
 	}
@@ -171,4 +174,19 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 	)
 
 	return true, nil
+}
+
+func (a *provisionAgent) bootstrapProcess() bool {
+	log.WithFields(log.Fields{}).Warn("Starting bootstrap agent...")
+	filename := util.RandomString(10)
+	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
+
+	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, fullPath, a.containerDaemon, a.pfclient)
+	p := bootstrapAgent.Process()
+
+	if p != true {
+		return false
+	}
+
+	return true
 }

@@ -45,7 +45,7 @@ func (a *bootstrapAgent) Run() {
 }
 
 func (a *bootstrapAgent) Process() bool {
-	pcs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname, "ListProvisionedContainers")
+	pcs, err := a.pfclient.FetchProvisionedContainersFromServer(a.nodeHostname)
 	if err != nil {
 		return false
 	}
@@ -53,7 +53,7 @@ func (a *bootstrapAgent) Process() bool {
 	// Compare containers between server and local daemon
 	// Do action as necessary
 	for _, pc := range *pcs {
-		err := a.createContainerFile(pc)
+		err := a.createContainerBootstrapFile(pc)
 		if err != nil {
 			return false
 		}
@@ -64,7 +64,7 @@ func (a *bootstrapAgent) Process() bool {
 	return true
 }
 
-func (a *bootstrapAgent) createContainerFile(pc pfmodel.Container) error {
+func (a *bootstrapAgent) createContainerBootstrapFile(pc pfmodel.Container) error {
 	log.WithFields(log.Fields{
 		"hostname":      pc.Hostname,
 		"ipaddress":     pc.Ipaddress,
@@ -78,7 +78,7 @@ func (a *bootstrapAgent) createContainerFile(pc pfmodel.Container) error {
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Creating container file")
 
-	err := a.containerDaemon.CreateContainerFile(pc, a.fullPath)
+	err := a.containerDaemon.CreateContainerBootstrapFile(pc, a.fullPath)
 	if err != nil {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,
@@ -116,7 +116,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Bootstrapping container")
 
-	ok, err := a.containerDaemon.ExecContainer(pc, a.fullPath)
+	ok, err := a.containerDaemon.ExecContainerBootstrap(pc, a.fullPath)
 	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,
