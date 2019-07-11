@@ -34,8 +34,6 @@ func CmdAgent(ctx *cli.Context) {
 func runAgent() {
 	hostname, _ := os.Hostname()
 	ipaddress := getLocalIP()
-	filename := util.RandomString(10)
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	daemon, err := daemon.NewLXD(hostname, LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
@@ -74,9 +72,6 @@ func runAgent() {
 
 	provisionAgent := agent.NewProvisionAgent(hostname, daemon, pfclient)
 	go provisionAgent.Run()
-
-	bootstrapAgent := agent.NewBootstrapAgent(hostname, fullPath, daemon, pfclient)
-	go bootstrapAgent.Run()
 
 	metricsAgent := agent.NewMetricsAgent(hostname, pfclient)
 	go metricsAgent.Run()
