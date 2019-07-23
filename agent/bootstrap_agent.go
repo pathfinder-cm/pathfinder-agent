@@ -2,10 +2,8 @@ package agent
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
-	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	log "github.com/sirupsen/logrus"
@@ -13,35 +11,24 @@ import (
 
 type bootstrapAgent struct {
 	nodeHostname    string
-	fullPath        string
 	containerDaemon daemon.ContainerDaemon
 	pfclient        pfclient.Pfclient
 }
 
 func NewBootstrapAgent(
 	nodeHostname string,
-	fullPath string,
 	containerDaemon daemon.ContainerDaemon,
 	pfclient pfclient.Pfclient) Agent {
 
 	return &bootstrapAgent{
 		nodeHostname:    nodeHostname,
-		fullPath:        fullPath,
 		containerDaemon: containerDaemon,
 		pfclient:        pfclient,
 	}
 }
 
 func (a *bootstrapAgent) Run() {
-	log.WithFields(log.Fields{}).Warn("Starting bootstrap agent...")
 
-	for {
-		// Add delay between processing
-		delay := 5 + util.RandomIntRange(1, 5)
-		time.Sleep(time.Duration(delay) * time.Second)
-
-		a.Process()
-	}
 }
 
 func (a *bootstrapAgent) Process() bool {
@@ -78,7 +65,7 @@ func (a *bootstrapAgent) createContainerBootstrapFile(pc pfmodel.Container) erro
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Creating container file")
 
-	err := a.containerDaemon.CreateContainerBootstrapFile(pc, a.fullPath)
+	err := a.containerDaemon.CreateContainerBootstrapFile(pc)
 	if err != nil {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,
@@ -116,7 +103,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Bootstrapping container")
 
-	ok, err := a.containerDaemon.ExecContainerBootstrap(pc, a.fullPath)
+	ok, err := a.containerDaemon.ExecContainerBootstrap(pc)
 	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,

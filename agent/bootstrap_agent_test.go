@@ -1,19 +1,15 @@
 package agent
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
-	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
 func TestBootstrapProcess(t *testing.T) {
 	node := "test-01"
-	filename := util.RandomString(10)
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
@@ -66,8 +62,8 @@ func TestBootstrapProcess(t *testing.T) {
 	mockContainerDaemon := mock.NewMockContainerDaemon(mockCtrl)
 
 	for _, pc := range pcs {
-		mockContainerDaemon.EXPECT().CreateContainerBootstrapFile(pc, fullPath).Return(nil)
-		mockContainerDaemon.EXPECT().ExecContainerBootstrap(pc, fullPath).Return(true, nil)
+		mockContainerDaemon.EXPECT().CreateContainerBootstrapFile(pc).Return(nil)
+		mockContainerDaemon.EXPECT().ExecContainerBootstrap(pc).Return(true, nil)
 	}
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)
@@ -77,7 +73,7 @@ func TestBootstrapProcess(t *testing.T) {
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-03").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-04").Return(true, nil)
 
-	bootstrapAgent := NewBootstrapAgent(node, fullPath, mockContainerDaemon, mockPfClient)
+	bootstrapAgent := NewBootstrapAgent(node, mockContainerDaemon, mockPfClient)
 	ok := bootstrapAgent.Process()
 	if ok != true {
 		t.Errorf("Agent does not process properly")

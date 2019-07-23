@@ -177,11 +177,9 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 }
 
 func (a *provisionAgent) bootstrapProcess() bool {
-	log.WithFields(log.Fields{}).Warn("Starting bootstrap agent...")
-	filename := util.RandomString(10)
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
+	log.WithFields(log.Fields{}).Warn("Bootstrapping...")
 
-	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, fullPath, a.containerDaemon, a.pfclient)
+	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, a.containerDaemon, a.pfclient)
 	p := bootstrapAgent.Process()
 
 	if p != true {
