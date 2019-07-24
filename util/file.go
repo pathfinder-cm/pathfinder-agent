@@ -1,11 +1,12 @@
 package util
 
 import (
-	"fmt"
 	"io"
 	"os"
+	"text/template"
 
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 )
 
 func WriteStringToFile(filename string, data string) (*os.File, error) {
@@ -22,23 +23,46 @@ func WriteStringToFile(filename string, data string) (*os.File, error) {
 	return file, nil
 }
 
-func SetupBootstrapFileContent(bs pfmodel.Bootstrapper, content string, mode int) (string, int) {
-	switch bs.Type {
-	case "chef-solo":
-		content = `
-cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
+func DeleteFile(path string) error {
+	err := os.Remove(path)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GenerateBootstrapFileContent(bs pfmodel.Bootstrapper) (string, int, error) {
+	var tmpl string
+	var mode int
+	if bs.Type == "chef-solo" {
+		const content = `
+cd /tmp && curl -LO {{.ChefInstaller}} && sudo bash ./install.sh -v {{.ChefVersion}} && rm install.sh
 cat > solo.rb << EOF
 root = File.absolute_path(File.dirname(__FILE__))
 cookbook_path root + "/cookbooks"
 EOF
+chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksUrl}}
 `
-		execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bs.Attributes, bs.CookbooksUrl)
-		content = content + "\n" + execChefSoloCmd
+		tmpl := template.Must(template.New("content").Parse(content))
+		err := tmpl.Execute(os.Stdout, struct {
+			ChefInstaller       string
+			ChefVersion         string
+			BootstrapAttributes string
+			CookbooksUrl        string
+		}{
+			ChefInstaller:       config.ChefInstaller,
+			ChefVersion:         config.ChefVersion,
+			BootstrapAttributes: bs.Attributes,
+			CookbooksUrl:        bs.CookbooksUrl,
+		})
+
+		if err != nil {
+			return "", 0, err
+		}
+
 		mode = 600
-	default:
-		content = content
-		mode = mode
 	}
 
-	return content, mode
+	return tmpl, mode, nil
 }
