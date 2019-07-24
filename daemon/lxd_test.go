@@ -8,6 +8,7 @@ import (
 	"github.com/golang/mock/gomock"
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
@@ -167,8 +168,6 @@ func TestCreateContainerBootstrapFile(t *testing.T) {
 			Attributes:   "{}",
 		},
 	}
-	filename := util.RandomString(10)
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 
 	tables := []struct {
 		container pfmodel.Container
@@ -192,28 +191,20 @@ func TestCreateContainerBootstrapFile(t *testing.T) {
 		},
 	}
 
-	content := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
+	content, _, err := util.GenerateBootstrapFileContent(bootstrappers[0])
+
+	exceptedContent := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
 cat > solo.rb << EOF
 root = File.absolute_path(File.dirname(__FILE__))
 cookbook_path root + "/cookbooks"
-EOF
-`
+EOF'`
 	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
-	content = content + "\n" + execChefSoloCmd
+	exceptedContent = exceptedContent + "\n" + execChefSoloCmd
 
-	bootstrapFile, err := util.WriteStringToFile(fullPath, content)
 	if err != nil {
-		fmt.Println(err)
-	}
-
-	// Setup the various options for a container file upload
-	fileArgs := client.ContainerFileArgs{
-		Content:   bootstrapFile,
-		UID:       0,
-		GID:       0,
-		Mode:      600,
-		Type:      "file",
-		WriteMode: "overwrite",
+		t.Errorf("Incorrect content generated, got: %s, want: %s.",
+			content,
+			exceptedContent)
 	}
 
 	mockCtrl := gomock.NewController(t)
@@ -223,21 +214,18 @@ EOF
 	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
-	mockContainerServer.EXPECT().
-		CreateContainerFile(tables[0].container.Hostname, fullPath, fileArgs).
+
+	mockContainerServer.EXPECT().CreateContainerFile(tables[0].container.Hostname, config.RelativeBootstrapPath, gomock.Any()).
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	err = l.CreateContainerBootstrapFile(tables[0].container, fullPath)
+	err = l.CreateContainerBootstrapFile(tables[0].container)
 	if err != nil {
 		t.Errorf("Container file failed to create")
 	}
 }
 
 func TestExecContainerBootstrap(t *testing.T) {
-	filename := util.RandomString(10)
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
-
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
@@ -272,7 +260,7 @@ func TestExecContainerBootstrap(t *testing.T) {
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", fullPath)
+	execBootstrapShCmd := fmt.Sprintf("./%s", config.RelativeBootstrapPath)
 	commands = append(commands, execBootstrapShCmd)
 
 	mockCtrl := gomock.NewController(t)
@@ -300,8 +288,8 @@ func TestExecContainerBootstrap(t *testing.T) {
 	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _ := l.ExecContainerBootstrap(tables[0].container, fullPath)
+	ok, _ := l.ExecContainerBootstrap(tables[0].container)
 	if ok != true {
-		t.Errorf("Container not properly generated")
+		t.Errorf("Container not properly bootstrapped")
 	}
 }

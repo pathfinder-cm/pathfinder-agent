@@ -50,17 +50,17 @@ func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0 interface{}) *go
 }
 
 // CreateContainerBootstrapFile mocks base method
-func (m *MockContainerDaemon) CreateContainerBootstrapFile(arg0 pfmodel.Container, arg1 string) error {
+func (m *MockContainerDaemon) CreateContainerBootstrapFile(arg0 pfmodel.Container) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateContainerBootstrapFile", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateContainerBootstrapFile", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateContainerBootstrapFile indicates an expected call of CreateContainerBootstrapFile
-func (mr *MockContainerDaemonMockRecorder) CreateContainerBootstrapFile(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockContainerDaemonMockRecorder) CreateContainerBootstrapFile(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainerBootstrapFile", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainerBootstrapFile), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainerBootstrapFile", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainerBootstrapFile), arg0)
 }
 
 // DeleteContainer mocks base method
@@ -79,18 +79,18 @@ func (mr *MockContainerDaemonMockRecorder) DeleteContainer(arg0 interface{}) *go
 }
 
 // ExecContainerBootstrap mocks base method
-func (m *MockContainerDaemon) ExecContainerBootstrap(arg0 pfmodel.Container, arg1 string) (bool, error) {
+func (m *MockContainerDaemon) ExecContainerBootstrap(arg0 pfmodel.Container) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExecContainerBootstrap", arg0, arg1)
+	ret := m.ctrl.Call(m, "ExecContainerBootstrap", arg0)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ExecContainerBootstrap indicates an expected call of ExecContainerBootstrap
-func (mr *MockContainerDaemonMockRecorder) ExecContainerBootstrap(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockContainerDaemonMockRecorder) ExecContainerBootstrap(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecContainerBootstrap", reflect.TypeOf((*MockContainerDaemon)(nil).ExecContainerBootstrap), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecContainerBootstrap", reflect.TypeOf((*MockContainerDaemon)(nil).ExecContainerBootstrap), arg0)
 }
 
 // ListContainers mocks base method

@@ -8,6 +8,7 @@ import (
 
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
@@ -170,45 +171,53 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	return true, nil
 }
 
-func (l *LXD) CreateContainerBootstrapFile(container pfmodel.Container, fullPath string) error {
-	var content string
-	mode := 644
+func (l *LXD) CreateContainerBootstrapFile(container pfmodel.Container) error {
+	filename := util.RandomString(10)
+	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	contentType := "file"
 	writeMode := "overwrite"
 
 	for _, bs := range container.Bootstrappers {
-		content, mode = util.SetupBootstrapFileContent(bs, content, mode)
-	}
+		content, mode, err := util.GenerateBootstrapFileContent(bs)
+		if err != nil {
+			return err
+		}
 
-	bootstrapFile, err := util.WriteStringToFile(fullPath, content)
-	if err != nil {
-		return err
-	}
+		bootstrapFile, err := util.WriteStringToFile(fullPath, content)
+		if err != nil {
+			return err
+		}
 
-	// Setup the various options for a container file upload
-	fileArgs := client.ContainerFileArgs{
-		Content:   bootstrapFile,
-		UID:       0,
-		GID:       0,
-		Mode:      mode,
-		Type:      contentType,
-		WriteMode: writeMode,
-	}
+		// Setup the various options for a container file upload
+		fileArgs := client.ContainerFileArgs{
+			Content:   bootstrapFile,
+			UID:       0,
+			GID:       0,
+			Mode:      mode,
+			Type:      contentType,
+			WriteMode: writeMode,
+		}
 
-	err = l.targetSrv.CreateContainerFile(container.Hostname, fullPath, fileArgs)
-	if err != nil {
-		return err
+		err = l.targetSrv.CreateContainerFile(container.Hostname, config.RelativeBootstrapPath, fileArgs)
+		if err != nil {
+			return err
+		}
+
+		err = util.DeleteFile(fullPath)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (l *LXD) ExecContainerBootstrap(container pfmodel.Container, fullPath string) (bool, error) {
+func (l *LXD) ExecContainerBootstrap(container pfmodel.Container) (bool, error) {
 	commands := []string{
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", fullPath)
+	execBootstrapShCmd := fmt.Sprintf("./%s", config.RelativeBootstrapPath)
 	commands = append(commands, execBootstrapShCmd)
 
 	// Container exec request
