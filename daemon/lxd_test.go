@@ -160,7 +160,7 @@ func TestDeleteContainer(t *testing.T) {
 	}
 }
 
-func TestCreateContainerBootstrapFile(t *testing.T) {
+func TestCreateContainerBootstrapScript(t *testing.T) {
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
@@ -191,7 +191,7 @@ func TestCreateContainerBootstrapFile(t *testing.T) {
 		},
 	}
 
-	content, _, err := util.GenerateBootstrapFileContent(bootstrappers[0])
+	content, _, err := util.GenerateBootstrapScriptContent(bootstrappers[0])
 
 	exceptedContent := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
 cat > solo.rb << EOF
@@ -219,7 +219,7 @@ EOF'`
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	err = l.CreateContainerBootstrapFile(tables[0].container)
+	err = l.CreateContainerBootstrapScript(tables[0].container)
 	if err != nil {
 		t.Errorf("Container file failed to create")
 	}

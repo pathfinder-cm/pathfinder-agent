@@ -49,18 +49,18 @@ func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0)
 }
 
-// CreateContainerBootstrapFile mocks base method
-func (m *MockContainerDaemon) CreateContainerBootstrapFile(arg0 pfmodel.Container) error {
+// CreateContainerBootstrapScript mocks base method
+func (m *MockContainerDaemon) CreateContainerBootstrapScript(arg0 pfmodel.Container) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateContainerBootstrapFile", arg0)
+	ret := m.ctrl.Call(m, "CreateContainerBootstrapScript", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateContainerBootstrapFile indicates an expected call of CreateContainerBootstrapFile
-func (mr *MockContainerDaemonMockRecorder) CreateContainerBootstrapFile(arg0 interface{}) *gomock.Call {
+// CreateContainerBootstrapScript indicates an expected call of CreateContainerBootstrapScript
+func (mr *MockContainerDaemonMockRecorder) CreateContainerBootstrapScript(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainerBootstrapFile", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainerBootstrapFile), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainerBootstrapScript", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainerBootstrapScript), arg0)
 }
 
 // DeleteContainer mocks base method

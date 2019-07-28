@@ -171,14 +171,14 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	return true, nil
 }
 
-func (l *LXD) CreateContainerBootstrapFile(container pfmodel.Container) error {
+func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) error {
 	filename := util.RandomString(10)
 	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	contentType := "file"
 	writeMode := "overwrite"
 
 	for _, bs := range container.Bootstrappers {
-		content, mode, err := util.GenerateBootstrapFileContent(bs)
+		content, mode, err := util.GenerateBootstrapScriptContent(bs)
 		if err != nil {
 			return err
 		}

@@ -37,10 +37,8 @@ func (a *bootstrapAgent) Process() bool {
 		return false
 	}
 
-	// Compare containers between server and local daemon
-	// Do action as necessary
 	for _, pc := range *pcs {
-		err := a.createContainerBootstrapFile(pc)
+		err := a.createContainerBootstrapScript(pc)
 		if err != nil {
 			return false
 		}
@@ -51,7 +49,7 @@ func (a *bootstrapAgent) Process() bool {
 	return true
 }
 
-func (a *bootstrapAgent) createContainerBootstrapFile(pc pfmodel.Container) error {
+func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) error {
 	log.WithFields(log.Fields{
 		"hostname":      pc.Hostname,
 		"ipaddress":     pc.Ipaddress,
@@ -63,9 +61,9 @@ func (a *bootstrapAgent) createContainerBootstrapFile(pc pfmodel.Container) erro
 		"protocol":      pc.Source.Remote.Protocol,
 		"auth_type":     pc.Source.Remote.AuthType,
 		"bootstrappers": pc.Bootstrappers,
-	}).Info("Creating container file")
+	}).Info("Creating container bootstrap script")
 
-	err := a.containerDaemon.CreateContainerBootstrapFile(pc)
+	err := a.containerDaemon.CreateContainerBootstrapScript(pc)
 	if err != nil {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,
@@ -82,7 +80,7 @@ func (a *bootstrapAgent) createContainerBootstrapFile(pc pfmodel.Container) erro
 			"protocol":      pc.Source.Remote.Protocol,
 			"auth_type":     pc.Source.Remote.AuthType,
 			"bootstrappers": pc.Bootstrappers,
-		}).Error(fmt.Sprintf("Error during creating container file. %v", err))
+		}).Error(fmt.Sprintf("Error when creating container bootstrap script: %v", err))
 		return err
 	}
 
@@ -120,7 +118,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 			"protocol":      pc.Source.Remote.Protocol,
 			"auth_type":     pc.Source.Remote.AuthType,
 			"bootstrappers": pc.Bootstrappers,
-		}).Error(fmt.Sprintf("Error during container bootsrapping. %v", err))
+		}).Error(fmt.Sprintf("Error when bootstrapping container: %v", err))
 		return false, err
 	}
 

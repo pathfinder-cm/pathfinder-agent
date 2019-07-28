@@ -5,8 +5,8 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 	"github.com/pathfinder-cm/pathfinder-agent/config"
+	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
 func WriteStringToFile(filename string, data string) (*os.File, error) {
@@ -32,7 +32,8 @@ func DeleteFile(path string) error {
 	return nil
 }
 
-func GenerateBootstrapFileContent(bs pfmodel.Bootstrapper) (string, int, error) {
+// TODO: to be abstracted
+func GenerateBootstrapScriptContent(bs pfmodel.Bootstrapper) (string, int, error) {
 	var tmpl string
 	var mode int
 	if bs.Type == "chef-solo" {
