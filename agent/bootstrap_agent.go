@@ -39,8 +39,8 @@ func (a *bootstrapAgent) Process() bool {
 	}
 
 	for _, pc := range *pcs {
-		err := a.createContainerBootstrapScript(pc)
-		if err != nil {
+		ok, _ := a.createContainerBootstrapScript(pc)
+		if !ok {
 			return false
 		}
 
@@ -50,7 +50,7 @@ func (a *bootstrapAgent) Process() bool {
 	return true
 }
 
-func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) error {
+func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (bool, error) {
 	log.WithFields(log.Fields{
 		"hostname":      pc.Hostname,
 		"ipaddress":     pc.Ipaddress,
@@ -64,8 +64,8 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) er
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Creating container bootstrap script")
 
-	err := a.containerDaemon.CreateContainerBootstrapScript(pc)
-	if err != nil {
+	ok, err := a.containerDaemon.CreateContainerBootstrapScript(pc)
+	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,
 			pc.Hostname,
@@ -82,10 +82,10 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) er
 			"auth_type":     pc.Source.Remote.AuthType,
 			"bootstrappers": pc.Bootstrappers,
 		}).Error(fmt.Sprintf("Error when creating container bootstrap script: %v", err))
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }
 
 func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) {
@@ -102,7 +102,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Bootstrapping container")
 
-	ok, err := a.containerDaemon.ExecContainerBootstrap(pc)
+	ok, err := a.containerDaemon.BootstrapContainer(pc)
 	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,

@@ -219,13 +219,13 @@ EOF'`
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	err = l.CreateContainerBootstrapScript(tables[0].container)
-	if err != nil {
+	ok, err := l.CreateContainerBootstrapScript(tables[0].container)
+	if !ok {
 		t.Errorf("Container file failed to create")
 	}
 }
 
-func TestExecContainerBootstrap(t *testing.T) {
+func TestBootstrapContainer(t *testing.T) {
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
@@ -260,8 +260,8 @@ func TestExecContainerBootstrap(t *testing.T) {
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
-	commands = append(commands, execBootstrapShCmd)
+	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	commands = append(commands, execBootstrapCmd)
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -288,8 +288,8 @@ func TestExecContainerBootstrap(t *testing.T) {
 	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _ := l.ExecContainerBootstrap(tables[0].container)
-	if ok != true {
+	ok, _ := l.BootstrapContainer(tables[0].container)
+	if !ok {
 		t.Errorf("Container not properly bootstrapped")
 	}
 }

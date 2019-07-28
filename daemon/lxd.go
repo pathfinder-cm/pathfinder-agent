@@ -171,7 +171,7 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	return true, nil
 }
 
-func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) error {
+func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool, error) {
 	filename := util.RandomString(10)
 	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	contentType := "file"
@@ -180,17 +180,16 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) error 
 	for _, bs := range container.Bootstrappers {
 		content, mode, err := util.GenerateBootstrapScriptContent(bs)
 		if err != nil {
-			return err
+			return false, err
 		}
 
-		bootstrapFile, err := util.WriteStringToFile(fullPath, content)
+		bootstrapScript, err := util.WriteStringToFile(fullPath, content)
 		if err != nil {
-			return err
+			return false, err
 		}
 
-		// Setup the various options for a container file upload
 		fileArgs := client.ContainerFileArgs{
-			Content:   bootstrapFile,
+			Content:   bootstrapScript,
 			UID:       0,
 			GID:       0,
 			Mode:      mode,
@@ -200,27 +199,26 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) error 
 
 		err = l.targetSrv.CreateContainerFile(container.Hostname, config.AbsoluteBootstrapScriptPath, fileArgs)
 		if err != nil {
-			return err
+			return false, err
 		}
 
 		err = util.DeleteFile(fullPath)
 		if err != nil {
-			return err
+			return false, err
 		}
 	}
 
-	return nil
+	return true, nil
 }
 
-func (l *LXD) ExecContainerBootstrap(container pfmodel.Container) (bool, error) {
+func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 	commands := []string{
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
-	commands = append(commands, execBootstrapShCmd)
+	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	commands = append(commands, execBootstrapCmd)
 
-	// Container exec request
 	req := api.ContainerExecPost{
 		Command:     commands,
 		WaitForWS:   true,
@@ -229,20 +227,17 @@ func (l *LXD) ExecContainerBootstrap(container pfmodel.Container) (bool, error) 
 		Height:      15,
 	}
 
-	// Setup the exec arguments (fds)
 	args := client.ContainerExecArgs{
 		Stdin:  os.Stdin,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 	}
 
-	// Get LXD to exec the container
 	op, err := l.targetSrv.ExecContainer(container.Hostname, req, &args)
 	if err != nil {
 		return false, err
 	}
 
-	// Wait for it to complete
 	err = op.Wait()
 	if err != nil {
 		return false, err
