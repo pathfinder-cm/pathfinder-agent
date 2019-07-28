@@ -31,15 +31,16 @@ func NewProvisionAgent(
 
 func (a *provisionAgent) Run() {
 	log.WithFields(log.Fields{}).Warn("Starting provision agent...")
+	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, a.containerDaemon, a.pfclient)
 
 	for {
 		// Add delay between processing
 		delay := 5 + util.RandomIntRange(1, 5)
 		time.Sleep(time.Duration(delay) * time.Second)
 
-		provisionAgent := a.Process()
-		if provisionAgent {
-			a.bootstrapProcess()
+		provisionSucceed := a.Process()
+		if provisionSucceed {
+			bootstrapAgent.Run()
 		}
 	}
 }
@@ -174,17 +175,4 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 	)
 
 	return true, nil
-}
-
-func (a *provisionAgent) bootstrapProcess() bool {
-	log.WithFields(log.Fields{}).Warn("Bootstrapping...")
-
-	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, a.containerDaemon, a.pfclient)
-	p := bootstrapAgent.Process()
-
-	if p != true {
-		return false
-	}
-
-	return true
 }

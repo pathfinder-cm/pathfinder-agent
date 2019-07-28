@@ -28,7 +28,8 @@ func NewBootstrapAgent(
 }
 
 func (a *bootstrapAgent) Run() {
-
+	log.WithFields(log.Fields{}).Warn("Bootstrapping...")
+	a.Process()
 }
 
 func (a *bootstrapAgent) Process() bool {
