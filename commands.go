@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/BaritoLog/go-boilerplate/srvkit"
 	"github.com/pathfinder-cm/pathfinder-agent/agent"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
@@ -34,7 +35,7 @@ func CmdAgent(ctx *cli.Context) {
 func runAgent() {
 	hostname, _ := os.Hostname()
 	ipaddress := getLocalIP()
-	daemon, err := daemon.NewLXD(hostname, LXDSocketPath)
+	daemon, err := daemon.NewLXD(hostname, config.LXDSocketPath)
 	if err != nil {
 		log.Error("Cannot connect to container daemon")
 		return
@@ -49,11 +50,11 @@ func runAgent() {
 		},
 	}
 	pfclient := pfclient.NewPfclient(
-		PfCluster,
-		PfClusterPassword,
+		config.PfCluster,
+		config.PfClusterPassword,
 		httpClient,
-		PfServerAddr,
-		PfApiPath,
+		config.PfServerAddr,
+		config.PfApiPath,
 	)
 
 	log.WithFields(log.Fields{}).Warn("Trying to register to pathfinder server...")

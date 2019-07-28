@@ -33,6 +33,21 @@ func (m *MockContainerDaemon) EXPECT() *MockContainerDaemonMockRecorder {
 	return m.recorder
 }
 
+// BootstrapContainer mocks base method
+func (m *MockContainerDaemon) BootstrapContainer(arg0 pfmodel.Container) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BootstrapContainer", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BootstrapContainer indicates an expected call of BootstrapContainer
+func (mr *MockContainerDaemonMockRecorder) BootstrapContainer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BootstrapContainer", reflect.TypeOf((*MockContainerDaemon)(nil).BootstrapContainer), arg0)
+}
+
 // CreateContainer mocks base method
 func (m *MockContainerDaemon) CreateContainer(arg0 pfmodel.Container) (bool, string, error) {
 	m.ctrl.T.Helper()
@@ -47,6 +62,21 @@ func (m *MockContainerDaemon) CreateContainer(arg0 pfmodel.Container) (bool, str
 func (mr *MockContainerDaemonMockRecorder) CreateContainer(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainer", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainer), arg0)
+}
+
+// CreateContainerBootstrapScript mocks base method
+func (m *MockContainerDaemon) CreateContainerBootstrapScript(arg0 pfmodel.Container) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateContainerBootstrapScript", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateContainerBootstrapScript indicates an expected call of CreateContainerBootstrapScript
+func (mr *MockContainerDaemonMockRecorder) CreateContainerBootstrapScript(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateContainerBootstrapScript", reflect.TypeOf((*MockContainerDaemon)(nil).CreateContainerBootstrapScript), arg0)
 }
 
 // DeleteContainer mocks base method

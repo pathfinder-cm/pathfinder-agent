@@ -18,7 +18,7 @@ func TestMetricsProcess(t *testing.T) {
 	metricsAgent := NewMetricsAgent(node, mockPfClient)
 	mockPfClient.EXPECT().StoreMetrics(gomock.Any()).Return(true, nil)
 	ok := metricsAgent.Process()
-	if ok != true {
+	if !ok {
 		t.Errorf("Metrics agent does not process properly")
 	}
 }

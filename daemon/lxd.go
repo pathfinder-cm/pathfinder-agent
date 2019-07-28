@@ -2,11 +2,16 @@ package daemon
 
 import (
 	"errors"
+	"fmt"
+	"os"
 	"time"
 
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
+	"github.com/google/uuid"
 )
 
 type apiContainers []api.Container
@@ -62,7 +67,7 @@ func (l *LXD) ListContainers() (*pfmodel.ContainerList, error) {
 func (l *LXD) CreateContainer(container pfmodel.Container) (bool, string, error) {
 	var certificate string
 	if container.Source.Remote.AuthType == "tls" {
-		certificate = container.Source.Certificate
+		certificate = container.Source.Remote.Certificate
 	}
 
 	// Container creation request
@@ -159,6 +164,81 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 	}
 
 	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool, error) {
+	filename := uuid.New()
+	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
+	contentType := "file"
+	writeMode := "overwrite"
+
+	for _, bs := range container.Bootstrappers {
+		content, mode, err := util.GenerateBootstrapScriptContent(bs)
+		if err != nil {
+			return false, err
+		}
+
+		bootstrapScript, err := util.WriteStringToFile(fullPath, content)
+		if err != nil {
+			return false, err
+		}
+
+		fileArgs := client.ContainerFileArgs{
+			Content:   bootstrapScript,
+			UID:       0,
+			GID:       0,
+			Mode:      mode,
+			Type:      contentType,
+			WriteMode: writeMode,
+		}
+
+		err = l.targetSrv.CreateContainerFile(container.Hostname, config.AbsoluteBootstrapScriptPath, fileArgs)
+		if err != nil {
+			return false, err
+		}
+
+		err = util.DeleteFile(fullPath)
+		if err != nil {
+			return false, err
+		}
+	}
+
+	return true, nil
+}
+
+func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
+	commands := []string{
+		"sh",
+		"-c",
+	}
+	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	commands = append(commands, execBootstrapCmd)
+
+	req := api.ContainerExecPost{
+		Command:     commands,
+		WaitForWS:   true,
+		Interactive: true,
+		Width:       80,
+		Height:      15,
+	}
+
+	args := client.ContainerExecArgs{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	op, err := l.targetSrv.ExecContainer(container.Hostname, req, &args)
+	if err != nil {
+		return false, err
+	}
+
 	err = op.Wait()
 	if err != nil {
 		return false, err

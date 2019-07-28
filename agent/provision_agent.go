@@ -31,18 +31,22 @@ func NewProvisionAgent(
 
 func (a *provisionAgent) Run() {
 	log.WithFields(log.Fields{}).Warn("Starting provision agent...")
+	bootstrapAgent := NewBootstrapAgent(a.nodeHostname, a.containerDaemon, a.pfclient)
 
 	for {
 		// Add delay between processing
 		delay := 5 + util.RandomIntRange(1, 5)
 		time.Sleep(time.Duration(delay) * time.Second)
 
-		a.Process()
+		provisionSucceed := a.Process()
+		if provisionSucceed {
+			bootstrapAgent.Run()
+		}
 	}
 }
 
 func (a *provisionAgent) Process() bool {
-	scs, err := a.pfclient.FetchContainersFromServer(a.nodeHostname)
+	scs, err := a.pfclient.FetchScheduledContainersFromServer(a.nodeHostname)
 	if err != nil {
 		return false
 	}
@@ -75,7 +79,7 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 			"hostname":    sc.Hostname,
 			"source_type": sc.Source.Type,
 			"alias":       sc.Source.Alias,
-			"certificate": sc.Source.Certificate,
+			"certificate": sc.Source.Remote.Certificate,
 			"mode":        sc.Source.Mode,
 			"server":      sc.Source.Remote.Server,
 			"protocol":    sc.Source.Remote.Protocol,
@@ -92,7 +96,7 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 				"hostname":    sc.Hostname,
 				"source_type": sc.Source.Type,
 				"alias":       sc.Source.Alias,
-				"certificate": sc.Source.Certificate,
+				"certificate": sc.Source.Remote.Certificate,
 				"mode":        sc.Source.Mode,
 				"server":      sc.Source.Remote.Server,
 				"protocol":    sc.Source.Remote.Protocol,
@@ -115,7 +119,7 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 			"hostname":    sc.Hostname,
 			"source_type": sc.Source.Type,
 			"alias":       sc.Source.Alias,
-			"certificate": sc.Source.Certificate,
+			"certificate": sc.Source.Remote.Certificate,
 			"mode":        sc.Source.Mode,
 			"server":      sc.Source.Remote.Server,
 			"protocol":    sc.Source.Remote.Protocol,
@@ -126,7 +130,7 @@ func (a *provisionAgent) provisionContainer(sc pfmodel.Container, lcs *pfmodel.C
 			"hostname":    sc.Hostname,
 			"source_type": sc.Source.Type,
 			"alias":       sc.Source.Alias,
-			"certificate": sc.Source.Certificate,
+			"certificate": sc.Source.Remote.Certificate,
 			"mode":        sc.Source.Mode,
 			"server":      sc.Source.Remote.Server,
 			"protocol":    sc.Source.Remote.Protocol,

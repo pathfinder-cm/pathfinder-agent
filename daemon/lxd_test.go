@@ -1,11 +1,16 @@
 package daemon
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/mock"
+	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
 
@@ -58,14 +63,14 @@ func TestCreateContainer(t *testing.T) {
 			pfmodel.Container{
 				Hostname: "test-01",
 				Source: pfmodel.Source{
-					Type:        "image",
-					Mode:        "pull",
-					Alias:       "16.04",
-					Certificate: "random",
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
 					Remote: pfmodel.Remote{
-						Server:   "https://cloud-images.ubuntu.com/releases",
-						Protocol: "simplestream",
-						AuthType: "tls",
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
 					},
 				},
 			},
@@ -83,7 +88,7 @@ func TestCreateContainer(t *testing.T) {
 			Protocol:    tables[0].container.Source.Remote.Protocol,
 			Alias:       tables[0].container.Source.Alias,
 			Mode:        tables[0].container.Source.Mode,
-			Certificate: tables[0].container.Source.Certificate,
+			Certificate: tables[0].container.Source.Remote.Certificate,
 		},
 	}
 
@@ -119,7 +124,7 @@ func TestCreateContainer(t *testing.T) {
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	ok, _, _ := l.CreateContainer(tables[0].container)
-	if ok != true {
+	if !ok {
 		t.Errorf("Container not properly generated")
 	}
 }
@@ -150,7 +155,141 @@ func TestDeleteContainer(t *testing.T) {
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	ok, _ := l.DeleteContainer(tables[0].hostname)
-	if ok != true {
+	if !ok {
 		t.Errorf("Container not properly deleted")
+	}
+}
+
+func TestCreateContainerBootstrapScript(t *testing.T) {
+	bootstrappers := []pfmodel.Bootstrapper{
+		pfmodel.Bootstrapper{
+			Type:         "chef-solo",
+			CookbooksUrl: "127.0.0.1",
+			Attributes:   "{}",
+		},
+	}
+
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+				Bootstrappers: bootstrappers,
+			},
+		},
+	}
+
+	content, _, err := util.GenerateBootstrapScriptContent(bootstrappers[0])
+
+	exceptedContent := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
+cat > solo.rb << EOF
+root = File.absolute_path(File.dirname(__FILE__))
+cookbook_path root + "/cookbooks"
+EOF'`
+	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
+	exceptedContent = exceptedContent + "\n" + execChefSoloCmd
+
+	if err != nil {
+		t.Errorf("Incorrect content generated, got: %s, want: %s.",
+			content,
+			exceptedContent)
+	}
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+
+	mockContainerServer.EXPECT().CreateContainerFile(tables[0].container.Hostname, config.AbsoluteBootstrapScriptPath, gomock.Any()).
+		Return(nil)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	ok, err := l.CreateContainerBootstrapScript(tables[0].container)
+	if !ok {
+		t.Errorf("Container file failed to create")
+	}
+}
+
+func TestBootstrapContainer(t *testing.T) {
+	bootstrappers := []pfmodel.Bootstrapper{
+		pfmodel.Bootstrapper{
+			Type:         "chef-solo",
+			CookbooksUrl: "127.0.0.1",
+			Attributes:   "{}",
+		},
+	}
+
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+				Bootstrappers: bootstrappers,
+			},
+		},
+	}
+
+	commands := []string{
+		"sh",
+		"-c",
+	}
+	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	commands = append(commands, execBootstrapCmd)
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	execReq := api.ContainerExecPost{
+		Command:     commands,
+		WaitForWS:   true,
+		Interactive: true,
+		Width:       80,
+		Height:      15,
+	}
+
+	// Setup the exec arguments (fds)
+	args := client.ContainerExecArgs{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	ok, _ := l.BootstrapContainer(tables[0].container)
+	if !ok {
+		t.Errorf("Container not properly bootstrapped")
 	}
 }
