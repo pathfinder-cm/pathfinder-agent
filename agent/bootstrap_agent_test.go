@@ -75,7 +75,7 @@ func TestBootstrapProcess(t *testing.T) {
 
 	bootstrapAgent := NewBootstrapAgent(node, mockContainerDaemon, mockPfClient)
 	ok := bootstrapAgent.Process()
-	if ok != true {
+	if !ok {
 		t.Errorf("Agent does not process properly")
 	}
 }

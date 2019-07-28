@@ -64,7 +64,7 @@ func TestProvisionProcess(t *testing.T) {
 
 	provisionAgent := NewProvisionAgent(node, mockContainerDaemon, mockPfClient)
 	ok := provisionAgent.Process()
-	if ok != true {
+	if !ok {
 		t.Errorf("Agent does not process properly")
 	}
 }
