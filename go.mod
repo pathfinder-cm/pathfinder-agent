@@ -7,6 +7,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/golang/mock v1.3.1
+	github.com/google/uuid v1.1.1
 	github.com/gorilla/websocket v1.4.0
 	github.com/juju/clock v0.0.0-20190205081909-9c5c9712527c // indirect
 	github.com/juju/errors v0.0.0-20190207033735-e65537c515d7 // indirect

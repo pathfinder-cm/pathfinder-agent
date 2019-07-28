@@ -11,6 +11,7 @@ import (
 	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
+	"github.com/google/uuid"
 )
 
 type apiContainers []api.Container
@@ -172,7 +173,7 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 }
 
 func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool, error) {
-	filename := util.RandomString(10)
+	filename := uuid.New()
 	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	contentType := "file"
 	writeMode := "overwrite"
