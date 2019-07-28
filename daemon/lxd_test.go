@@ -215,7 +215,7 @@ EOF'`
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
 
-	mockContainerServer.EXPECT().CreateContainerFile(tables[0].container.Hostname, config.RelativeBootstrapPath, gomock.Any()).
+	mockContainerServer.EXPECT().CreateContainerFile(tables[0].container.Hostname, config.AbsoluteBootstrapScriptPath, gomock.Any()).
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
@@ -260,7 +260,7 @@ func TestExecContainerBootstrap(t *testing.T) {
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", config.RelativeBootstrapPath)
+	execBootstrapShCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
 	commands = append(commands, execBootstrapShCmd)
 
 	mockCtrl := gomock.NewController(t)

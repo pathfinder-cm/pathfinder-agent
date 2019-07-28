@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	Name                                   = "Pathfinder Agent"
-	Version                                = "0.3.2"
+	Name    = "Pathfinder Agent"
+	Version = "0.3.2"
 )
 
 func init() {

@@ -198,7 +198,7 @@ func (l *LXD) CreateContainerBootstrapFile(container pfmodel.Container) error {
 			WriteMode: writeMode,
 		}
 
-		err = l.targetSrv.CreateContainerFile(container.Hostname, config.RelativeBootstrapPath, fileArgs)
+		err = l.targetSrv.CreateContainerFile(container.Hostname, config.AbsoluteBootstrapScriptPath, fileArgs)
 		if err != nil {
 			return err
 		}
@@ -217,7 +217,7 @@ func (l *LXD) ExecContainerBootstrap(container pfmodel.Container) (bool, error) 
 		"sh",
 		"-c",
 	}
-	execBootstrapShCmd := fmt.Sprintf("./%s", config.RelativeBootstrapPath)
+	execBootstrapShCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
 	commands = append(commands, execBootstrapShCmd)
 
 	// Container exec request

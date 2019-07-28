@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/BaritoLog/go-boilerplate/envkit"
-
 )
 
 const (
@@ -21,7 +20,7 @@ const (
 	DefaultPfMarkDeletedPath               = "api/v1/node/containers/mark_deleted"
 	DefaultChefInstaller                   = "https://www.chef.io/chef/install.sh"
 	DefaultChefVersion                     = "14.12.3"
-	DefaultRelativeBootstrapPath           = "/opt/bootstrap.sh"
+	DefaultAbsoluteBootstrapScriptPath     = "/opt/bootstrap.sh"
 
 	EnvLXDSocketPath                   = "LXD_SOCKET_PATH"
 	EnvPfCluster                       = "PF_CLUSTER"
@@ -39,22 +38,21 @@ const (
 	EnvPfMarkDeletedPath               = "PF_MARK_DELETED_PATH"
 	EnvChefInstaller                   = "CHEF_INSTALLER"
 	EnvChefVersion                     = "CHEF_VERSION"
-	EnvRelativeBootstrapPath           = "RELATIVE_BOOTSTRAP_PATH"
+	EnvAbsoluteBootstrapScriptPath     = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
 )
 
 var (
-	LXDSocketPath     string
-	PfCluster         string
-	PfClusterPassword string
-	PfServerAddr      string
-	PfApiPath         map[string]string
-	ChefInstaller     string
-	ChefVersion       string
-	RelativeBootstrapPath string
+	LXDSocketPath               string
+	PfCluster                   string
+	PfClusterPassword           string
+	PfServerAddr                string
+	PfApiPath                   map[string]string
+	ChefInstaller               string
+	ChefVersion                 string
+	AbsoluteBootstrapScriptPath string
 )
 
 func init() {
-	// Initialize config vars
 	LXDSocketPath, _ = envkit.GetString(EnvLXDSocketPath, DefaultLXDSocketPath)
 	PfCluster, _ = envkit.GetString(EnvPfCluster, DefaultPfCluster)
 	PfClusterPassword, _ = envkit.GetString(EnvPfClusterPassword, "")
@@ -72,6 +70,5 @@ func init() {
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)
 	ChefInstaller, _ = envkit.GetString(EnvChefInstaller, DefaultChefInstaller)
 	ChefVersion, _ = envkit.GetString(EnvChefVersion, DefaultChefVersion)
-	RelativeBootstrapPath, _ = envkit.GetString(EnvRelativeBootstrapPath, DefaultRelativeBootstrapPath)
+	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)
 }
-
