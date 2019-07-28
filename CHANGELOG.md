@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.5.0
+- Support bootstrapping container
+
 #### 0.4.0
 - Retry connecting to pathfinder mono when server is down
 - Migrate to go modules
