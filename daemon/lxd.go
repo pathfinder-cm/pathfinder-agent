@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 	"github.com/pathfinder-cm/pathfinder-agent/config"
@@ -173,8 +173,6 @@ func (l *LXD) DeleteContainer(hostname string) (bool, error) {
 }
 
 func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool, error) {
-	filename := uuid.New()
-	fullPath := fmt.Sprintf("/tmp/%s.sh", filename)
 	contentType := "file"
 	writeMode := "overwrite"
 
@@ -184,13 +182,10 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool,
 			return false, err
 		}
 
-		bootstrapScript, err := util.WriteStringToFile(fullPath, content)
-		if err != nil {
-			return false, err
-		}
+		bootstrapContent := strings.NewReader(content)
 
 		fileArgs := client.ContainerFileArgs{
-			Content:   bootstrapScript,
+			Content:   bootstrapContent,
 			UID:       0,
 			GID:       0,
 			Mode:      mode,
@@ -199,11 +194,6 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool,
 		}
 
 		err = l.targetSrv.CreateContainerFile(container.Hostname, config.AbsoluteBootstrapScriptPath, fileArgs)
-		if err != nil {
-			return false, err
-		}
-
-		err = util.DeleteFile(fullPath)
 		if err != nil {
 			return false, err
 		}
