@@ -22,23 +22,23 @@ const (
 	DefaultChefVersion                     			= "14.12.3"
 	DefaultAbsoluteBootstrapScriptPath     			= "/opt/bootstrap.sh"
 
-	EnvLXDSocketPath                   = "LXD_SOCKET_PATH"
-	EnvPfCluster                       = "PF_CLUSTER"
-	EnvPfClusterPassword               = "PF_CLUSTER_PASSWORD"
-	EnvPfServerAddr                    = "PF_SERVER_ADDR"
-	EnvPfRegisterPath                  = "PF_REGISTER_PATH"
-	EnvPfStoreMetricsPath              = "PF_STORE_METRICS_PATH"
-	EnvPfListScheduledContainersPath   = "PF_LIST_SCHEDULED_CONTAINERS_PATH"
-	EnvPfListProvisionedContainersPath = "PF_LIST_PROVISIONED_CONTAINERS_PATH"
-	EnvPfUpdateIpaddressPath           = "PF_UPDATE_IPADDRESS_PATH"
-	EnvPfMarkProvisionedPath           = "PF_MARK_PROVISIONED_PATH"
-	EnvPfMarkProvisionErrorPath        = "PF_MARK_PROVISION_ERROR_PATH"
-	EnvPfMarkBootstrappedPath          = "PF_MARK_BOOTSTRAPPED_PATH"
-	EnvPfMarkBootstrapErrorPath        = "PF_MARK_BOOTSTRAP_ERROR_PATH"
-	EnvPfMarkDeletedPath               = "PF_MARK_DELETED_PATH"
-	EnvChefInstaller                   = "CHEF_INSTALLER"
-	EnvChefVersion                     = "CHEF_VERSION"
-	EnvAbsoluteBootstrapScriptPath     = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
+	EnvLXDSocketPath                   			= "LXD_SOCKET_PATH"
+	EnvPfCluster                       			= "PF_CLUSTER"
+	EnvPfClusterPassword               			= "PF_CLUSTER_PASSWORD"
+	EnvPfServerAddr                    			= "PF_SERVER_ADDR"
+	EnvPfRegisterPath                  			= "PF_REGISTER_PATH"
+	EnvPfStoreMetricsPath              			= "PF_STORE_METRICS_PATH"
+	EnvPfListScheduledContainersPath   			= "PF_LIST_SCHEDULED_CONTAINERS_PATH"
+	EnvPfListBootstrapScheduledContainersPath 	= "PF_LIST_BOOTSTRAPP_SCHEDULED_CONTAINERS_PATH"
+	EnvPfUpdateIpaddressPath           			= "PF_UPDATE_IPADDRESS_PATH"
+	EnvPfMarkProvisionedPath           			= "PF_MARK_PROVISIONED_PATH"
+	EnvPfMarkProvisionErrorPath        			= "PF_MARK_PROVISION_ERROR_PATH"
+	EnvPfMarkBootstrappedPath          			= "PF_MARK_BOOTSTRAPPED_PATH"
+	EnvPfMarkBootstrapErrorPath        			= "PF_MARK_BOOTSTRAP_ERROR_PATH"
+	EnvPfMarkDeletedPath               			= "PF_MARK_DELETED_PATH"
+	EnvChefInstaller                   			= "CHEF_INSTALLER"
+	EnvChefVersion                     			= "CHEF_VERSION"
+	EnvAbsoluteBootstrapScriptPath     			= "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
 )
 
 var (
@@ -61,7 +61,7 @@ func init() {
 	PfApiPath["Register"], _ = envkit.GetString(EnvPfRegisterPath, DefaultPfRegisterPath)
 	PfApiPath["StoreMetrics"], _ = envkit.GetString(EnvPfStoreMetricsPath, DefaultPfStoreMetricsPath)
 	PfApiPath["ListScheduledContainers"], _ = envkit.GetString(EnvPfListScheduledContainersPath, DefaultPfListScheduledContainersPath)
-	PfApiPath["ListProvisionedContainers"], _ = envkit.GetString(EnvPfListProvisionedContainersPath, DefaultPfListBootstrapScheduledContainersPath)
+	PfApiPath["ListBootstrapScheduledContainers"], _ = envkit.GetString(EnvPfListBootstrapScheduledContainersPath, DefaultPfListBootstrapScheduledContainersPath)
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddressPath, DefaultPfUpdateIpaddressPath)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)
 	PfApiPath["MarkProvisionError"], _ = envkit.GetString(EnvPfMarkProvisionErrorPath, DefaultPfMarkProvisionErrorPath)
