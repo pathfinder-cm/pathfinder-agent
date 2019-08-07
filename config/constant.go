@@ -5,22 +5,22 @@ import (
 )
 
 const (
-	DefaultLXDSocketPath                   = "/var/snap/lxd/common/lxd/unix.socket"
-	DefaultPfCluster                       = "default"
-	DefaultPfServerAddr                    = "http://192.168.33.1:3000"
-	DefaultPfRegisterPath                  = "api/v1/node/register"
-	DefaultPfStoreMetricsPath              = "api/v1/node/nodes/store_metrics"
-	DefaultPfListScheduledContainersPath   = "api/v2/node/containers/scheduled"
-	DefaultPfListProvisionedContainersPath = "api/v2/node/containers/bootstrap_scheduled"
-	DefaultPfUpdateIpaddressPath           = "api/v1/node/containers/ipaddress"
-	DefaultPfMarkProvisionedPath           = "api/v1/node/containers/mark_provisioned"
-	DefaultPfMarkProvisionErrorPath        = "api/v1/node/containers/mark_provision_error"
-	DefaultPfMarkBootstrappedPath          = "api/v2/node/containers/mark_bootstrapped"
-	DefaultPfMarkBootstrapErrorPath        = "api/v2/node/containers/mark_bootstrap_error"
-	DefaultPfMarkDeletedPath               = "api/v1/node/containers/mark_deleted"
-	DefaultChefInstaller                   = "https://www.chef.io/chef/install.sh"
-	DefaultChefVersion                     = "14.12.3"
-	DefaultAbsoluteBootstrapScriptPath     = "/opt/bootstrap.sh"
+	DefaultLXDSocketPath                   			= "/var/snap/lxd/common/lxd/unix.socket"
+	DefaultPfCluster                       			= "default"
+	DefaultPfServerAddr                    			= "http://192.168.33.1:3000"
+	DefaultPfRegisterPath                  			= "api/v1/node/register"
+	DefaultPfStoreMetricsPath              			= "api/v1/node/nodes/store_metrics"
+	DefaultPfListScheduledContainersPath   			= "api/v2/node/containers/scheduled"
+	DefaultPfListBootstrapScheduledContainersPath 	= "api/v2/node/containers/bootstrap_scheduled"
+	DefaultPfUpdateIpaddressPath           			= "api/v1/node/containers/ipaddress"
+	DefaultPfMarkProvisionedPath           			= "api/v1/node/containers/mark_provisioned"
+	DefaultPfMarkProvisionErrorPath        			= "api/v1/node/containers/mark_provision_error"
+	DefaultPfMarkBootstrappedPath          			= "api/v2/node/containers/mark_bootstrapped"
+	DefaultPfMarkBootstrapErrorPath        			= "api/v2/node/containers/mark_bootstrap_error"
+	DefaultPfMarkDeletedPath               			= "api/v1/node/containers/mark_deleted"
+	DefaultChefInstaller                   			= "https://www.chef.io/chef/install.sh"
+	DefaultChefVersion                     			= "14.12.3"
+	DefaultAbsoluteBootstrapScriptPath     			= "/opt/bootstrap.sh"
 
 	EnvLXDSocketPath                   = "LXD_SOCKET_PATH"
 	EnvPfCluster                       = "PF_CLUSTER"
@@ -61,7 +61,7 @@ func init() {
 	PfApiPath["Register"], _ = envkit.GetString(EnvPfRegisterPath, DefaultPfRegisterPath)
 	PfApiPath["StoreMetrics"], _ = envkit.GetString(EnvPfStoreMetricsPath, DefaultPfStoreMetricsPath)
 	PfApiPath["ListScheduledContainers"], _ = envkit.GetString(EnvPfListScheduledContainersPath, DefaultPfListScheduledContainersPath)
-	PfApiPath["ListProvisionedContainers"], _ = envkit.GetString(EnvPfListProvisionedContainersPath, DefaultPfListProvisionedContainersPath)
+	PfApiPath["ListProvisionedContainers"], _ = envkit.GetString(EnvPfListProvisionedContainersPath, DefaultPfListBootstrapScheduledContainersPath)
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddressPath, DefaultPfUpdateIpaddressPath)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)
 	PfApiPath["MarkProvisionError"], _ = envkit.GetString(EnvPfMarkProvisionErrorPath, DefaultPfMarkProvisionErrorPath)
