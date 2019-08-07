@@ -1,36 +1,12 @@
 package util
 
 import (
-	"io"
 	"os"
 	"text/template"
 
 	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
 )
-
-func WriteStringToFile(filename string, data string) (*os.File, error) {
-	file, err := os.Create(filename)
-	if err != nil {
-		return file, err
-	}
-	defer file.Close()
-
-	_, err = io.WriteString(file, data)
-	if err != nil {
-		return file, err
-	}
-	return file, nil
-}
-
-func DeleteFile(path string) error {
-	err := os.Remove(path)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 // TODO: to be abstracted
 func GenerateBootstrapScriptContent(bs pfmodel.Bootstrapper) (string, int, error) {
