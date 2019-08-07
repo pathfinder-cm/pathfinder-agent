@@ -128,18 +128,16 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		pc.Hostname,
 	)
 	log.WithFields(log.Fields{
-		"hostname":                pc.Hostname,
-		"ipaddress":               pc.Ipaddress,
-		"source_type":             pc.Source.Type,
-		"alias":                   pc.Source.Alias,
-		"certificate":             pc.Source.Remote.Certificate,
-		"mode":                    pc.Source.Mode,
-		"server":                  pc.Source.Remote.Server,
-		"protocol":                pc.Source.Remote.Protocol,
-		"auth_type":               pc.Source.Remote.AuthType,
-		"bootstrap_type":          pc.Bootstrappers[0].Type,
-		"bootstrap_cookbooks_url": pc.Bootstrappers[0].CookbooksUrl,
-		"bootstrap_attributes":    pc.Bootstrappers[0].Attributes,
+		"hostname":      pc.Hostname,
+		"ipaddress":     pc.Ipaddress,
+		"source_type":   pc.Source.Type,
+		"alias":         pc.Source.Alias,
+		"certificate":   pc.Source.Remote.Certificate,
+		"mode":          pc.Source.Mode,
+		"server":        pc.Source.Remote.Server,
+		"protocol":      pc.Source.Remote.Protocol,
+		"auth_type":     pc.Source.Remote.AuthType,
+		"bootstrappers": pc.Bootstrappers,
 	}).Info("Container bootstrapped")
 
 	return true, nil

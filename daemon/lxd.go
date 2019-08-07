@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	client "github.com/lxc/lxd/client"
 	"github.com/lxc/lxd/shared/api"
 	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/util"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
-	"github.com/google/uuid"
 )
 
 type apiContainers []api.Container
