@@ -65,6 +65,8 @@ github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710084420-e30eb22e517a
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710084420-e30eb22e517a/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710093714-04a66f068cfa h1:hM8grkCVm1t3xcdWvHHmOKPziI9eLPhX4YZCXZbo4k0=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710093714-04a66f068cfa/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190807121802-233b617d3414 h1:lDMMF8aLE+MSrVTbTKsXW74UVxzvm5R3Wl9JJy0evE0=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190807121802-233b617d3414/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
@@ -102,6 +104,7 @@ golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5h
 golang.org/x/sys v0.0.0-20190422165155-953cdadca894/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190528012530-adf421d2caf4 h1:gd52YanAQJ4UkvuNi/7z63JEyc6ejHh9QwdzbTiEtAY=
 golang.org/x/sys v0.0.0-20190528012530-adf421d2caf4/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/tools v0.0.0-20190425150028-36563e24a262 h1:qsl9y/CJx34tuA7QCPNp86JNJe4spst6Ff8MjvPUdPg=

@@ -22,14 +22,14 @@ require (
 	github.com/lxc/lxd v0.0.0-20180904093917-aa490dbc7cfc
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
-	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190710093714-04a66f068cfa
+	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20190807121802-233b617d3414
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af // indirect
 	github.com/shirou/gopsutil v0.0.0-20180801053943-8048a2e9c577
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/urfave/cli v1.20.0
-	golang.org/x/sys v0.0.0-20190528012530-adf421d2caf4 // indirect
+	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/errgo.v1 v1.0.0 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
