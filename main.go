@@ -9,7 +9,7 @@ import (
 
 const (
 	Name    = "Pathfinder Agent"
-	Version = "0.5.1"
+	Version = "0.5.2"
 )
 
 func init() {
