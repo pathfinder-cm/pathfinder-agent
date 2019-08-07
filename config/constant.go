@@ -11,7 +11,7 @@ const (
 	DefaultPfRegisterPath                  = "api/v1/node/register"
 	DefaultPfStoreMetricsPath              = "api/v1/node/nodes/store_metrics"
 	DefaultPfListScheduledContainersPath   = "api/v2/node/containers/scheduled"
-	DefaultPfListProvisionedContainersPath = "api/v2/node/containers/provisioned"
+	DefaultPfListProvisionedContainersPath = "api/v2/node/containers/bootstrap_scheduled"
 	DefaultPfUpdateIpaddressPath           = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath           = "api/v1/node/containers/mark_provisioned"
 	DefaultPfMarkProvisionErrorPath        = "api/v1/node/containers/mark_provision_error"
