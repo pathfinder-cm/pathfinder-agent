@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.5.1
+- Update endpoint address
+
 #### 0.5.0
 - Support bootstrapping container
 
