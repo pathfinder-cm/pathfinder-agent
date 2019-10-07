@@ -1,7 +1,7 @@
 package util
 
 import (
-	"os"
+	"bytes"
 	"text/template"
 
 	"github.com/pathfinder-cm/pathfinder-agent/config"
@@ -10,7 +10,7 @@ import (
 
 // TODO: to be abstracted
 func GenerateBootstrapScriptContent(bs pfmodel.Bootstrapper) (string, int, error) {
-	var tmpl string
+	var tpl bytes.Buffer
 	var mode int
 	if bs.Type == "chef-solo" {
 		const content = `
@@ -19,19 +19,19 @@ cat > solo.rb << EOF
 root = File.absolute_path(File.dirname(__FILE__))
 cookbook_path root + "/cookbooks"
 EOF
-chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksUrl}}
+chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksURL}}
 `
 		tmpl := template.Must(template.New("content").Parse(content))
-		err := tmpl.Execute(os.Stdout, struct {
+		err := tmpl.Execute(&tpl, struct {
 			ChefInstaller       string
 			ChefVersion         string
 			BootstrapAttributes string
-			CookbooksUrl        string
+			CookbooksURL        string
 		}{
 			ChefInstaller:       config.ChefInstaller,
 			ChefVersion:         config.ChefVersion,
 			BootstrapAttributes: bs.Attributes,
-			CookbooksUrl:        bs.CookbooksUrl,
+			CookbooksURL:        bs.CookbooksUrl,
 		})
 
 		if err != nil {
@@ -41,5 +41,5 @@ chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksUrl}}
 		mode = 600
 	}
 
-	return tmpl, mode, nil
+	return tpl.String(), mode, nil
 }
