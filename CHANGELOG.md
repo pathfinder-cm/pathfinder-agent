@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.5.3
+- Fix: Empty bootstrap template content
+
 #### 0.5.2
 - Avoid creating temporary file before writing bootstrap script on the container
 
