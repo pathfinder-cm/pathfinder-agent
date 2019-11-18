@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"encoding/json"
 	"text/template"
 
 	"github.com/pathfinder-cm/pathfinder-agent/config"
@@ -21,6 +22,8 @@ cookbook_path root + "/cookbooks"
 EOF
 chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksURL}}
 `
+		attributes, _ := json.Marshal(bs.Attributes)
+
 		tmpl := template.Must(template.New("content").Parse(content))
 		err := tmpl.Execute(&tpl, struct {
 			ChefInstaller       string
@@ -30,7 +33,7 @@ chef-solo -c ~/tmp/solo.rb -j {{.BootstrapAttributes}} {{.CookbooksURL}}
 		}{
 			ChefInstaller:       config.ChefInstaller,
 			ChefVersion:         config.ChefVersion,
-			BootstrapAttributes: bs.Attributes,
+			BootstrapAttributes: string(attributes),
 			CookbooksURL:        bs.CookbooksUrl,
 		})
 

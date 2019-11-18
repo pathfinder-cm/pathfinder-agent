@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -10,12 +11,22 @@ import (
 
 func TestBootstrapProcess(t *testing.T) {
 	node := "test-01"
+	bytes := []byte(`{
+		"consul":{
+			"hosts":["guro-consul-01"],
+			"config":{
+			"consul.json":{"bind_addr":null}}
+		},
+		"run_list":["role[consul]"]
+	}`)
+	var attributes interface{}
+	json.Unmarshal(bytes, &attributes)
 
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
 			CookbooksUrl: "127.0.0.1",
-			Attributes:   "{}",
+			Attributes:   attributes,
 		},
 	}
 	pcs := make(pfmodel.ContainerList, 4)

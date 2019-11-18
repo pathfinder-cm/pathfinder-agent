@@ -1,6 +1,7 @@
 package daemon
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
@@ -161,11 +162,22 @@ func TestDeleteContainer(t *testing.T) {
 }
 
 func TestCreateContainerBootstrapScript(t *testing.T) {
+	bytes := []byte(`{
+		"consul":{
+			"hosts":["guro-consul-01"],
+			"config":{
+			"consul.json":{"bind_addr":null}}
+		},
+		"run_list":["role[consul]"]
+	}`)
+	var attributes interface{}
+	json.Unmarshal(bytes, &attributes)
+
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
 			CookbooksUrl: "127.0.0.1",
-			Attributes:   "{}",
+			Attributes:   attributes,
 		},
 	}
 
@@ -198,7 +210,9 @@ cat > solo.rb << EOF
 root = File.absolute_path(File.dirname(__FILE__))
 cookbook_path root + "/cookbooks"
 EOF'`
-	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
+
+	bootstrapperAttributes, _ := json.Marshal(bootstrappers[0].Attributes)
+	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrapperAttributes, bootstrappers[0].CookbooksUrl)
 	exceptedContent = exceptedContent + "\n" + execChefSoloCmd
 
 	if err != nil {
@@ -226,11 +240,22 @@ EOF'`
 }
 
 func TestBootstrapContainer(t *testing.T) {
+	bytes := []byte(`{
+		"consul":{
+			"hosts":["guro-consul-01"],
+			"config":{
+			"consul.json":{"bind_addr":null}}
+		},
+		"run_list":["role[consul]"]
+	}`)
+	var attributes interface{}
+	json.Unmarshal(bytes, &attributes)
+
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
 			CookbooksUrl: "127.0.0.1",
-			Attributes:   "{}",
+			Attributes:   attributes,
 		},
 	}
 
