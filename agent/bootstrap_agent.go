@@ -44,7 +44,7 @@ func (a *bootstrapAgent) Process() bool {
 			return false
 		}
 
-		a.bootstrapContainer(pc)
+		go a.bootstrapContainer(pc)
 	}
 
 	return true
