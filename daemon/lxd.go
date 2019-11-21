@@ -204,18 +204,14 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool,
 
 func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 	commands := []string{
-		"sh",
-		"-c",
+		"bash",
 	}
-	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
-	commands = append(commands, execBootstrapCmd)
+	commands = append(commands, config.AbsoluteBootstrapScriptPath)
 
 	req := api.ContainerExecPost{
 		Command:     commands,
 		WaitForWS:   true,
-		Interactive: true,
-		Width:       80,
-		Height:      15,
+		Interactive: false,
 	}
 
 	args := client.ContainerExecArgs{
@@ -234,5 +230,10 @@ func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 		return false, err
 	}
 
+	opAPI := op.Get()
+	retVal, ok := opAPI.Metadata["return"].(float64)
+	if !ok {
+		return false, fmt.Errorf("Error Status: %v when executing bootstrap command", retVal)
+	}
 	return true, nil
 }
