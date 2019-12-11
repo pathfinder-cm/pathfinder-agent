@@ -282,8 +282,7 @@ func TestBootstrapContainer(t *testing.T) {
 	}
 
 	commands := []string{
-		"sh",
-		"-c",
+		"bash",
 	}
 	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
 	commands = append(commands, execBootstrapCmd)

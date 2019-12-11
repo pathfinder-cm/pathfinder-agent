@@ -64,6 +64,22 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (b
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Creating container bootstrap script")
 
+	if len(pc.Bootstrappers.Type) == 0 {
+		log.WithFields(log.Fields{
+			"hostname":      pc.Hostname,
+			"ipaddress":     pc.Ipaddress,
+			"source_type":   pc.Source.Type,
+			"alias":         pc.Source.Alias,
+			"certificate":   pc.Source.Remote.Certificate,
+			"mode":          pc.Source.Mode,
+			"server":        pc.Source.Remote.Server,
+			"protocol":      pc.Source.Remote.Protocol,
+			"auth_type":     pc.Source.Remote.AuthType,
+			"bootstrappers": pc.Bootstrappers,
+		}).Error(fmt.Sprintf("Bootstrap Type not specified"))
+		return false, fmt.Errorf("Error while bootstrapping %v: Bootstrap Type not specified", pc.Hostname)
+	}
+
 	ok, err := a.containerDaemon.CreateContainerBootstrapScript(pc)
 	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
