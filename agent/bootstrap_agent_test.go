@@ -79,12 +79,21 @@ func TestBootstrapProcess(t *testing.T) {
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)
 	mockPfClient.EXPECT().FetchProvisionedContainersFromServer(node).Return(&pcs, nil)
+	mockPfClient.EXPECT().MarkContainerAsBootstrapStarted(node, "test-c-01").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-01").Return(true, nil)
+	mockPfClient.EXPECT().MarkContainerAsBootstrapStarted(node, "test-c-02").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-02").Return(true, nil)
+	mockPfClient.EXPECT().MarkContainerAsBootstrapStarted(node, "test-c-03").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-03").Return(true, nil)
+	mockPfClient.EXPECT().MarkContainerAsBootstrapStarted(node, "test-c-04").Return(true, nil)
 	mockPfClient.EXPECT().MarkContainerAsBootstrapped(node, "test-c-04").Return(true, nil)
 
+	startBootstrap = func(a *bootstrapAgent, pc pfmodel.Container) {
+		a.bootstrapContainer(pc)
+	}
+
 	bootstrapAgent := NewBootstrapAgent(node, mockContainerDaemon, mockPfClient)
+
 	ok := bootstrapAgent.Process()
 	if !ok {
 		t.Errorf("Agent does not process properly")

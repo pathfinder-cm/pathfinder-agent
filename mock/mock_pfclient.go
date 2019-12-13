@@ -78,6 +78,21 @@ func (mr *MockPfclientMockRecorder) MarkContainerAsBootstrapError(arg0, arg1 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsBootstrapError", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsBootstrapError), arg0, arg1)
 }
 
+// MarkContainerAsBootstrapStarted mocks base method
+func (m *MockPfclient) MarkContainerAsBootstrapStarted(arg0, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkContainerAsBootstrapStarted", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MarkContainerAsBootstrapStarted indicates an expected call of MarkContainerAsBootstrapStarted
+func (mr *MockPfclientMockRecorder) MarkContainerAsBootstrapStarted(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkContainerAsBootstrapStarted", reflect.TypeOf((*MockPfclient)(nil).MarkContainerAsBootstrapStarted), arg0, arg1)
+}
+
 // MarkContainerAsBootstrapped mocks base method
 func (m *MockPfclient) MarkContainerAsBootstrapped(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -166,6 +181,21 @@ func (m *MockPfclient) StoreMetrics(arg0 *pfmodel.Metrics) (bool, error) {
 func (mr *MockPfclientMockRecorder) StoreMetrics(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreMetrics", reflect.TypeOf((*MockPfclient)(nil).StoreMetrics), arg0)
+}
+
+// UpdateContainerStatus mocks base method
+func (m *MockPfclient) UpdateContainerStatus(arg0, arg1, arg2 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateContainerStatus", arg0, arg1, arg2)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateContainerStatus indicates an expected call of UpdateContainerStatus
+func (mr *MockPfclientMockRecorder) UpdateContainerStatus(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateContainerStatus", reflect.TypeOf((*MockPfclient)(nil).UpdateContainerStatus), arg0, arg1, arg2)
 }
 
 // UpdateIpaddress mocks base method

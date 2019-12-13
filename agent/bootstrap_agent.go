@@ -32,6 +32,10 @@ func (a *bootstrapAgent) Run() {
 	a.Process()
 }
 
+var startBootstrap = func(a *bootstrapAgent, pc pfmodel.Container) {
+	go a.bootstrapContainer(pc)
+}
+
 func (a *bootstrapAgent) Process() bool {
 	pcs, err := a.pfclient.FetchProvisionedContainersFromServer(a.nodeHostname)
 	if err != nil {
@@ -44,7 +48,7 @@ func (a *bootstrapAgent) Process() bool {
 			return false
 		}
 
-		go a.bootstrapContainer(pc)
+		startBootstrap(a, pc)
 	}
 
 	return true
@@ -64,7 +68,11 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (b
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Creating container bootstrap script")
 
-	if len(pc.Bootstrappers.Type) == 0 {
+	if len(pc.Bootstrappers) == 0 {
+		a.pfclient.MarkContainerAsBootstrapError(
+			a.nodeHostname,
+			pc.Hostname,
+		)
 		log.WithFields(log.Fields{
 			"hostname":      pc.Hostname,
 			"ipaddress":     pc.Ipaddress,
@@ -76,8 +84,8 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (b
 			"protocol":      pc.Source.Remote.Protocol,
 			"auth_type":     pc.Source.Remote.AuthType,
 			"bootstrappers": pc.Bootstrappers,
-		}).Error(fmt.Sprintf("Bootstrap Type not specified"))
-		return false, fmt.Errorf("Error while bootstrapping %v: Bootstrap Type not specified", pc.Hostname)
+		}).Error(fmt.Sprintf("Bootstrappers not specified"))
+		return false, fmt.Errorf("Error while bootstrapping %v: Bootstrapper not specified", pc.Hostname)
 	}
 
 	ok, err := a.containerDaemon.CreateContainerBootstrapScript(pc)
@@ -100,6 +108,10 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (b
 		}).Error(fmt.Sprintf("Error when creating container bootstrap script: %v", err))
 		return false, err
 	}
+	a.pfclient.MarkContainerAsBootstrapStarted(
+		a.nodeHostname,
+		pc.Hostname,
+	)
 
 	return true, nil
 }
