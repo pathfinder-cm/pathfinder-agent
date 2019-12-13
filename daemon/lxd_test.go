@@ -284,7 +284,7 @@ func TestBootstrapContainer(t *testing.T) {
 	commands := []string{
 		"bash",
 	}
-	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	execBootstrapCmd := fmt.Sprintf("%s", config.AbsoluteBootstrapScriptPath)
 	commands = append(commands, execBootstrapCmd)
 
 	mockCtrl := gomock.NewController(t)
@@ -293,9 +293,7 @@ func TestBootstrapContainer(t *testing.T) {
 	execReq := api.ContainerExecPost{
 		Command:     commands,
 		WaitForWS:   true,
-		Interactive: true,
-		Width:       80,
-		Height:      15,
+		Interactive: false,
 	}
 
 	// Setup the exec arguments (fds)
@@ -305,8 +303,12 @@ func TestBootstrapContainer(t *testing.T) {
 		Stderr: os.Stderr,
 	}
 
+	opApi := api.Operation{}
+	json.Unmarshal([]byte(`{"return":1}`), &opApi.Metadata)
+
 	mockOperation := mock.NewMockOperation(mockCtrl)
 	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+	mockOperation.EXPECT().Get().Return(opApi).AnyTimes()
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
 	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
