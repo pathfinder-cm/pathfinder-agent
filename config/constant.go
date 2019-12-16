@@ -22,6 +22,7 @@ const (
 	DefaultChefInstaller                          = "https://www.chef.io/chef/install.sh"
 	DefaultChefVersion                            = "15.5.17"
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
+	DefaultBootstrapContainerMaxRetry             = 2
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
@@ -41,6 +42,7 @@ const (
 	EnvChefInstaller                          = "CHEF_INSTALLER"
 	EnvChefVersion                            = "CHEF_VERSION"
 	EnvAbsoluteBootstrapScriptPath            = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
+	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
 )
 
 var (
@@ -52,6 +54,7 @@ var (
 	ChefInstaller               string
 	ChefVersion                 string
 	AbsoluteBootstrapScriptPath string
+	BootstrapContainerMaxRetry  int
 )
 
 func init() {
@@ -74,4 +77,5 @@ func init() {
 	ChefInstaller, _ = envkit.GetString(EnvChefInstaller, DefaultChefInstaller)
 	ChefVersion, _ = envkit.GetString(EnvChefVersion, DefaultChefVersion)
 	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)
+	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
 }

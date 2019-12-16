@@ -303,15 +303,29 @@ func TestBootstrapContainer(t *testing.T) {
 		Stderr: os.Stderr,
 	}
 
-	opApi := api.Operation{}
-	json.Unmarshal([]byte(`{"return":0}`), &opApi.Metadata)
-
-	mockOperation := mock.NewMockOperation(mockCtrl)
-	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
-	mockOperation.EXPECT().Get().Return(opApi).AnyTimes()
+	opAPIReturnValues := []string{
+		`{"return":1}`,
+		`{"return":1}`,
+		`{"return":0}`,
+	}
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
-	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+	var previousExecContainerMock *gomock.Call
+
+	for _, opAPIReturnValue := range opAPIReturnValues {
+		opAPI := api.Operation{}
+		json.Unmarshal([]byte(opAPIReturnValue), &opAPI.Metadata)
+
+		mockOperation := mock.NewMockOperation(mockCtrl)
+		mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+		mockOperation.EXPECT().Get().Return(opAPI).AnyTimes()
+
+		execContainerMock := mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+		if previousExecContainerMock != nil {
+			execContainerMock.After(previousExecContainerMock)
+		}
+		previousExecContainerMock = execContainerMock
+	}
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
 	ok, _ := l.BootstrapContainer(tables[0].container)

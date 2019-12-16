@@ -202,7 +202,7 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool,
 	return true, nil
 }
 
-func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
+func (l *LXD) doBootstrapContainer(container pfmodel.Container) (bool, error) {
 	commands := []string{
 		"bash",
 	}
@@ -240,4 +240,20 @@ func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
+	var ok bool
+	var err error
+
+	maxTry := config.BootstrapContainerMaxRetry + 1
+
+	for maxTry > 0 {
+		ok, err = l.doBootstrapContainer(container)
+		if ok {
+			break
+		}
+		maxTry--
+	}
+	return ok, err
 }
