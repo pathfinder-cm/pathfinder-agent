@@ -304,7 +304,7 @@ func TestBootstrapContainer(t *testing.T) {
 	}
 
 	opApi := api.Operation{}
-	json.Unmarshal([]byte(`{"return":1}`), &opApi.Metadata)
+	json.Unmarshal([]byte(`{"return":0}`), &opApi.Metadata)
 
 	mockOperation := mock.NewMockOperation(mockCtrl)
 	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()

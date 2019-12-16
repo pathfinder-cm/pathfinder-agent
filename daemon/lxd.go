@@ -233,7 +233,11 @@ func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 	opAPI := op.Get()
 	retVal, ok := opAPI.Metadata["return"].(float64)
 	if !ok {
+		return false, fmt.Errorf("Error Status: Unable to parse exit status")
+	}
+	if retVal != 0 {
 		return false, fmt.Errorf("Error Status: %v when executing bootstrap command", retVal)
 	}
+
 	return true, nil
 }
