@@ -18,7 +18,7 @@ func GenerateBootstrapScriptContent(bs pfmodel.Bootstrapper) (string, int, error
 CHEF_FLAG_FILE=/tmp/chef_installed.txt
 if [ ! -f "$CHEF_FLAG_FILE" ]; then
 	echo "$CHEF_FLAG_FILE doesn't exist, creating file..."
-	cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh && touch chef_installed.txt
+	cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v {{.ChefVersion}} && rm install.sh && touch chef_installed.txt
 fi
 
 CHEF_REPO_DIR=/tmp/chef-repo-master
@@ -39,7 +39,6 @@ cat > /tmp/attributes.json << EOF
 EOF
 
 chef-solo -c /tmp/solo.rb -j /tmp/attributes.json
-echo $?
 `
 		attributes, _ := json.Marshal(bs.Attributes)
 

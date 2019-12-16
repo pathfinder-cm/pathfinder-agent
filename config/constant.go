@@ -20,7 +20,7 @@ const (
 	DefaultPfMarkBootstrapErrorPath               = "api/v2/node/containers/mark_bootstrap_error"
 	DefaultPfMarkDeletedPath                      = "api/v1/node/containers/mark_deleted"
 	DefaultChefInstaller                          = "https://www.chef.io/chef/install.sh"
-	DefaultChefVersion                            = "14.12.3"
+	DefaultChefVersion                            = "15.5.17"
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
