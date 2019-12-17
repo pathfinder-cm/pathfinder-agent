@@ -253,6 +253,11 @@ func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 		if ok {
 			break
 		}
+
+		// Add delay between processing
+		delay := 5 + util.RandomIntRange(1, 5)
+		time.Sleep(time.Duration(delay) * time.Second)
+		
 		maxTry--
 	}
 	return ok, err
