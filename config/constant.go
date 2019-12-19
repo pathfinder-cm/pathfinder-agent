@@ -23,6 +23,7 @@ const (
 	DefaultChefVersion                            = "15.5.17"
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
+	DefaultBootstrapMaxConcurrent                 = 5
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
@@ -43,6 +44,7 @@ const (
 	EnvChefVersion                            = "CHEF_VERSION"
 	EnvAbsoluteBootstrapScriptPath            = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
 	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
+	EnvBootstrapMaxConcurrent                 = "BOOTSTRAP_MAX_CONCURRENT"
 )
 
 var (
@@ -55,6 +57,7 @@ var (
 	ChefVersion                 string
 	AbsoluteBootstrapScriptPath string
 	BootstrapContainerMaxRetry  int
+	BootstrapMaxConcurrent      int
 )
 
 func init() {
@@ -78,4 +81,5 @@ func init() {
 	ChefVersion, _ = envkit.GetString(EnvChefVersion, DefaultChefVersion)
 	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)
 	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
+	BootstrapMaxConcurrent, _ = envkit.GetInt(EnvBootstrapMaxConcurrent, DefaultBootstrapMaxConcurrent)
 }

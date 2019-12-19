@@ -3,6 +3,7 @@ package agent
 import (
 	"fmt"
 
+	"github.com/pathfinder-cm/pathfinder-agent/config"
 	"github.com/pathfinder-cm/pathfinder-agent/daemon"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfclient"
 	"github.com/pathfinder-cm/pathfinder-go-client/pfmodel"
@@ -10,9 +11,10 @@ import (
 )
 
 type bootstrapAgent struct {
-	nodeHostname    string
-	containerDaemon daemon.ContainerDaemon
-	pfclient        pfclient.Pfclient
+	nodeHostname       string
+	containerDaemon    daemon.ContainerDaemon
+	pfclient           pfclient.Pfclient
+	limitConcBootstrap chan struct{}
 }
 
 func NewBootstrapAgent(
@@ -21,14 +23,15 @@ func NewBootstrapAgent(
 	pfclient pfclient.Pfclient) Agent {
 
 	return &bootstrapAgent{
-		nodeHostname:    nodeHostname,
-		containerDaemon: containerDaemon,
-		pfclient:        pfclient,
+		nodeHostname:       nodeHostname,
+		containerDaemon:    containerDaemon,
+		pfclient:           pfclient,
+		limitConcBootstrap: make(chan struct{}, config.BootstrapMaxConcurrent),
 	}
 }
 
 func (a *bootstrapAgent) Run() {
-	log.WithFields(log.Fields{}).Warn("Bootstrapping...")
+	log.WithFields(log.Fields{}).Info("Bootstrap agent running...")
 	a.Process()
 }
 
@@ -48,6 +51,7 @@ func (a *bootstrapAgent) Process() bool {
 			return false
 		}
 
+		a.limitConcBootstrap <- struct{}{}
 		startBootstrap(a, pc)
 	}
 
@@ -114,6 +118,7 @@ func (a *bootstrapAgent) createContainerBootstrapScript(pc pfmodel.Container) (b
 }
 
 func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) {
+	log.WithFields(log.Fields{}).Info("Bootstrapping...")
 	log.WithFields(log.Fields{
 		"hostname":      pc.Hostname,
 		"ipaddress":     pc.Ipaddress,
@@ -143,6 +148,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 			"auth_type":     pc.Source.Remote.AuthType,
 			"bootstrappers": pc.Bootstrappers,
 		}).Error(fmt.Sprintf("Error when bootstrapping container: %v", err))
+		<-a.limitConcBootstrap
 		return false, err
 	}
 
@@ -162,5 +168,6 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Container bootstrapped")
 
+	<-a.limitConcBootstrap
 	return true, nil
 }
