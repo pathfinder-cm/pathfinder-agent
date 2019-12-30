@@ -183,21 +183,6 @@ func (mr *MockPfclientMockRecorder) StoreMetrics(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreMetrics", reflect.TypeOf((*MockPfclient)(nil).StoreMetrics), arg0)
 }
 
-// UpdateContainerStatus mocks base method
-func (m *MockPfclient) UpdateContainerStatus(arg0, arg1, arg2 string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateContainerStatus", arg0, arg1, arg2)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateContainerStatus indicates an expected call of UpdateContainerStatus
-func (mr *MockPfclientMockRecorder) UpdateContainerStatus(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateContainerStatus", reflect.TypeOf((*MockPfclient)(nil).UpdateContainerStatus), arg0, arg1, arg2)
-}
-
 // UpdateIpaddress mocks base method
 func (m *MockPfclient) UpdateIpaddress(arg0, arg1, arg2 string) (bool, error) {
 	m.ctrl.T.Helper()
