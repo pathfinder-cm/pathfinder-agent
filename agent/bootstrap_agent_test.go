@@ -74,7 +74,7 @@ func TestBootstrapProcess(t *testing.T) {
 
 	for _, pc := range pcs {
 		mockContainerDaemon.EXPECT().CreateContainerBootstrapScript(pc).Return(true, nil)
-		mockContainerDaemon.EXPECT().BootstrapContainer(pc).Return(true, nil)
+		mockContainerDaemon.EXPECT().ValidateAndBootstrapContainer(pc).Return(true, nil)
 	}
 
 	mockPfClient := mock.NewMockPfclient(mockCtrl)

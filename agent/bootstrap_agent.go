@@ -131,7 +131,7 @@ func (a *bootstrapAgent) bootstrapContainer(pc pfmodel.Container) (bool, error) 
 		"bootstrappers": pc.Bootstrappers,
 	}).Info("Bootstrapping container")
 
-	ok, err := a.containerDaemon.BootstrapContainer(pc)
+	ok, err := a.containerDaemon.ValidateAndBootstrapContainer(pc)
 	if !ok {
 		a.pfclient.MarkContainerAsBootstrapError(
 			a.nodeHostname,

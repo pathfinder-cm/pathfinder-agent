@@ -328,7 +328,7 @@ func TestBootstrapContainer(t *testing.T) {
 	}
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _ := l.BootstrapContainer(tables[0].container)
+	ok, _ := l.ValidateAndBootstrapContainer(tables[0].container)
 	if !ok {
 		t.Errorf("Container not properly bootstrapped")
 	}

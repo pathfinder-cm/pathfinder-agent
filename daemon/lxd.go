@@ -202,7 +202,7 @@ func (l *LXD) CreateContainerBootstrapScript(container pfmodel.Container) (bool,
 	return true, nil
 }
 
-func (l *LXD) doBootstrapContainer(container pfmodel.Container) (bool, error) {
+func (l *LXD) bootstrapContainer(container pfmodel.Container) (bool, error) {
 	commands := []string{
 		"bash",
 	}
@@ -242,14 +242,14 @@ func (l *LXD) doBootstrapContainer(container pfmodel.Container) (bool, error) {
 	return true, nil
 }
 
-func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
+func (l *LXD) ValidateAndBootstrapContainer(container pfmodel.Container) (bool, error) {
 	var ok bool
 	var err error
 
 	maxTry := config.BootstrapContainerMaxRetry + 1
 
 	for maxTry > 0 {
-		ok, err = l.doBootstrapContainer(container)
+		ok, err = l.bootstrapContainer(container)
 		if ok {
 			break
 		}
@@ -257,7 +257,7 @@ func (l *LXD) BootstrapContainer(container pfmodel.Container) (bool, error) {
 		// Add delay between processing
 		delay := 5 + util.RandomIntRange(1, 5)
 		time.Sleep(time.Duration(delay) * time.Second)
-		
+
 		maxTry--
 	}
 	return ok, err
