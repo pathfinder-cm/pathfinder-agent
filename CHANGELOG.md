@@ -1,5 +1,10 @@
 ## Changelog
 
+#### 0.6.0
+- Make bootstrap process idempotent
+- Functionality to retry bootstrap if it failed
+- Make number of concurrent bootstrap adjustable
+
 #### 0.5.3
 - Fix: Empty bootstrap template content
 
