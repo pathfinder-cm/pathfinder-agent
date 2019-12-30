@@ -15,12 +15,15 @@ const (
 	DefaultPfUpdateIpaddressPath                  = "api/v1/node/containers/ipaddress"
 	DefaultPfMarkProvisionedPath                  = "api/v1/node/containers/mark_provisioned"
 	DefaultPfMarkProvisionErrorPath               = "api/v1/node/containers/mark_provision_error"
+	DefaultPfMarkBootstrapStartedPath             = "api/v2/node/containers/mark_bootstrap_started"
 	DefaultPfMarkBootstrappedPath                 = "api/v2/node/containers/mark_bootstrapped"
 	DefaultPfMarkBootstrapErrorPath               = "api/v2/node/containers/mark_bootstrap_error"
 	DefaultPfMarkDeletedPath                      = "api/v1/node/containers/mark_deleted"
 	DefaultChefInstaller                          = "https://www.chef.io/chef/install.sh"
-	DefaultChefVersion                            = "14.12.3"
+	DefaultChefVersion                            = "15.5.17"
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
+	DefaultBootstrapContainerMaxRetry             = 2
+	DefaultBootstrapMaxConcurrent                 = 5
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
@@ -33,12 +36,15 @@ const (
 	EnvPfUpdateIpaddressPath                  = "PF_UPDATE_IPADDRESS_PATH"
 	EnvPfMarkProvisionedPath                  = "PF_MARK_PROVISIONED_PATH"
 	EnvPfMarkProvisionErrorPath               = "PF_MARK_PROVISION_ERROR_PATH"
+	EnvPfMarkBootstrapStartedPath             = "PF_MARK_BOOTSTRAP_STARTED_PATH"
 	EnvPfMarkBootstrappedPath                 = "PF_MARK_BOOTSTRAPPED_PATH"
 	EnvPfMarkBootstrapErrorPath               = "PF_MARK_BOOTSTRAP_ERROR_PATH"
 	EnvPfMarkDeletedPath                      = "PF_MARK_DELETED_PATH"
 	EnvChefInstaller                          = "CHEF_INSTALLER"
 	EnvChefVersion                            = "CHEF_VERSION"
 	EnvAbsoluteBootstrapScriptPath            = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
+	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
+	EnvBootstrapMaxConcurrent                 = "BOOTSTRAP_MAX_CONCURRENT"
 )
 
 var (
@@ -50,6 +56,8 @@ var (
 	ChefInstaller               string
 	ChefVersion                 string
 	AbsoluteBootstrapScriptPath string
+	BootstrapContainerMaxRetry  int
+	BootstrapMaxConcurrent      int
 )
 
 func init() {
@@ -65,10 +73,13 @@ func init() {
 	PfApiPath["UpdateIpaddress"], _ = envkit.GetString(EnvPfUpdateIpaddressPath, DefaultPfUpdateIpaddressPath)
 	PfApiPath["MarkProvisioned"], _ = envkit.GetString(EnvPfMarkProvisionedPath, DefaultPfMarkProvisionedPath)
 	PfApiPath["MarkProvisionError"], _ = envkit.GetString(EnvPfMarkProvisionErrorPath, DefaultPfMarkProvisionErrorPath)
+	PfApiPath["MarkBootstrapStarted"], _ = envkit.GetString(EnvPfMarkBootstrapStartedPath, DefaultPfMarkBootstrapStartedPath)
 	PfApiPath["MarkBootstrapped"], _ = envkit.GetString(EnvPfMarkBootstrappedPath, DefaultPfMarkBootstrappedPath)
 	PfApiPath["MarkBootstrapError"], _ = envkit.GetString(EnvPfMarkBootstrapErrorPath, DefaultPfMarkBootstrapErrorPath)
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)
 	ChefInstaller, _ = envkit.GetString(EnvChefInstaller, DefaultChefInstaller)
 	ChefVersion, _ = envkit.GetString(EnvChefVersion, DefaultChefVersion)
 	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)
+	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
+	BootstrapMaxConcurrent, _ = envkit.GetInt(EnvBootstrapMaxConcurrent, DefaultBootstrapMaxConcurrent)
 }

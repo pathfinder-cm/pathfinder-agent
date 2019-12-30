@@ -7,5 +7,5 @@ type ContainerDaemon interface {
 	CreateContainer(container pfmodel.Container) (bool, string, error)
 	DeleteContainer(hostname string) (bool, error)
 	CreateContainerBootstrapScript(container pfmodel.Container) (bool, error)
-	BootstrapContainer(container pfmodel.Container) (bool, error)
+	ValidateAndBootstrapContainer(container pfmodel.Container) (bool, error)
 }

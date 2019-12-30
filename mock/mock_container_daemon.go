@@ -33,21 +33,6 @@ func (m *MockContainerDaemon) EXPECT() *MockContainerDaemonMockRecorder {
 	return m.recorder
 }
 
-// BootstrapContainer mocks base method
-func (m *MockContainerDaemon) BootstrapContainer(arg0 pfmodel.Container) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BootstrapContainer", arg0)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BootstrapContainer indicates an expected call of BootstrapContainer
-func (mr *MockContainerDaemonMockRecorder) BootstrapContainer(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BootstrapContainer", reflect.TypeOf((*MockContainerDaemon)(nil).BootstrapContainer), arg0)
-}
-
 // CreateContainer mocks base method
 func (m *MockContainerDaemon) CreateContainer(arg0 pfmodel.Container) (bool, string, error) {
 	m.ctrl.T.Helper()
@@ -107,4 +92,19 @@ func (m *MockContainerDaemon) ListContainers() (*pfmodel.ContainerList, error) {
 func (mr *MockContainerDaemonMockRecorder) ListContainers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListContainers", reflect.TypeOf((*MockContainerDaemon)(nil).ListContainers))
+}
+
+// ValidateAndBootstrapContainer mocks base method
+func (m *MockContainerDaemon) ValidateAndBootstrapContainer(arg0 pfmodel.Container) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidateAndBootstrapContainer", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ValidateAndBootstrapContainer indicates an expected call of ValidateAndBootstrapContainer
+func (mr *MockContainerDaemonMockRecorder) ValidateAndBootstrapContainer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateAndBootstrapContainer", reflect.TypeOf((*MockContainerDaemon)(nil).ValidateAndBootstrapContainer), arg0)
 }

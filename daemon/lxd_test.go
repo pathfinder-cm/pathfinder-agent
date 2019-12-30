@@ -1,6 +1,7 @@
 package daemon
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
@@ -161,11 +162,22 @@ func TestDeleteContainer(t *testing.T) {
 }
 
 func TestCreateContainerBootstrapScript(t *testing.T) {
+	bytes := []byte(`{
+		"consul":{
+			"hosts":["guro-consul-01"],
+			"config":{
+			"consul.json":{"bind_addr":null}}
+		},
+		"run_list":["role[consul]"]
+	}`)
+	var attributes interface{}
+	json.Unmarshal(bytes, &attributes)
+
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
 			CookbooksUrl: "127.0.0.1",
-			Attributes:   "{}",
+			Attributes:   attributes,
 		},
 	}
 
@@ -198,7 +210,9 @@ cat > solo.rb << EOF
 root = File.absolute_path(File.dirname(__FILE__))
 cookbook_path root + "/cookbooks"
 EOF'`
-	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrappers[0].Attributes, bootstrappers[0].CookbooksUrl)
+
+	bootstrapperAttributes, _ := json.Marshal(bootstrappers[0].Attributes)
+	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrapperAttributes, bootstrappers[0].CookbooksUrl)
 	exceptedContent = exceptedContent + "\n" + execChefSoloCmd
 
 	if err != nil {
@@ -226,11 +240,22 @@ EOF'`
 }
 
 func TestBootstrapContainer(t *testing.T) {
+	bytes := []byte(`{
+		"consul":{
+			"hosts":["guro-consul-01"],
+			"config":{
+			"consul.json":{"bind_addr":null}}
+		},
+		"run_list":["role[consul]"]
+	}`)
+	var attributes interface{}
+	json.Unmarshal(bytes, &attributes)
+
 	bootstrappers := []pfmodel.Bootstrapper{
 		pfmodel.Bootstrapper{
 			Type:         "chef-solo",
 			CookbooksUrl: "127.0.0.1",
-			Attributes:   "{}",
+			Attributes:   attributes,
 		},
 	}
 
@@ -257,10 +282,9 @@ func TestBootstrapContainer(t *testing.T) {
 	}
 
 	commands := []string{
-		"sh",
-		"-c",
+		"bash",
 	}
-	execBootstrapCmd := fmt.Sprintf("./%s", config.AbsoluteBootstrapScriptPath)
+	execBootstrapCmd := fmt.Sprintf("%s", config.AbsoluteBootstrapScriptPath)
 	commands = append(commands, execBootstrapCmd)
 
 	mockCtrl := gomock.NewController(t)
@@ -269,9 +293,7 @@ func TestBootstrapContainer(t *testing.T) {
 	execReq := api.ContainerExecPost{
 		Command:     commands,
 		WaitForWS:   true,
-		Interactive: true,
-		Width:       80,
-		Height:      15,
+		Interactive: false,
 	}
 
 	// Setup the exec arguments (fds)
@@ -281,14 +303,32 @@ func TestBootstrapContainer(t *testing.T) {
 		Stderr: os.Stderr,
 	}
 
-	mockOperation := mock.NewMockOperation(mockCtrl)
-	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+	opAPIReturnValues := []string{
+		`{"return":1}`,
+		`{"return":1}`,
+		`{"return":0}`,
+	}
 
 	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
-	mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+	var previousExecContainerMock *gomock.Call
+
+	for _, opAPIReturnValue := range opAPIReturnValues {
+		opAPI := api.Operation{}
+		json.Unmarshal([]byte(opAPIReturnValue), &opAPI.Metadata)
+
+		mockOperation := mock.NewMockOperation(mockCtrl)
+		mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+		mockOperation.EXPECT().Get().Return(opAPI).AnyTimes()
+
+		execContainerMock := mockContainerServer.EXPECT().ExecContainer(tables[0].container.Hostname, execReq, &args).Return(mockOperation, nil)
+		if previousExecContainerMock != nil {
+			execContainerMock.After(previousExecContainerMock)
+		}
+		previousExecContainerMock = execContainerMock
+	}
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, _ := l.BootstrapContainer(tables[0].container)
+	ok, _ := l.ValidateAndBootstrapContainer(tables[0].container)
 	if !ok {
 		t.Errorf("Container not properly bootstrapped")
 	}
