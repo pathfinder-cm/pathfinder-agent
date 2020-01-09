@@ -38,7 +38,7 @@ cat > /tmp/attributes.json << EOF
 {{.BootstrapAttributes}}
 EOF
 
-chef-solo -c /tmp/solo.rb -j /tmp/attributes.json
+chef-solo -c /tmp/solo.rb -j /tmp/attributes.json {{.ChefFlagOptions}}
 `
 		attributes, _ := json.Marshal(bs.Attributes)
 
@@ -48,11 +48,13 @@ chef-solo -c /tmp/solo.rb -j /tmp/attributes.json
 			ChefVersion         string
 			BootstrapAttributes string
 			CookbooksURL        string
+			ChefFlagOptions     string
 		}{
 			ChefInstaller:       config.ChefInstaller,
 			ChefVersion:         config.ChefVersion,
 			BootstrapAttributes: string(attributes),
 			CookbooksURL:        bs.CookbooksUrl,
+			ChefFlagOptions:     config.ChefFlagOptions,
 		})
 
 		if err != nil {
