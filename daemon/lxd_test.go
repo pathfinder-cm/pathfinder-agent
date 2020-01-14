@@ -230,7 +230,7 @@ cat > /tmp/attributes.json << EOF
 {"consul":{"config":{"consul.json":{"bind_addr":null}},"hosts":["guro-consul-01"]},"run_list":["role[consul]"]}
 EOF
 
-chef-solo -c /tmp/solo.rb -j /tmp/attributes.json --chef-license accept
+chef-solo -c /tmp/solo.rb -j /tmp/attributes.json 
 `
 	compareResult := strings.Compare(content,
 		exceptedContent)
