@@ -18,7 +18,7 @@ func GenerateBootstrapScriptContent(bs pfmodel.Bootstrapper) (string, int, error
 CHEF_FLAG_FILE=/tmp/chef_installed.txt
 if [ ! -f "$CHEF_FLAG_FILE" ]; then
 	echo "$CHEF_FLAG_FILE doesn't exist, creating file..."
-	cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v {{.BootstrapVersion}} && rm install.sh && touch chef_installed.txt
+	cd /tmp && curl -LO {{.BootstrapInstallerUrl}} && sudo bash ./install.sh -v {{.BootstrapVersion}} && rm install.sh && touch chef_installed.txt
 fi
 
 CHEF_REPO_DIR=/tmp/chef-repo-master
@@ -44,17 +44,17 @@ chef-solo -c /tmp/solo.rb -j /tmp/attributes.json {{.BootstrapFlagOptions}}
 
 		tmpl := template.Must(template.New("content").Parse(content))
 		err := tmpl.Execute(&tpl, struct {
-			BootstrapInstaller   string
-			BootstrapVersion     string
-			BootstrapAttributes  string
-			BootstrapFlagOptions string
-			CookbooksURL         string
+			BootstrapInstallerUrl string
+			BootstrapVersion      string
+			BootstrapAttributes   string
+			BootstrapFlagOptions  string
+			CookbooksURL          string
 		}{
-			BootstrapInstaller:   config.BootstrapInstaller,
-			BootstrapVersion:     config.BootstrapVersion,
-			BootstrapAttributes:  string(attributes),
-			BootstrapFlagOptions: config.BootstrapFlagOptions,
-			CookbooksURL:         bs.CookbooksUrl,
+			BootstrapInstallerUrl: config.BootstrapInstallerUrl,
+			BootstrapVersion:      config.BootstrapVersion,
+			BootstrapAttributes:   string(attributes),
+			BootstrapFlagOptions:  config.BootstrapFlagOptions,
+			CookbooksURL:          bs.CookbooksUrl,
 		})
 
 		if err != nil {

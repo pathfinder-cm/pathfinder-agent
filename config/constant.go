@@ -19,8 +19,8 @@ const (
 	DefaultPfMarkBootstrappedPath                 = "api/v2/node/containers/mark_bootstrapped"
 	DefaultPfMarkBootstrapErrorPath               = "api/v2/node/containers/mark_bootstrap_error"
 	DefaultPfMarkDeletedPath                      = "api/v1/node/containers/mark_deleted"
-	DefaultBootstrapInstaller                     = "https://www.chef.io/chef/install.sh"
-	DefaultBootstrapVersion                       = "15.5.17"
+	DefaultBootstrapInstallerUrl                  = ""
+	DefaultBootstrapVersion                       = ""
 	DefaultBootstrapFlagOptions                   = ""
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
@@ -41,7 +41,7 @@ const (
 	EnvPfMarkBootstrappedPath                 = "PF_MARK_BOOTSTRAPPED_PATH"
 	EnvPfMarkBootstrapErrorPath               = "PF_MARK_BOOTSTRAP_ERROR_PATH"
 	EnvPfMarkDeletedPath                      = "PF_MARK_DELETED_PATH"
-	EnvBootstrapInstaller                     = "BOOTSTRAP_INSTALLER"
+	EnvBootstrapInstallerUrl                  = "BOOTSTRAP_INSTALLER_URL"
 	EnvBootstrapVersion                       = "BOOTSTRAP_VERSION"
 	EnvBootstrapFlagOptions                   = "BOOTSTRAP_FLAG_OPTIONS"
 	EnvAbsoluteBootstrapScriptPath            = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
@@ -55,7 +55,7 @@ var (
 	PfClusterPassword           string
 	PfServerAddr                string
 	PfApiPath                   map[string]string
-	BootstrapInstaller          string
+	BootstrapInstallerUrl       string
 	BootstrapVersion            string
 	BootstrapFlagOptions        string
 	AbsoluteBootstrapScriptPath string
@@ -80,7 +80,7 @@ func init() {
 	PfApiPath["MarkBootstrapped"], _ = envkit.GetString(EnvPfMarkBootstrappedPath, DefaultPfMarkBootstrappedPath)
 	PfApiPath["MarkBootstrapError"], _ = envkit.GetString(EnvPfMarkBootstrapErrorPath, DefaultPfMarkBootstrapErrorPath)
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)
-	BootstrapInstaller, _ = envkit.GetString(EnvBootstrapInstaller, DefaultBootstrapInstaller)
+	BootstrapInstallerUrl, _ = envkit.GetString(EnvBootstrapInstallerUrl, DefaultBootstrapInstallerUrl)
 	BootstrapVersion, _ = envkit.GetString(EnvBootstrapVersion, DefaultBootstrapVersion)
 	BootstrapFlagOptions, _ = envkit.GetString(EnvBootstrapFlagOptions, DefaultBootstrapFlagOptions)
 	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)

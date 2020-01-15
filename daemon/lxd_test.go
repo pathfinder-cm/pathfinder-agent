@@ -210,7 +210,7 @@ func TestCreateContainerBootstrapScript(t *testing.T) {
 CHEF_FLAG_FILE=/tmp/chef_installed.txt
 if [ ! -f "$CHEF_FLAG_FILE" ]; then
 	echo "$CHEF_FLAG_FILE doesn't exist, creating file..."
-	cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 15.5.17 && rm install.sh && touch chef_installed.txt
+	cd /tmp && curl -LO  && sudo bash ./install.sh -v  && rm install.sh && touch chef_installed.txt
 fi
 
 CHEF_REPO_DIR=/tmp/chef-repo-master
