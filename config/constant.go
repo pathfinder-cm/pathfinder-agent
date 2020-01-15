@@ -19,8 +19,9 @@ const (
 	DefaultPfMarkBootstrappedPath                 = "api/v2/node/containers/mark_bootstrapped"
 	DefaultPfMarkBootstrapErrorPath               = "api/v2/node/containers/mark_bootstrap_error"
 	DefaultPfMarkDeletedPath                      = "api/v1/node/containers/mark_deleted"
-	DefaultChefInstaller                          = "https://www.chef.io/chef/install.sh"
-	DefaultChefVersion                            = "15.5.17"
+	DefaultBootstrapInstallerUrl                  = ""
+	DefaultBootstrapVersion                       = ""
+	DefaultBootstrapFlagOptions                   = ""
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
 	DefaultBootstrapMaxConcurrent                 = 5
@@ -40,8 +41,9 @@ const (
 	EnvPfMarkBootstrappedPath                 = "PF_MARK_BOOTSTRAPPED_PATH"
 	EnvPfMarkBootstrapErrorPath               = "PF_MARK_BOOTSTRAP_ERROR_PATH"
 	EnvPfMarkDeletedPath                      = "PF_MARK_DELETED_PATH"
-	EnvChefInstaller                          = "CHEF_INSTALLER"
-	EnvChefVersion                            = "CHEF_VERSION"
+	EnvBootstrapInstallerUrl                  = "BOOTSTRAP_INSTALLER_URL"
+	EnvBootstrapVersion                       = "BOOTSTRAP_VERSION"
+	EnvBootstrapFlagOptions                   = "BOOTSTRAP_FLAG_OPTIONS"
 	EnvAbsoluteBootstrapScriptPath            = "ABSOLUTE_BOOTSTRAP_SCRIPT_PATH"
 	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
 	EnvBootstrapMaxConcurrent                 = "BOOTSTRAP_MAX_CONCURRENT"
@@ -53,8 +55,9 @@ var (
 	PfClusterPassword           string
 	PfServerAddr                string
 	PfApiPath                   map[string]string
-	ChefInstaller               string
-	ChefVersion                 string
+	BootstrapInstallerUrl       string
+	BootstrapVersion            string
+	BootstrapFlagOptions        string
 	AbsoluteBootstrapScriptPath string
 	BootstrapContainerMaxRetry  int
 	BootstrapMaxConcurrent      int
@@ -77,8 +80,9 @@ func init() {
 	PfApiPath["MarkBootstrapped"], _ = envkit.GetString(EnvPfMarkBootstrappedPath, DefaultPfMarkBootstrappedPath)
 	PfApiPath["MarkBootstrapError"], _ = envkit.GetString(EnvPfMarkBootstrapErrorPath, DefaultPfMarkBootstrapErrorPath)
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)
-	ChefInstaller, _ = envkit.GetString(EnvChefInstaller, DefaultChefInstaller)
-	ChefVersion, _ = envkit.GetString(EnvChefVersion, DefaultChefVersion)
+	BootstrapInstallerUrl, _ = envkit.GetString(EnvBootstrapInstallerUrl, DefaultBootstrapInstallerUrl)
+	BootstrapVersion, _ = envkit.GetString(EnvBootstrapVersion, DefaultBootstrapVersion)
+	BootstrapFlagOptions, _ = envkit.GetString(EnvBootstrapFlagOptions, DefaultBootstrapFlagOptions)
 	AbsoluteBootstrapScriptPath, _ = envkit.GetString(EnvAbsoluteBootstrapScriptPath, DefaultAbsoluteBootstrapScriptPath)
 	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
 	BootstrapMaxConcurrent, _ = envkit.GetInt(EnvBootstrapMaxConcurrent, DefaultBootstrapMaxConcurrent)

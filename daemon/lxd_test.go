@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -203,22 +204,40 @@ func TestCreateContainerBootstrapScript(t *testing.T) {
 		},
 	}
 
-	content, _, err := util.GenerateBootstrapScriptContent(bootstrappers[0])
+	content, _, _ := util.GenerateBootstrapScriptContent(bootstrappers[0])
 
-	exceptedContent := `cd /tmp && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 14.12.3 && rm install.sh
-cat > solo.rb << EOF
-root = File.absolute_path(File.dirname(__FILE__))
-cookbook_path root + "/cookbooks"
-EOF'`
+	exceptedContent := `
+CHEF_FLAG_FILE=/tmp/chef_installed.txt
+if [ ! -f "$CHEF_FLAG_FILE" ]; then
+	echo "$CHEF_FLAG_FILE doesn't exist, creating file..."
+	cd /tmp && curl -LO  && sudo bash ./install.sh -v  && rm install.sh && touch chef_installed.txt
+fi
 
-	bootstrapperAttributes, _ := json.Marshal(bootstrappers[0].Attributes)
-	execChefSoloCmd := fmt.Sprintf("chef-solo -c ~/tmp/solo.rb -j %s %s", bootstrapperAttributes, bootstrappers[0].CookbooksUrl)
-	exceptedContent = exceptedContent + "\n" + execChefSoloCmd
+CHEF_REPO_DIR=/tmp/chef-repo-master
+[ -d "$CHEF_REPO_DIR" ] && rm -rf $CHEF_REPO_DIR
+mkdir $CHEF_REPO_DIR && wget 127.0.0.1 -O - | tar -xz -C /tmp/chef-repo-master --strip-components=1
 
-	if err != nil {
-		t.Errorf("Incorrect content generated, got: %s, want: %s.",
-			content,
-			exceptedContent)
+SOLO_FILE=/tmp/solo.rb
+if [ ! -f "$SOLO_FILE" ]; then
+	echo "$SOLO_FILE doesn't exist, creating file..."
+	cat > solo.rb << EOF
+cookbook_path "/tmp/chef-repo-master/cookbooks"
+role_path "/tmp/chef-repo-master/roles"
+EOF
+fi
+
+cat > /tmp/attributes.json << EOF
+{"consul":{"config":{"consul.json":{"bind_addr":null}},"hosts":["guro-consul-01"]},"run_list":["role[consul]"]}
+EOF
+
+chef-solo -c /tmp/solo.rb -j /tmp/attributes.json 
+`
+	compareResult := strings.Compare(content,
+		exceptedContent)
+	if compareResult != 0 {
+		t.Errorf("Incorrect content generated, got: %v, want: %v.",
+			compareResult,
+			0)
 	}
 
 	mockCtrl := gomock.NewController(t)
@@ -233,7 +252,7 @@ EOF'`
 		Return(nil)
 
 	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
-	ok, err := l.CreateContainerBootstrapScript(tables[0].container)
+	ok, _ := l.CreateContainerBootstrapScript(tables[0].container)
 	if !ok {
 		t.Errorf("Container file failed to create")
 	}
