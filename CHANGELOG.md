@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.6.1
+- Add bootstrap flag options as environment variables
+
 #### 0.6.0
 - Make bootstrap process idempotent
 - Functionality to retry bootstrap if it failed
