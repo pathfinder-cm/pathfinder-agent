@@ -70,6 +70,10 @@ func collectRootDisk() *pfmodel.Disk {
 }
 
 func collectZFSDisk() *pfmodel.Disk {
+	if config.MetricsZpoolName == "" {
+		return nil
+	}
+
 	zpoolStat, err := zfs.GetZpool(config.MetricsZpoolName)
 	if err != nil {
 		log.Error(err.Error())

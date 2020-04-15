@@ -25,7 +25,7 @@ const (
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
 	DefaultBootstrapMaxConcurrent                 = 5
-	DefaultMetricsZpoolName                       = "local"
+	DefaultMetricsZpoolName                       = ""
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
