@@ -64,8 +64,8 @@ func collectRootDisk() *pfmodel.Disk {
 	}
 
 	return &pfmodel.Disk{
-		Total: usageStat.Total,
-		Used:  usageStat.Used,
+		Total: util.BToMb(usageStat.Total),
+		Used:  util.BToMb(usageStat.Used),
 	}
 }
 
@@ -77,7 +77,7 @@ func collectZFSDisk() *pfmodel.Disk {
 	}
 
 	return &pfmodel.Disk{
-		Total: zpoolStat.Size,
-		Used:  zpoolStat.Allocated,
+		Total: util.BToMb(zpoolStat.Size),
+		Used:  util.BToMb(zpoolStat.Allocated),
 	}
 }
