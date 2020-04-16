@@ -20,6 +20,7 @@ require (
 	github.com/julienschmidt/httprouter v1.1.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/lxc/lxd v0.0.0-20180904093917-aa490dbc7cfc
+	github.com/mistifyio/go-zfs v2.1.1+incompatible
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
 	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20191230010840-52d47b216b6c
