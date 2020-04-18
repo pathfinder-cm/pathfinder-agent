@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.6.2
+- Add the ability to capture additional metrics: loadavg & disks (root & ZFS)
+
 #### 0.6.1
 - Add bootstrap flag options as environment variables
 
