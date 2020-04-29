@@ -7,7 +7,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/golang/mock v1.3.1
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.0
 	github.com/juju/clock v0.0.0-20190205081909-9c5c9712527c // indirect
 	github.com/juju/errors v0.0.0-20190207033735-e65537c515d7 // indirect
@@ -23,7 +23,7 @@ require (
 	github.com/mistifyio/go-zfs v2.1.1+incompatible
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
-	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20191230010840-52d47b216b6c
+	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200415034815-6fab848c36b8
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af // indirect
 	github.com/shirou/gopsutil v0.0.0-20180801053943-8048a2e9c577
