@@ -7,7 +7,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/golang/mock v1.3.1
-	github.com/google/uuid v1.1.1
+	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/gorilla/websocket v1.4.0
 	github.com/juju/clock v0.0.0-20190205081909-9c5c9712527c // indirect
 	github.com/juju/errors v0.0.0-20190207033735-e65537c515d7 // indirect
@@ -21,19 +21,15 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/lxc/lxd v0.0.0-20180904093917-aa490dbc7cfc
 	github.com/mistifyio/go-zfs v2.1.1+incompatible
-	github.com/onsi/ginkgo v1.8.0 // indirect
-	github.com/onsi/gomega v1.5.0 // indirect
-	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20191230010840-52d47b216b6c
+	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200415034815-6fab848c36b8
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af // indirect
 	github.com/shirou/gopsutil v0.0.0-20180801053943-8048a2e9c577
 	github.com/sirupsen/logrus v1.4.2
-	github.com/stretchr/objx v0.2.0 // indirect
+	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/urfave/cli v1.20.0
 	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
-	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/errgo.v1 v1.0.0 // indirect
-	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	gopkg.in/httprequest.v1 v1.1.2 // indirect
 	gopkg.in/macaroon-bakery.v2 v2.0.1 // indirect
 	gopkg.in/macaroon.v2 v2.0.0 // indirect
