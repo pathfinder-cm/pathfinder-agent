@@ -262,3 +262,127 @@ func (l *LXD) ValidateAndBootstrapContainer(container pfmodel.Container) (bool, 
 	}
 	return ok, err
 }
+
+func (l *LXD) MigrateContainer(container pfmodel.Container) (success bool, ipaddress string, err error) {
+	// create params
+	migrateReq := api.ContainerPost{
+		Name:          container.Hostname,
+		Migration:     true,
+		Live:          false,
+		ContainerOnly: false,
+		Target: &api.ContainerPostTarget{
+			Certificate: container.Source.Remote.Certificate,
+		},
+	}
+
+	isRunning, err := l.isContainerRunning(container.Hostname)
+	if err != nil {
+		return false, "", err
+	}
+
+	// stop container first
+	if isRunning {
+		ok, err := l.stopContainer(container.Hostname)
+		if !ok {
+			return false, "", err
+		}
+	}
+
+	// migrate the container
+	// don't know if we should stop the container first
+	op, err := l.targetSrv.MigrateContainer(container.Hostname, migrateReq)
+	if err != nil {
+		return false, "", err
+	}
+
+	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, "", err
+	}
+
+	// start container
+	ok, err := l.startContainer(container.Hostname)
+	if !ok {
+		return false, "", err
+	}
+
+	// Wait for ipaddress to be available
+	found := false
+	timeLimit := time.Now().Add(time.Duration(config.ContainerRelocationTimeoutInHour) * time.Hour)
+
+	for !found && time.Now().Before(timeLimit) {
+		state, _, err := l.targetSrv.GetContainerState(container.Hostname)
+		if err != nil {
+			return false, "", err
+		}
+
+		addresses := state.Network["eth0"].Addresses
+		for _, address := range addresses {
+			if address.Family == "inet" {
+				ipaddress = address.Address
+			}
+		}
+
+		if ipaddress != "" {
+			found = true
+			break
+		}
+
+		time.Sleep(time.Duration(5) * time.Second)
+	}
+
+	return true, ipaddress, nil
+}
+
+func (l *LXD) stopContainer(hostname string) (bool, error) {
+	req := api.ContainerStatePut{
+		Action:  "stop",
+		Timeout: -1,
+	}
+
+	op, err := l.targetSrv.UpdateContainerState(hostname, req, "")
+
+	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, err
+	}
+
+	return true, err
+}
+
+func (l *LXD) startContainer(hostname string) (bool, error) {
+	req := api.ContainerStatePut{
+		Action:  "start",
+		Timeout: -1,
+	}
+
+	op, err := l.targetSrv.UpdateContainerState(hostname, req, "")
+
+	// Wait for the operation to complete
+	err = op.Wait()
+	if err != nil {
+		return false, err
+	}
+
+	return true, err
+}
+
+func (l *LXD) isContainerStopped(hostname string) (bool, error) {
+	c, _, err := l.targetSrv.GetContainer(hostname)
+	if err != nil {
+		return false, err
+	}
+
+	return c.StatusCode == api.Stopped, nil
+}
+
+func (l *LXD) isContainerRunning(hostname string) (bool, error) {
+	c, _, err := l.targetSrv.GetContainer(hostname)
+	if err != nil {
+		return false, err
+	}
+
+	return c.StatusCode == api.Running, nil
+}

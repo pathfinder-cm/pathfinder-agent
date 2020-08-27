@@ -64,6 +64,8 @@ func (a *provisionAgent) Process() bool {
 			a.provisionContainer(sc, lcs)
 		case "SCHEDULE_DELETION":
 			a.deleteContainer(sc, lcs)
+		case "SCHEDULE_RELOCATION":
+			a.migrateContainer(sc)
 		}
 	}
 
@@ -166,6 +168,38 @@ func (a *provisionAgent) deleteContainer(sc pfmodel.Container, lcs *pfmodel.Cont
 	}
 
 	a.pfclient.MarkContainerAsDeleted(
+		a.nodeHostname,
+		sc.Hostname,
+	)
+
+	return true, nil
+}
+
+func (a *provisionAgent) migrateContainer(sc pfmodel.Container) (bool, error) {
+	a.pfclient.MarkContainerAsRelocateStarted(
+		a.nodeHostname,
+		sc.Hostname,
+	)
+
+	ok, ipaddress, err := a.containerDaemon.MigrateContainer(sc)
+	if !ok {
+		log.WithFields(log.Fields{
+			"hostname": sc.Hostname,
+			"alias":    sc.Source.Alias,
+		}).Errorf("Error during container relocation: %q", err)
+		a.pfclient.MarkContainerAsRelocateError(
+			a.nodeHostname,
+			sc.Hostname,
+		)
+		return false, err
+	}
+
+	a.pfclient.UpdateIpaddress(
+		a.nodeHostname,
+		sc.Hostname,
+		ipaddress,
+	)
+	a.pfclient.MarkContainerAsProvisioned(
 		a.nodeHostname,
 		sc.Hostname,
 	)
