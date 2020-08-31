@@ -27,7 +27,7 @@ const (
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
 	DefaultBootstrapMaxConcurrent                 = 5
-	DefaultMetricsZpoolName                       = ""
+	DefaultMetricsZpoolName                       = "local"
 	DefaultContainerRelocationTimeoutInHour       = 10
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
