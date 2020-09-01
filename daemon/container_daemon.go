@@ -8,4 +8,5 @@ type ContainerDaemon interface {
 	DeleteContainer(hostname string) (bool, error)
 	CreateContainerBootstrapScript(container pfmodel.Container) (bool, error)
 	ValidateAndBootstrapContainer(container pfmodel.Container) (bool, error)
+	MigrateContainer(container pfmodel.Container) (success bool, ipaddress string, err error)
 }

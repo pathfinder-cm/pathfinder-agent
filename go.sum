@@ -45,6 +45,8 @@ github.com/mistifyio/go-zfs v2.1.1+incompatible h1:gAMO1HM9xBRONLHHYnu5iFsOJUiJd
 github.com/mistifyio/go-zfs v2.1.1+incompatible/go.mod h1:8AuVvqP/mXw1px98n46wfvcGfQ4ci2FwoAjKYxuo3Z4=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200415034815-6fab848c36b8 h1:lfDc61Z6x2JViGXDxztpRkyUawdLK7oVNMiOikrqXmY=
 github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200415034815-6fab848c36b8/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200829001356-d278e185649d h1:er8WkOMEYZbWeVzCdwOXLW3wwMSzwkZBvLM90uAooUg=
+github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200829001356-d278e185649d/go.mod h1:fZQNmSXkU6ImRD3IB7L0kJxk5tq/boJBc67N35JYBrE=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

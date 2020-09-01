@@ -18,6 +18,8 @@ const (
 	DefaultPfMarkBootstrapStartedPath             = "api/v2/node/containers/mark_bootstrap_started"
 	DefaultPfMarkBootstrappedPath                 = "api/v2/node/containers/mark_bootstrapped"
 	DefaultPfMarkBootstrapErrorPath               = "api/v2/node/containers/mark_bootstrap_error"
+	DefaultPfMarkRelocateStartedPath              = "api/v2/node/containers/mark_relocate_started"
+	DefaultPfMarkRelocateErrorPath                = "api/v2/node/containers/mark_relocate_error"
 	DefaultPfMarkDeletedPath                      = "api/v1/node/containers/mark_deleted"
 	DefaultBootstrapInstallerUrl                  = ""
 	DefaultBootstrapVersion                       = ""
@@ -25,7 +27,8 @@ const (
 	DefaultAbsoluteBootstrapScriptPath            = "/opt/bootstrap.sh"
 	DefaultBootstrapContainerMaxRetry             = 2
 	DefaultBootstrapMaxConcurrent                 = 5
-	DefaultMetricsZpoolName                       = ""
+	DefaultMetricsZpoolName                       = "local"
+	DefaultContainerRelocationTimeoutInMinute     = 600
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
@@ -41,6 +44,8 @@ const (
 	EnvPfMarkBootstrapStartedPath             = "PF_MARK_BOOTSTRAP_STARTED_PATH"
 	EnvPfMarkBootstrappedPath                 = "PF_MARK_BOOTSTRAPPED_PATH"
 	EnvPfMarkBootstrapErrorPath               = "PF_MARK_BOOTSTRAP_ERROR_PATH"
+	EnvPfMarkRelocateStartedPath              = "PF_MARK_RELOCATE_STARTED_PATH"
+	EnvPfMarkRelocateErrorPath                = "PF_MARK_RELOCATE_ERROR_PATH"
 	EnvPfMarkDeletedPath                      = "PF_MARK_DELETED_PATH"
 	EnvBootstrapInstallerUrl                  = "BOOTSTRAP_INSTALLER_URL"
 	EnvBootstrapVersion                       = "BOOTSTRAP_VERSION"
@@ -49,21 +54,23 @@ const (
 	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
 	EnvBootstrapMaxConcurrent                 = "BOOTSTRAP_MAX_CONCURRENT"
 	EnvMetricsZpoolName                       = "METRICS_ZPOOL_NAME"
+	EnvContainerRelocationTimeoutInMinute     = "CONTAINER_RELOCATION_TIMEOUT_IN_MINUTE"
 )
 
 var (
-	LXDSocketPath               string
-	PfCluster                   string
-	PfClusterPassword           string
-	PfServerAddr                string
-	PfApiPath                   map[string]string
-	BootstrapInstallerUrl       string
-	BootstrapVersion            string
-	BootstrapFlagOptions        string
-	AbsoluteBootstrapScriptPath string
-	BootstrapContainerMaxRetry  int
-	BootstrapMaxConcurrent      int
-	MetricsZpoolName            string
+	LXDSocketPath                      string
+	PfCluster                          string
+	PfClusterPassword                  string
+	PfServerAddr                       string
+	PfApiPath                          map[string]string
+	BootstrapInstallerUrl              string
+	BootstrapVersion                   string
+	BootstrapFlagOptions               string
+	AbsoluteBootstrapScriptPath        string
+	BootstrapContainerMaxRetry         int
+	BootstrapMaxConcurrent             int
+	MetricsZpoolName                   string
+	ContainerRelocationTimeoutInMinute int
 )
 
 func init() {
@@ -83,6 +90,8 @@ func init() {
 	PfApiPath["MarkBootstrapped"], _ = envkit.GetString(EnvPfMarkBootstrappedPath, DefaultPfMarkBootstrappedPath)
 	PfApiPath["MarkBootstrapError"], _ = envkit.GetString(EnvPfMarkBootstrapErrorPath, DefaultPfMarkBootstrapErrorPath)
 	PfApiPath["MarkDeleted"], _ = envkit.GetString(EnvPfMarkDeletedPath, DefaultPfMarkDeletedPath)
+	PfApiPath["MarkRelocateStarted"], _ = envkit.GetString(EnvPfMarkRelocateStartedPath, DefaultPfMarkRelocateStartedPath)
+	PfApiPath["MarkRelocateError"], _ = envkit.GetString(EnvPfMarkRelocateErrorPath, DefaultPfMarkRelocateErrorPath)
 	BootstrapInstallerUrl, _ = envkit.GetString(EnvBootstrapInstallerUrl, DefaultBootstrapInstallerUrl)
 	BootstrapVersion, _ = envkit.GetString(EnvBootstrapVersion, DefaultBootstrapVersion)
 	BootstrapFlagOptions, _ = envkit.GetString(EnvBootstrapFlagOptions, DefaultBootstrapFlagOptions)
@@ -90,4 +99,5 @@ func init() {
 	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
 	BootstrapMaxConcurrent, _ = envkit.GetInt(EnvBootstrapMaxConcurrent, DefaultBootstrapMaxConcurrent)
 	MetricsZpoolName, _ = envkit.GetString(EnvMetricsZpoolName, DefaultMetricsZpoolName)
+	ContainerRelocationTimeoutInMinute, _ = envkit.GetInt(EnvContainerRelocationTimeoutInMinute, DefaultContainerRelocationTimeoutInMinute)
 }

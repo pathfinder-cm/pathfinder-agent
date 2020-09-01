@@ -352,3 +352,172 @@ func TestBootstrapContainer(t *testing.T) {
 		t.Errorf("Container not properly bootstrapped")
 	}
 }
+
+func TestMigrateContainer(t *testing.T) {
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+			},
+		},
+	}
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	migrateReq := api.ContainerPost{
+		Name:          tables[0].container.Hostname,
+		Migration:     true,
+		Live:          false,
+		ContainerOnly: false,
+		Target: &api.ContainerPostTarget{
+			Certificate: tables[0].container.Source.Remote.Certificate,
+		},
+	}
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	state := api.ContainerState{
+		Network: map[string]api.ContainerStateNetwork{
+			"eth0": api.ContainerStateNetwork{
+				Addresses: []api.ContainerStateNetworkAddress{
+					api.ContainerStateNetworkAddress{
+						Family:  "inet",
+						Address: "127.0.0.2",
+					},
+				},
+			},
+		},
+	}
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().
+		GetContainer(tables[0].container.Hostname).
+		Return(&api.Container{StatusCode: api.Running}, "", nil)
+	mockContainerServer.EXPECT().
+		MigrateContainer(tables[0].container.Hostname, migrateReq).
+		Return(mockOperation, nil)
+	mockContainerServer.EXPECT().
+		GetContainerState(tables[0].container.Hostname).
+		Return(&state, "", nil)
+
+	updateContainerStateValues := []string{"stop", "start"}
+	updateContainerStateCalled := 0
+	mockContainerServer.EXPECT().
+		UpdateContainerState(tables[0].container.Hostname, gomock.Any(), "").
+		Do(func(_ string, state api.ContainerStatePut, _ string) {
+			if updateContainerStateValues[updateContainerStateCalled] != state.Action {
+				t.Errorf("Should have 'start' action, got: %q", state.Action)
+			}
+			updateContainerStateCalled++
+		}).
+		Return(mockOperation, nil).
+		Times(2)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	ok, ipaddress, _ := l.MigrateContainer(tables[0].container)
+	if !ok {
+		t.Fatal("Container not properly generated")
+	}
+
+	if "127.0.0.2" != ipaddress {
+		t.Errorf("Should return correct ip address, got: %q, want: %q", ipaddress, "127.0.0.2")
+	}
+}
+
+func TestMigrateContainer_stoppedContainer(t *testing.T) {
+	tables := []struct {
+		container pfmodel.Container
+	}{
+		{
+			pfmodel.Container{
+				Hostname: "test-01",
+				Source: pfmodel.Source{
+					Type:  "image",
+					Mode:  "pull",
+					Alias: "16.04",
+					Remote: pfmodel.Remote{
+						Server:      "https://cloud-images.ubuntu.com/releases",
+						Protocol:    "simplestream",
+						AuthType:    "tls",
+						Certificate: "random",
+					},
+				},
+			},
+		},
+	}
+
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	migrateReq := api.ContainerPost{
+		Name:          tables[0].container.Hostname,
+		Migration:     true,
+		Live:          false,
+		ContainerOnly: false,
+		Target: &api.ContainerPostTarget{
+			Certificate: tables[0].container.Source.Remote.Certificate,
+		},
+	}
+
+	mockOperation := mock.NewMockOperation(mockCtrl)
+	mockOperation.EXPECT().Wait().Return(nil).AnyTimes()
+
+	state := api.ContainerState{
+		Network: map[string]api.ContainerStateNetwork{
+			"eth0": api.ContainerStateNetwork{
+				Addresses: []api.ContainerStateNetworkAddress{
+					api.ContainerStateNetworkAddress{
+						Family:  "inet",
+						Address: "127.0.0.2",
+					},
+				},
+			},
+		},
+	}
+
+	mockContainerServer := mock.NewMockContainerServer(mockCtrl)
+	mockContainerServer.EXPECT().
+		GetContainer(tables[0].container.Hostname).
+		Return(&api.Container{StatusCode: api.Stopped}, "", nil)
+	mockContainerServer.EXPECT().
+		MigrateContainer(tables[0].container.Hostname, migrateReq).
+		Return(mockOperation, nil)
+	mockContainerServer.EXPECT().
+		GetContainerState(tables[0].container.Hostname).
+		Return(&state, "", nil)
+
+	mockContainerServer.EXPECT().
+		UpdateContainerState(tables[0].container.Hostname, gomock.Any(), "").
+		Do(func(_ string, state api.ContainerStatePut, _ string) {
+			if "start" != state.Action {
+				t.Errorf("Should have 'start' action, got: %q", state.Action)
+			}
+		}).
+		Return(mockOperation, nil).
+		Times(1)
+
+	l := LXD{localSrv: mockContainerServer, targetSrv: mockContainerServer}
+	ok, ipaddress, _ := l.MigrateContainer(tables[0].container)
+	if !ok {
+		t.Fatal("Container not properly generated")
+	}
+
+	if "127.0.0.2" != ipaddress {
+		t.Errorf("Should return correct ip address, got: %q, want: %q", ipaddress, "127.0.0.2")
+	}
+}
