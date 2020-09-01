@@ -21,7 +21,7 @@ require (
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/lxc/lxd v0.0.0-20180904093917-aa490dbc7cfc
 	github.com/mistifyio/go-zfs v2.1.1+incompatible
-	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200415034815-6fab848c36b8
+	github.com/pathfinder-cm/pathfinder-go-client v0.0.0-20200829001356-d278e185649d
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af // indirect
 	github.com/shirou/gopsutil v0.0.0-20180801053943-8048a2e9c577
