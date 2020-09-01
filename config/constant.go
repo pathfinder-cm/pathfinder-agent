@@ -28,7 +28,7 @@ const (
 	DefaultBootstrapContainerMaxRetry             = 2
 	DefaultBootstrapMaxConcurrent                 = 5
 	DefaultMetricsZpoolName                       = "local"
-	DefaultContainerRelocationTimeoutInHour       = 10
+	DefaultContainerRelocationTimeoutInMinute     = 600
 
 	EnvLXDSocketPath                          = "LXD_SOCKET_PATH"
 	EnvPfCluster                              = "PF_CLUSTER"
@@ -54,23 +54,23 @@ const (
 	EnvBootstrapContainerMaxRetry             = "BOOTSTRAP_CONTAINER_MAX_RETRY"
 	EnvBootstrapMaxConcurrent                 = "BOOTSTRAP_MAX_CONCURRENT"
 	EnvMetricsZpoolName                       = "METRICS_ZPOOL_NAME"
-	EnvContainerRelocationTimeoutInHour       = "CONTAINER_RELOCATION_TIMEOUT_IN_HOUR"
+	EnvContainerRelocationTimeoutInMinute     = "CONTAINER_RELOCATION_TIMEOUT_IN_MINUTE"
 )
 
 var (
-	LXDSocketPath                    string
-	PfCluster                        string
-	PfClusterPassword                string
-	PfServerAddr                     string
-	PfApiPath                        map[string]string
-	BootstrapInstallerUrl            string
-	BootstrapVersion                 string
-	BootstrapFlagOptions             string
-	AbsoluteBootstrapScriptPath      string
-	BootstrapContainerMaxRetry       int
-	BootstrapMaxConcurrent           int
-	MetricsZpoolName                 string
-	ContainerRelocationTimeoutInHour int
+	LXDSocketPath                      string
+	PfCluster                          string
+	PfClusterPassword                  string
+	PfServerAddr                       string
+	PfApiPath                          map[string]string
+	BootstrapInstallerUrl              string
+	BootstrapVersion                   string
+	BootstrapFlagOptions               string
+	AbsoluteBootstrapScriptPath        string
+	BootstrapContainerMaxRetry         int
+	BootstrapMaxConcurrent             int
+	MetricsZpoolName                   string
+	ContainerRelocationTimeoutInMinute int
 )
 
 func init() {
@@ -99,5 +99,5 @@ func init() {
 	BootstrapContainerMaxRetry, _ = envkit.GetInt(EnvBootstrapContainerMaxRetry, DefaultBootstrapContainerMaxRetry)
 	BootstrapMaxConcurrent, _ = envkit.GetInt(EnvBootstrapMaxConcurrent, DefaultBootstrapMaxConcurrent)
 	MetricsZpoolName, _ = envkit.GetString(EnvMetricsZpoolName, DefaultMetricsZpoolName)
-	ContainerRelocationTimeoutInHour, _ = envkit.GetInt(EnvContainerRelocationTimeoutInHour, DefaultContainerRelocationTimeoutInHour)
+	ContainerRelocationTimeoutInMinute, _ = envkit.GetInt(EnvContainerRelocationTimeoutInMinute, DefaultContainerRelocationTimeoutInMinute)
 }

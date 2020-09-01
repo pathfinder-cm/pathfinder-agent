@@ -309,7 +309,7 @@ func (l *LXD) MigrateContainer(container pfmodel.Container) (success bool, ipadd
 
 	// Wait for ipaddress to be available
 	found := false
-	timeLimit := time.Now().Add(time.Duration(config.ContainerRelocationTimeoutInHour) * time.Hour)
+	timeLimit := time.Now().Add(time.Duration(config.ContainerRelocationTimeoutInMinute) * time.Minute)
 
 	for !found && time.Now().Before(timeLimit) {
 		state, _, err := l.targetSrv.GetContainerState(container.Hostname)
